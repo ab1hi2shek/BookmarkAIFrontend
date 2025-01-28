@@ -16,3 +16,4 @@ A React-based bookmark management application built with Vite and Material-UI.
 
    ```bash
    npm install
+   npm install @emotion/react @emotion/styled

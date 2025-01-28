@@ -11,12 +11,10 @@ const TagList = () => {
     const [selectedTagForUpdate, setSelectedTagForUpdate] = useState(null);
 
     const dispatch = useDispatch();
-
     const allTags = useSelector((state) => state.tags.allTags);
 
     const handleEditClick = (tag) => {
         setSelectedTagForUpdate(tag);
-        console.log("new = " + JSON.stringify(tag))
         setEditModalOpen(true);
     };
 

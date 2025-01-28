@@ -4,7 +4,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleSelectedTags } from '../features/tags/tagsSlice';
 
-const Breadcrumbs = ({ onTagClick }) => {
+const Breadcrumbs = () => {
 
     const dispatch = useDispatch();
     const allTags = useSelector((state) => state.tags.allTags);

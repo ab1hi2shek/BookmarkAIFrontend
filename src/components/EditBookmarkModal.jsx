@@ -1,10 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Box, TextField, Button, Chip, Typography } from '@mui/material';
 
 const EditBookmarkModal = ({ open, onClose, bookmark, onSave }) => {
-    const [title, setTitle] = useState(bookmark.title);
-    const [notes, setNotes] = useState(bookmark.notes);
-    const [tags, setTags] = useState(bookmark.tags.join(', '));
+    const [title, setTitle] = useState('');
+    const [notes, setNotes] = useState('');
+    const [tags, setTags] = useState([]);
+
+    // Sync state with the selectedTagForEdit prop
+    useEffect(() => {
+        if (bookmark) {
+            setTitle(bookmark.title || '');
+            setNotes(bookmark.notes || '');
+            setTags(bookmark.tags ? bookmark.tags.join(', ') : [])
+        }
+    }, [bookmark]);
 
     const handleSave = () => {
         const updatedBookmark = {
@@ -25,13 +34,21 @@ const EditBookmarkModal = ({ open, onClose, bookmark, onSave }) => {
                     top: '50%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
-                    width: 400,
+                    width: '60vw',
                     bgcolor: 'background.paper',
                     boxShadow: 24,
                     p: 4,
                 }}
             >
-                <Typography variant="h6">Edit Bookmark</Typography>
+                <Typography variant="h5" textAlign="center">Edit Bookmark</Typography>
+                <TextField
+                    label="URL"
+                    fullWidth
+                    value={bookmark.url}
+                    onChange={(e) => setTitle(e.target.value)}
+                    sx={{ mt: 2 }}
+                    disabled
+                />
                 <TextField
                     label="Title"
                     fullWidth
@@ -43,7 +60,7 @@ const EditBookmarkModal = ({ open, onClose, bookmark, onSave }) => {
                     label="Notes"
                     fullWidth
                     multiline
-                    rows={4}
+                    rows={6}
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
                     sx={{ mt: 2 }}

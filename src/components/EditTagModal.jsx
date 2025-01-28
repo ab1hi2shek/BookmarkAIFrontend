@@ -4,13 +4,9 @@ import { Modal, Box, TextField, Button, Typography } from '@mui/material';
 const EditTagModal = ({ open, onClose, selectedTagForEdit, onSave }) => {
     const [tagName, setTagName] = useState('');
 
-    console.log("selectedTagForEdit = " + JSON.stringify(selectedTagForEdit));
-
     // Sync state with the selectedTagForEdit prop
     useEffect(() => {
-        console.log("haha0 = " + selectedTagForEdit)
         if (selectedTagForEdit) {
-            console.log("haha = " + selectedTagForEdit)
             setTagName(selectedTagForEdit.name || ''); // Set name or fallback to an empty string
         }
     }, [selectedTagForEdit]);

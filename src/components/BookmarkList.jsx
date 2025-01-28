@@ -1,19 +1,18 @@
-import React, { useState } from 'react';
-import { List, ListItem, ListItemText } from '@mui/material';
-import { getBookmarksList } from '../data/bookmarkData';
+import React from 'react';
+import { List, ListItem, ListItemText, ListItemButton } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { selectFilteredBookmarks } from '../features/bookmarks/bookmarksSelectors';
 
 const BookmarkList = ({ onBookmarkClick }) => {
-    const bookmarks = getBookmarksList();
+    const filteredBookmarks = useSelector(selectFilteredBookmarks);
 
     return (
         <List>
-            {bookmarks.map((bookmark) => (
-                <ListItem
-                    button
-                    key={bookmark.id}
-                    onClick={() => onBookmarkClick(bookmark)}
-                >
-                    <ListItemText primary={bookmark.title} />
+            {filteredBookmarks.map((bookmark) => (
+                <ListItem key={bookmark.id}>
+                    <ListItemButton onClick={() => onBookmarkClick(bookmark)}>
+                        <ListItemText primary={bookmark.title} />
+                    </ListItemButton>
                 </ListItem>
             ))}
         </List>
