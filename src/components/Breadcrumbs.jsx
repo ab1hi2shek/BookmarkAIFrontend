@@ -8,7 +8,7 @@ const Breadcrumbs = ({ selectedTags, onTagClick }) => {
             <Link color="inherit" href="/">
                 <HomeIcon />
             </Link>
-            {selectedTags && selectedTags.map((tag, index) => (
+            {selectedTags.map((tag, index) => (
                 <Chip
                     key={index}
                     label={tag}

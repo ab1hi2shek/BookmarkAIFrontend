@@ -21,7 +21,7 @@ const SideBar = ({ onCloseSidebar, onBookmarkClick, onTagClick, selectedTags, on
         >
             <IconButton
                 onClick={onCloseSidebar}
-                sx={{ position: 'absolute', top: 8, left: 8, zIndex: 1200 }}
+                sx={{ position: 'relative', top: 8, left: 8, zIndex: 1200 }}
             >
                 <MenuIcon />
             </IconButton>

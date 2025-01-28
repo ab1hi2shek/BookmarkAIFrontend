@@ -22,8 +22,6 @@ const SideBarClosed = ({ onOpenSidebar }) => {
                 onClick={onOpenSidebar}
                 sx={{
                     position: 'relative',
-                    top: 0, // Adjust based on header height
-                    left: 0,
                     zIndex: 1200,
                 }}
             >

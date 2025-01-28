@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Header from '../components/Header';
-import SideBar from '../components/SideBar';
+import SideBar from '../components/Sidebar';
 import SideBarClosed from '../components/SideBarClosed';
 import MainLayout from '../components/MainLayout';
 
