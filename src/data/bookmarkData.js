@@ -65,17 +65,21 @@ export const getTagsList = () => {
     bookmarkList.forEach((bookmark) => {
         tagList.push(...bookmark.tags);
     });
-    const tagCounts = tagList.reduce((acc, tag) => {
-        acc[tag] = (acc[tag] || 0) + 1;
-        return acc;
-    }, {});
+    let tagListUnique = [...new Set(tagList)];
 
-    const tagObjects = Object.entries(tagCounts).map(([name, count]) => ({
-        name,
-        count,
-    }));
+    let count = 1;
+    let resultTagListObj = [];
+    tagListUnique.forEach((tag) => {
+        let tagItem = {
+            "id": "tag-" + count,
+            "name": tag,
+            "creator": "USER",
+            "userId": "user-1",
+            "isSelected": false
+        }
+        resultTagListObj.push(tagItem);
+        count += 1;
+    });
 
-    tagObjects.sort((a, b) => b.count - a.count);
-
-    return [...new Set(tagObjects)];
+    return resultTagListObj;
 };

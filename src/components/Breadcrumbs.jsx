@@ -7,10 +7,10 @@ import { toggleSelectedTags } from '../features/tags/tagsSlice';
 const Breadcrumbs = ({ onTagClick }) => {
 
     const dispatch = useDispatch();
-    const selectedTags = useSelector((state) => state.tags.selectedTags);
+    const allTags = useSelector((state) => state.tags.allTags);
 
     const handleTagClick = (tag) => {
-        dispatch(toggleSelectedTags(tag));
+        dispatch(toggleSelectedTags(tag.id));
     };
 
     return (
@@ -18,14 +18,14 @@ const Breadcrumbs = ({ onTagClick }) => {
             <Link color="inherit" href="/">
                 <HomeIcon />
             </Link>
-            {selectedTags.map((tag, index) => (
-                <Chip
+            {allTags.map((tag, index) => (
+                tag.isSelected && (<Chip
                     key={index}
-                    label={tag}
+                    label={tag.name}
                     onDelete={() => handleTagClick(tag)}
                     color="primary"
                     variant="outlined"
-                />
+                />)
             ))}
         </MuiBreadcrumbs>
     );

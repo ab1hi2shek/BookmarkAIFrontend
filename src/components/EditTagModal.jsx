@@ -1,8 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Box, TextField, Button, Typography } from '@mui/material';
 
-const EditTagModal = ({ open, onClose, tag, onSave }) => {
-    const [tagName, setTagName] = useState(tag);
+const EditTagModal = ({ open, onClose, selectedTagForEdit, onSave }) => {
+    const [tagName, setTagName] = useState('');
+
+    console.log("selectedTagForEdit = " + JSON.stringify(selectedTagForEdit));
+
+    // Sync state with the selectedTagForEdit prop
+    useEffect(() => {
+        console.log("haha0 = " + selectedTagForEdit)
+        if (selectedTagForEdit) {
+            console.log("haha = " + selectedTagForEdit)
+            setTagName(selectedTagForEdit.name || ''); // Set name or fallback to an empty string
+        }
+    }, [selectedTagForEdit]);
 
     const handleSave = () => {
         onSave(tagName);
