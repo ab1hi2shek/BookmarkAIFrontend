@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, CardContent, Typography, Button, Grid, IconButton, Chip, Box } from '@mui/material';
+import { Card, CardContent, Typography, Button, IconButton, Chip, Box } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditBookmarkModal from './EditBookmarkModal';
@@ -11,7 +11,6 @@ const BookmarkCard = () => {
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [selectedBookmark, setSelectedBookmark] = useState(null);
 
-    // Use selectors to get the filtered bookmarks.
     const dispatch = useDispatch();
     const filteredBookmarks = useSelector(selectFilteredBookmarks);
 
@@ -20,12 +19,10 @@ const BookmarkCard = () => {
         setEditModalOpen(false);
     };
 
-    // Handle bookmark deletion by dispatching the deleteBookmark action
     const handleDeleteBookmark = (id) => {
         dispatch(deleteBookmark(id));
     };
 
-    // Handle bookmark editing by dispatching the editBookmark action
     const handleEditBookmark = (updatedBookmark) => {
         setSelectedBookmark(updatedBookmark);
         setEditModalOpen(true);
@@ -33,49 +30,59 @@ const BookmarkCard = () => {
 
     return (
         <>
-            <Grid container spacing={2} marginTop={1}>
+            {/* Masonry Layout */}
+            <Box
+                sx={{
+                    columnCount: { xs: 1, sm: 2, md: 3 }, // Adjust number of columns based on screen size
+                    columnGap: '16px',
+                }}
+            >
                 {filteredBookmarks.map((bookmark) => (
-                    <Grid item xs={4} key={bookmark.id}>
-                        <Card>
-                            <CardContent>
-                                <Typography variant="h5">{bookmark.title}</Typography>
-                                <Typography variant="body2">Notes: {bookmark.notes}</Typography>
-                                <Box sx={{ mt: 1 }}>
-                                    {bookmark.tags.map((tag, index) => (
-                                        <Chip key={index} label={tag.split("-")[1]} sx={{ mr: 1, mb: 1 }} />
-                                    ))}
-                                </Box>
-                                <Box
-                                    sx={{
-                                        mt: 2,
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                    }}
-                                >
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        target="_blank"
-                                        href={bookmark.url}
-                                        sx={{ mt: 1 }}
-                                    >
-                                        Visit
-                                    </Button>
-                                    <Box>
-                                        <IconButton onClick={() => handleEditBookmark(bookmark)}>
-                                            <EditIcon />
-                                        </IconButton>
-                                        <IconButton onClick={() => handleDeleteBookmark(bookmark.id)}>
-                                            <DeleteIcon />
-                                        </IconButton>
-                                    </Box>
-                                </Box>
-                            </CardContent>
-                        </Card>
-                    </Grid>
+                    <Card
+                        key={bookmark.id}
+                        sx={{
+                            display: 'inline-block', // Ensures cards do not break column structure
+                            width: '100%', // Full width within column
+                            marginBottom: '16px', // Space between cards
+                        }}
+                    >
+                        <CardContent>
+                            <Typography variant="h5">{bookmark.title}</Typography>
+                            <Typography variant="body2">Notes: {bookmark.notes}</Typography>
+                            <Box sx={{ mt: 1 }}>
+                                {bookmark.tags.map((tag, index) => (
+                                    <Chip key={index} label={tag.split("-")[1]} sx={{ mr: 1, mb: 1 }} />
+                                ))}
+                            </Box>
+                        </CardContent>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                padding: 2,
+                            }}
+                        >
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                target="_blank"
+                                href={bookmark.url}
+                            >
+                                Visit
+                            </Button>
+                            <Box>
+                                <IconButton onClick={() => handleEditBookmark(bookmark)}>
+                                    <EditIcon />
+                                </IconButton>
+                                <IconButton onClick={() => handleDeleteBookmark(bookmark.id)}>
+                                    <DeleteIcon />
+                                </IconButton>
+                            </Box>
+                        </Box>
+                    </Card>
                 ))}
-            </Grid>
+            </Box>
             {selectedBookmark && (
                 <EditBookmarkModal
                     open={editModalOpen}
