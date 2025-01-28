@@ -16,6 +16,7 @@ const SideBar = ({ onCloseSidebar, onBookmarkClick, onTagClick, selectedTags, on
                     width: 240, // Fixed width for the sidebar
                     boxSizing: 'border-box',
                     marginTop: '64px', // Adjust based on header height
+                    marginBottom: '164px'
                 },
             }}
         >
@@ -29,17 +30,17 @@ const SideBar = ({ onCloseSidebar, onBookmarkClick, onTagClick, selectedTags, on
                 <ListItem>
                     <ListItemText primary="Tags" />
                 </ListItem>
-                <TagList
-                    onTagClick={onTagClick}
-                    selectedTags={selectedTags}
-                    onEditTag={onEditTag}
-                    onDeleteTag={onDeleteTag}
-                />
+                <TagList />
                 <Divider />
                 <ListItem>
                     <ListItemText primary="Bookmarks" />
                 </ListItem>
                 <BookmarkList onBookmarkClick={onBookmarkClick} />
+                <Divider />
+                <Divider />
+                <ListItem>
+                    <ListItemText primary="Tags" />
+                </ListItem>
             </List>
         </Drawer>
     );

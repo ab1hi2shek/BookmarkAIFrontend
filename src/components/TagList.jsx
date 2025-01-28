@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
 import { List, ListItem, ListItemText, IconButton, Chip } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditTagModal from './EditTagModal';
 import { getBookmarksList, getTagsList } from '../data/bookmarkData';
+import { toggleSelectedTags, editTag, deleteTag } from '../features/tags/tagsSlice';
 
-const TagList = ({ onTagClick, selectedTags, onEditTag, onDeleteTag }) => {
+const TagList = () => {
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [selectedTag, setSelectedTag] = useState('');
-    const { tagList } = getTagsList();
+
+    const dispatch = useDispatch();
+
+    const allTags = useSelector((state) => state.tags.allTags);
+    const selectedTags = useSelector((state) => state.tags.selectedTags);
 
     const handleEditClick = (tag) => {
         setSelectedTag(tag);
@@ -16,23 +22,27 @@ const TagList = ({ onTagClick, selectedTags, onEditTag, onDeleteTag }) => {
     };
 
     const handleDeleteClick = (tag) => {
-        onDeleteTag(tag);
+        dispatch(deleteTag(tag));
     };
 
     const handleSave = (updatedTag) => {
-        onEditTag(selectedTag, updatedTag);
+        dispatch(editTag({ oldTag: selectedTag, newTag: updatedTag }));
         setEditModalOpen(false);
+    };
+
+    const handleTagClick = (tag) => {
+        dispatch(toggleSelectedTags(tag));
     };
 
     return (
         <>
             <List>
-                {tagList.map((tag, index) => (
+                {allTags.map((tag, index) => (
                     <ListItem key={index}>
                         <Chip
                             label={tag.name}
                             sx={{ mr: 1 }}
-                            onClick={() => onTagClick(tag.name)}
+                            onClick={() => handleTagClick(tag.name)}
                             color={selectedTags.includes(tag.name) ? 'primary' : 'default'}
                         />
                         <IconButton onClick={() => handleEditClick(tag.name)}>

@@ -77,8 +77,5 @@ export const getTagsList = () => {
 
     tagObjects.sort((a, b) => b.count - a.count);
 
-    return {
-        tagList: [...new Set(tagObjects.slice(0, 6))],
-        bookmarkCount: tagObjects.length,
-    };
+    return [...new Set(tagObjects)];
 };
