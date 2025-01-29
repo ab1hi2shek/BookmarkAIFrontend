@@ -6,6 +6,13 @@ import EditBookmarkModal from './EditBookmarkModal';
 import { deleteBookmark, editBookmark } from '../features/bookmarks/bookmarksSlice';
 import { selectFilteredBookmarks } from '../features/bookmarks/bookmarksSelectors';
 import { useSelector, useDispatch } from 'react-redux';
+import styles from '../styles/bookmarkCardStyles'
+
+const truncateText = (text, limit) => {
+    if (text.length <= limit) return text;
+    const truncated = text.slice(0, limit);
+    return truncated.slice(0, truncated.lastIndexOf(' ')) + ' ...';
+};
 
 const BookmarkCard = () => {
     const [editModalOpen, setEditModalOpen] = useState(false);
@@ -30,53 +37,35 @@ const BookmarkCard = () => {
 
     return (
         <>
-            {/* Masonry Layout */}
-            <Box
-                sx={{
-                    columnCount: { xs: 1, sm: 2, md: 3 }, // Adjust number of columns based on screen size
-                    columnGap: '16px',
-                }}
-            >
+            <Box sx={{ columnCount: { xs: 1, sm: 3, md: 4 }, columnGap: '16px', marginTop: '20px' }}>
                 {filteredBookmarks.map((bookmark) => (
-                    <Card
-                        key={bookmark.id}
-                        sx={{
-                            display: 'inline-block', // Ensures cards do not break column structure
-                            width: '100%', // Full width within column
-                            marginBottom: '16px', // Space between cards
-                        }}
-                    >
+                    <Card key={bookmark.id} sx={styles.card}>
                         <CardContent>
-                            <Typography variant="h6">{bookmark.title}</Typography>
-                            <Typography variant="body2">{bookmark.notes}</Typography>
+                            <Typography variant="h6" sx={styles.title}>
+                                {bookmark.title}
+                            </Typography>
+
+                            <Typography variant="body2" sx={styles.notes}>
+                                {truncateText(bookmark.notes, 150)}
+                            </Typography>
+
                             <Box sx={{ mt: 1 }}>
                                 {bookmark.tags.map((tag, index) => (
-                                    <Chip key={index} label={tag.split("-")[1]} sx={{ mr: 1, mb: 1 }} />
+                                    <Chip key={index} label={tag.split("-")[1]} sx={styles.chip} />
                                 ))}
                             </Box>
                         </CardContent>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                padding: 2,
-                            }}
-                        >
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                target="_blank"
-                                href={bookmark.url}
-                            >
+
+                        <Box sx={styles.cardFooter}>
+                            <Button variant="contained" sx={styles.button} target="_blank" href={bookmark.url}>
                                 Visit
                             </Button>
                             <Box>
-                                <IconButton onClick={() => handleEditBookmark(bookmark)}>
-                                    <EditIcon />
+                                <IconButton onClick={() => handleEditBookmark(bookmark)} size="small">
+                                    <EditIcon fontSize="small" />
                                 </IconButton>
-                                <IconButton onClick={() => handleDeleteBookmark(bookmark.id)}>
-                                    <DeleteIcon />
+                                <IconButton onClick={() => handleDeleteBookmark(bookmark.id)} size="small">
+                                    <DeleteIcon fontSize="small" />
                                 </IconButton>
                             </Box>
                         </Box>
