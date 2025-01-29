@@ -1,9 +1,19 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { IconButton, Drawer } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import { openLeftSideBar } from '../features/sidebar/sidebarSlice';
 
 
-const SideBarClosed = ({ onOpenSidebar }) => {
+const SideBarClosed = () => {
+
+    const dispatch = useDispatch();
+
+    const handleWhenOpenLeftSideBar = (e) => {
+        console.log("I ama here", e);
+        dispatch(openLeftSideBar());
+    }
+
     return (
         <Drawer
             variant="persistent"
@@ -19,7 +29,7 @@ const SideBarClosed = ({ onOpenSidebar }) => {
             }}
         >
             <IconButton
-                onClick={onOpenSidebar}
+                onClick={e => handleWhenOpenLeftSideBar(e)}
                 sx={{
                     position: 'relative',
                     zIndex: 1200,

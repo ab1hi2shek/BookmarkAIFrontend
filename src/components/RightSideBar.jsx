@@ -6,17 +6,18 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import TagList from './TagList';
 import BookmarkList from './BookmarkList';
-import { closeLeftSideBar } from '../features/sidebar/sidebarSlice';
+import { closeRightSideBar } from '../features/sidebar/sidebarSlice';
 
-const SideBar = () => {
+
+const RightSideBar = () => {
 
     const [tagsOpen, setTagsOpen] = useState(false); // State to toggle tags section
     const [bookmarksOpen, setBookmarksOpen] = useState(false); // State to toggle bookmark section
 
     const dispatch = useDispatch();
 
-    const handleWhenCloseLeftSideBar = () => {
-        dispatch(closeLeftSideBar());
+    const handleWhenCloseRightSideBar = () => {
+        dispatch(closeRightSideBar());
     }
 
     const handleToggleTags = () => {
@@ -29,8 +30,8 @@ const SideBar = () => {
 
     return (
         <Drawer
+            anchor="right"
             variant="persistent"
-            anchor='left'
             open={true}
             sx={{
                 width: 250, // Fixed width for the sidebar
@@ -49,7 +50,7 @@ const SideBar = () => {
             }}
         >
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', padding: '8px', marginBottom: '10px' }}>
-                <IconButton onClick={handleWhenCloseLeftSideBar} sx={{ borderRadius: 0 }}>
+                <IconButton onClick={handleWhenCloseRightSideBar} sx={{ borderRadius: 0 }}>
                     <MenuIcon />
                 </IconButton>
             </Box>
@@ -93,4 +94,4 @@ const SideBar = () => {
     );
 };
 
-export default SideBar;
+export default RightSideBar;
