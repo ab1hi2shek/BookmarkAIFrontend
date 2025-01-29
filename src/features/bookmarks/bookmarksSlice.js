@@ -9,7 +9,7 @@ const bookmarksSlice = createSlice({
     },
     reducers: {
         addBookmark: (state, action) => {
-            state.push(action.payload);
+            state.allBookmarks.push(action.payload);
         },
         editBookmark: (state, action) => {
             let updatedBookmark = action.payload.updatedBookmark;
