@@ -21,7 +21,9 @@ const AddBookmark = () => {
             const clipboardText = await navigator.clipboard.readText();
             console.log("Clipboard content:", clipboardText);
 
-            setBookmarkUrl(clipboardText);
+            if (clipboardText.startsWith('http')) {
+                setBookmarkUrl(clipboardText);
+            }
         } catch (error) {
             console.error('Error reading clipboard:', error);
         }
