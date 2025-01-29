@@ -2,7 +2,7 @@ import React from 'react';
 import { Breadcrumbs as MuiBreadcrumbs, Link, Typography, Chip } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleSelectedTags } from '../features/tags/tagsSlice';
+import { toggleSelectedTags } from '../../features/tags/tagsSlice';
 
 const Breadcrumbs = () => {
 

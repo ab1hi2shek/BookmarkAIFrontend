@@ -2,8 +2,9 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { List, ListItem, ListItemText, ListItemButton } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { selectFilteredBookmarks } from '../features/bookmarks/bookmarksSelectors';
-import { openRightSideBar } from '../features/sidebar/sidebarSlice';
+import { selectFilteredBookmarks } from '../../features/bookmarks/bookmarksSelectors';
+import { updateSelectedBookmark } from '../../features/bookmarks/bookmarksSlice';
+import { openRightSideBar } from '../../features/sidebar/sidebarSlice';
 
 const BookmarkList = () => {
     const filteredBookmarks = useSelector(selectFilteredBookmarks);
@@ -11,7 +12,7 @@ const BookmarkList = () => {
     const dispatch = useDispatch();
 
     const handleBookmarkClick = (bookmark) => {
-        console.log(JSON.stringify(bookmark))
+        dispatch(updateSelectedBookmark(bookmark))
         dispatch(openRightSideBar());
     };
 

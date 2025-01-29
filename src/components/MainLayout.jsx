@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Breadcrumbs from './Breadcrumbs';
-import BookmarkCard from './BookmarkCard';
+import Breadcrumbs from './others/Breadcrumbs';
+import BookmarkCard from './bookmark/BookmarkCard';
 
 const MainLayout = () => {
 

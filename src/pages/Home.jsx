@@ -1,9 +1,8 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import Header from '../components/Header';
-import SideBar from '../components/Sidebar';
-import SideBarClosed from '../components/SideBarClosed';
-import RightSideBar from '../components/RightSideBar';
+import Header from '../components/others/Header';
+import SideBar from '../components/sidebar/Sidebar';
+import RightSideBar from '../components/sidebar/RightSideBar';
 import MainLayout from '../components/MainLayout';
 import styles from './HomeStyles';
 
@@ -17,9 +16,9 @@ const Home = () => {
 
             <div style={styles.contentWrapper}>
                 {/* Left Sidebar */}
-                {isLeftSideBarOpen ? <SideBar /> : <SideBarClosed />}
+                <SideBar />
 
-                <div style={styles.mainContent(isLeftSideBarOpen, isRightSideBarOpen)}>
+                <div style={styles.mainContent(isRightSideBarOpen)}>
                     <MainLayout />
                 </div>
 

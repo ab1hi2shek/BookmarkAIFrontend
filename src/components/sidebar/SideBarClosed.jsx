@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { IconButton, Drawer } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { openLeftSideBar } from '../features/sidebar/sidebarSlice';
+import { openLeftSideBar } from '../../features/sidebar/sidebarSlice';
 
 
 const SideBarClosed = () => {

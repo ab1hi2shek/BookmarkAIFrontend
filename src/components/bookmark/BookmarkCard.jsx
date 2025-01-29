@@ -3,10 +3,11 @@ import { Card, CardContent, Typography, Button, IconButton, Chip, Box } from '@m
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditBookmarkModal from './EditBookmarkModal';
-import { deleteBookmark, editBookmark } from '../features/bookmarks/bookmarksSlice';
-import { selectFilteredBookmarks } from '../features/bookmarks/bookmarksSelectors';
+import { deleteBookmark, editBookmark, updateSelectedBookmark } from '../../features/bookmarks/bookmarksSlice';
+import { selectFilteredBookmarks } from '../../features/bookmarks/bookmarksSelectors';
 import { useSelector, useDispatch } from 'react-redux';
-import styles from '../styles/bookmarkCardStyles'
+import styles from '../../styles/bookmarkCardStyles';
+import { openRightSideBar } from '../../features/sidebar/sidebarSlice';
 
 const truncateText = (text, limit) => {
     if (text.length <= limit) return text;
@@ -16,7 +17,6 @@ const truncateText = (text, limit) => {
 
 const BookmarkCard = () => {
     const [editModalOpen, setEditModalOpen] = useState(false);
-    const [selectedBookmark, setSelectedBookmark] = useState(null);
 
     const dispatch = useDispatch();
     const filteredBookmarks = useSelector(selectFilteredBookmarks);
@@ -31,13 +31,14 @@ const BookmarkCard = () => {
     };
 
     const handleEditBookmark = (updatedBookmark) => {
-        setSelectedBookmark(updatedBookmark);
-        setEditModalOpen(true);
+        dispatch(updateSelectedBookmark(updatedBookmark))
+        // setEditModalOpen(true);
+        dispatch(openRightSideBar());
     };
 
     return (
         <>
-            <Box sx={{ columnCount: { xs: 1, sm: 3, md: 4 }, columnGap: '16px', marginTop: '20px' }}>
+            <Box sx={{ columnCount: { xs: 1, sm: 3, md: 3 }, columnGap: '16px', marginTop: '20px' }}>
                 {filteredBookmarks.map((bookmark) => (
                     <Card key={bookmark.id} sx={styles.card}>
                         <CardContent>
@@ -72,14 +73,14 @@ const BookmarkCard = () => {
                     </Card>
                 ))}
             </Box>
-            {selectedBookmark && (
+            {/* {selectedBookmark && (
                 <EditBookmarkModal
                     open={editModalOpen}
                     onClose={() => setEditModalOpen(false)}
                     bookmark={selectedBookmark}
                     onSave={handleSave}
                 />
-            )}
+            )} */}
         </>
     );
 };

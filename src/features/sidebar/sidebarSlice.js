@@ -21,6 +21,7 @@ const sidebarSlice = createSlice({
 
         // Right sidebar
         openRightSideBar: (state) => {
+            console.log("openRightSideBar = ", state)
             return { ...state, isRightSidebarOpen: true };
         },
         closeRightSideBar: (state) => {

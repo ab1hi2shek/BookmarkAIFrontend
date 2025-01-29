@@ -6,7 +6,6 @@ export const selectFilteredBookmarks = createSelector(
     (allBookmarks, allTags) => {
         const selectedTagIds = allTags.filter((tag) => tag.isSelected).map((tag) => tag.id);
 
-        console.log(selectedTagIds)
 
         // If no tags are selected, return all bookmarks
         if (selectedTagIds.length === 0) {

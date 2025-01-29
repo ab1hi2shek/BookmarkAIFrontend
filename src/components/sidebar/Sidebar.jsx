@@ -4,9 +4,9 @@ import { Drawer, List, ListItem, ListItemText, IconButton, Collapse, Box } from 
 import MenuIcon from '@mui/icons-material/Menu';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import TagList from './TagList';
-import BookmarkList from './BookmarkList';
-import { closeLeftSideBar } from '../features/sidebar/sidebarSlice';
+import TagList from '../tag/TagList';
+import BookmarkList from '../bookmark/BookmarkList';
+import { closeLeftSideBar } from '../../features/sidebar/sidebarSlice';
 
 const SideBar = () => {
 
@@ -48,11 +48,11 @@ const SideBar = () => {
                 },
             }}
         >
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', padding: '8px', marginBottom: '10px' }}>
+            {/* <Box sx={{ display: 'flex', justifyContent: 'flex-end', padding: '8px', marginBottom: '10px' }}>
                 <IconButton onClick={handleWhenCloseLeftSideBar} sx={{ borderRadius: 0 }}>
                     <MenuIcon />
                 </IconButton>
-            </Box>
+            </Box> */}
 
             <List sx={{ marginBottom: '100px' }}>
                 {/* Tags Section with Expand/Collapse */}
@@ -60,8 +60,8 @@ const SideBar = () => {
                     button
                     onClick={handleToggleTags}
                     sx={{
-                        border: '0.2px solid #ccc', // Light border
-                        borderRadius: 1,
+                        // border: '0.2px solid #ccc', // Light border
+                        // borderRadius: 1,
                         margin: '4px',
                     }}
                 >
@@ -72,7 +72,7 @@ const SideBar = () => {
                     <TagList />
                 </Collapse>
 
-                {/* Bookmarks Section with Expand/Collapse */}
+                {/* Bookmarks Section with Expand/Collapse
                 <ListItem
                     button
                     onClick={handleToggleBookmarks}
@@ -87,7 +87,7 @@ const SideBar = () => {
                 </ListItem>
                 <Collapse in={bookmarksOpen} timeout="auto" unmountOnExit>
                     <BookmarkList />
-                </Collapse>
+                </Collapse> */}
             </List>
         </Drawer>
     );

@@ -4,23 +4,37 @@ import { getBookmarksList } from '../../data/bookmarkData';
 const bookmarksSlice = createSlice({
     name: 'bookmarks',
     initialState: {
-        allBookmarks: getBookmarksList()
+        allBookmarks: getBookmarksList(),
+        selectedBookmark: null
     },
     reducers: {
         addBookmark: (state, action) => {
             state.push(action.payload);
         },
         editBookmark: (state, action) => {
-            return state.allBookmarks; //TODO: Implement
+            let updatedBookmark = action.payload.updatedBookmark;
+            console.log("updatedBookmark = ", updatedBookmark);
+            state.allBookmarks = state.allBookmarks.map(bookmark => {
+                if (bookmark.id === updatedBookmark.id) {
+                    console.log("matched for, ", bookmark.id)
+                    return updatedBookmark;
+                }
+                return bookmark;
+            });
+            console.log("state.allBookmarks; = ", updatedBookmark);
+            console.log("state.allBookmarks = ", state.allBookmarks);
         },
         deleteBookmark: (state, action) => {
-            console.log(action.payload);
-            console.log(JSON.stringify(state.allBookmarks));
             state.allBookmarks = state.allBookmarks.filter((b) => b.id !== action.payload);
-            console.log(JSON.stringify(state.allBookmarks));
         },
+
+        //selected bookmark reducers.
+        updateSelectedBookmark: (state, action) => {
+            state.selectedBookmark = action.payload;
+            console.log("selected bookmark = ", state.selectedBookmark)
+        }
     },
 });
 
-export const { addBookmark, editBookmark, deleteBookmark } = bookmarksSlice.actions;
+export const { addBookmark, editBookmark, deleteBookmark, updateSelectedBookmark } = bookmarksSlice.actions;
 export default bookmarksSlice.reducer;

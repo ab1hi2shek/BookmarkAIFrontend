@@ -10,11 +10,11 @@ const styles = {
         marginTop: '64px',
         position: 'relative',
     },
-    mainContent: (isLeftSideBarOpen, isRightSideBarOpen) => ({
+    mainContent: (isRightSideBarOpen) => ({
         flex: 1,
-        transition: 'margin-right 0.3s ease, margin-left 0.3s ease',
-        marginRight: isRightSideBarOpen ? '250px' : '0px',
-        marginLeft: isLeftSideBarOpen ? '250px' : '0px',
+        transition: 'margin-right 0.1s ease',
+        marginRight: isRightSideBarOpen ? '500px' : '0px',
+        marginLeft: '250px'
     }),
 };
 
