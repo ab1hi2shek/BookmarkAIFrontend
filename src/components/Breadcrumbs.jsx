@@ -16,7 +16,7 @@ const Breadcrumbs = () => {
     return (
         <MuiBreadcrumbs aria-label="breadcrumb">
             <Link color="inherit" href="/">
-                <HomeIcon />
+                <HomeIcon size="small" />
             </Link>
             {allTags.map((tag, index) => (
                 tag.isSelected && (<Chip
@@ -25,6 +25,7 @@ const Breadcrumbs = () => {
                     onDelete={() => handleTagClick(tag)}
                     color="primary"
                     variant="outlined"
+                    size="small"
                 />)
             ))}
         </MuiBreadcrumbs>
