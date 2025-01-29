@@ -24,10 +24,10 @@ const SideBar = ({ onCloseSidebar, onBookmarkClick }) => {
             variant="persistent"
             open={true}
             sx={{
-                width: 240, // Fixed width for the sidebar
+                width: 250, // Fixed width for the sidebar
                 flexShrink: 0,
                 '& .MuiDrawer-paper': {
-                    width: 240, // Fixed width for the sidebar
+                    width: 250, // Fixed width for the sidebar
                     boxSizing: 'border-box',
                     marginTop: '64px', // Adjust based on header height
                     marginBottom: '64px',
@@ -35,12 +35,11 @@ const SideBar = ({ onCloseSidebar, onBookmarkClick }) => {
                 },
             }}
         >
-            <IconButton
-                onClick={onCloseSidebar}
-                sx={{ position: 'relative', top: 8, left: 8, zIndex: 1200 }}
-            >
-                <MenuIcon />
-            </IconButton>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', padding: '8px', marginBottom: '10px' }}>
+                <IconButton onClick={onCloseSidebar} sx={{ borderRadius: 0 }}>
+                    <MenuIcon />
+                </IconButton>
+            </Box>
 
             <List sx={{ marginBottom: '100px' }}>
                 {/* Tags Section with Expand/Collapse */}
@@ -48,8 +47,7 @@ const SideBar = ({ onCloseSidebar, onBookmarkClick }) => {
                     button
                     onClick={handleToggleTags}
                     sx={{
-                        backgroundColor: '#e8edf1',
-                        border: '1px solid #ccc', // Light border
+                        border: '0.2px solid #ccc', // Light border
                         borderRadius: 1,
                         margin: '4px',
                     }}
@@ -66,8 +64,7 @@ const SideBar = ({ onCloseSidebar, onBookmarkClick }) => {
                     button
                     onClick={handleToggleBookmarks}
                     sx={{
-                        backgroundColor: '#e8edf1',
-                        border: '1px solid #ccc', // Light border
+                        border: '0.2px solid #ccc', // Light border
                         borderRadius: 1,
                         margin: '4px',
                     }}
