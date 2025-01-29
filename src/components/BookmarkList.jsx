@@ -7,11 +7,16 @@ const BookmarkList = ({ onBookmarkClick }) => {
     const filteredBookmarks = useSelector(selectFilteredBookmarks);
 
     return (
-        <List>
+        <List sx={{ padding: 0 }}>
             {filteredBookmarks.map((bookmark) => (
-                <ListItem key={bookmark.id}>
+                <ListItem key={bookmark.id} dense sx={{ padding: '2px 0' }}>
                     <ListItemButton onClick={() => onBookmarkClick(bookmark)}>
-                        <ListItemText primary={bookmark.title} />
+                        <ListItemText sx={{ paddingTop: '1px', paddingBottom: '1px', paddingLeft: '0px', paddingRight: '0px' }}
+                            primary={bookmark.title}
+                            primaryTypographyProps={{
+                                fontSize: '0.85rem', // Reduce font size
+                                fontWeight: 350, // Reduce font weight
+                            }} />
                     </ListItemButton>
                 </ListItem>
             ))}

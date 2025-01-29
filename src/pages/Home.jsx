@@ -13,22 +13,6 @@ const Home = () => {
         setSelectedBookmark(bookmark);
     };
 
-    const handleTagClick = (tag) => {
-        if (selectedTags.includes(tag)) {
-            setSelectedTags(selectedTags.filter((t) => t !== tag));
-        } else {
-            setSelectedTags([...selectedTags, tag]);
-        }
-    };
-
-    const handleEditTag = (oldTag, newTag) => {
-        // Implement tag editing logic here
-    };
-
-    const handleDeleteTag = (tag) => {
-        // Implement tag deletion logic here
-    };
-
     const handleOpenSidebar = () => {
         setIsSidebarOpen(true);
     };
@@ -45,10 +29,6 @@ const Home = () => {
                     <SideBar
                         onCloseSidebar={handleCloseSidebar}
                         onBookmarkClick={handleBookmarkClick}
-                        onTagClick={handleTagClick}
-                        selectedTags={selectedTags}
-                        onEditTag={handleEditTag}
-                        onDeleteTag={handleDeleteTag}
                     />
                 ) : (
                     <SideBarClosed onOpenSidebar={handleOpenSidebar} />

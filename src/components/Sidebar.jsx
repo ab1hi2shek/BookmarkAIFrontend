@@ -1,10 +1,24 @@
-import React from 'react';
-import { Drawer, List, ListItem, ListItemText, IconButton, Divider } from '@mui/material';
+import React, { useState } from 'react';
+import { Drawer, List, ListItem, ListItemText, IconButton, Divider, Collapse, Box } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import TagList from './TagList';
 import BookmarkList from './BookmarkList';
 
-const SideBar = ({ onCloseSidebar, onBookmarkClick, onTagClick, selectedTags, onEditTag, onDeleteTag }) => {
+const SideBar = ({ onCloseSidebar, onBookmarkClick }) => {
+
+    const [tagsOpen, setTagsOpen] = useState(false); // State to toggle tags section
+    const [bookmarksOpen, setBookmarksOpen] = useState(false); // State to toggle bookmark section
+
+    const handleToggleTags = () => {
+        setTagsOpen((prev) => !prev);
+    };
+
+    const handleToggleBookmarks = () => {
+        setBookmarksOpen((prev) => !prev);
+    };
+
     return (
         <Drawer
             variant="persistent"
@@ -16,7 +30,8 @@ const SideBar = ({ onCloseSidebar, onBookmarkClick, onTagClick, selectedTags, on
                     width: 240, // Fixed width for the sidebar
                     boxSizing: 'border-box',
                     marginTop: '64px', // Adjust based on header height
-                    marginBottom: '164px'
+                    marginBottom: '64px',
+                    paddingRight: '8px',
                 },
             }}
         >
@@ -26,21 +41,43 @@ const SideBar = ({ onCloseSidebar, onBookmarkClick, onTagClick, selectedTags, on
             >
                 <MenuIcon />
             </IconButton>
-            <List>
-                <ListItem>
+
+            <List sx={{ marginBottom: '100px' }}>
+                {/* Tags Section with Expand/Collapse */}
+                <ListItem
+                    button
+                    onClick={handleToggleTags}
+                    sx={{
+                        backgroundColor: '#e8edf1',
+                        border: '1px solid #ccc', // Light border
+                        borderRadius: 1,
+                        margin: '4px',
+                    }}
+                >
                     <ListItemText primary="Tags" />
+                    {tagsOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                 </ListItem>
-                <TagList />
-                <Divider />
-                <ListItem>
+                <Collapse in={tagsOpen} timeout="auto" unmountOnExit>
+                    <TagList />
+                </Collapse>
+
+                {/* Bookmarks Section with Expand/Collapse */}
+                <ListItem
+                    button
+                    onClick={handleToggleBookmarks}
+                    sx={{
+                        backgroundColor: '#e8edf1',
+                        border: '1px solid #ccc', // Light border
+                        borderRadius: 1,
+                        margin: '4px',
+                    }}
+                >
                     <ListItemText primary="Bookmarks" />
+                    {bookmarksOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
                 </ListItem>
-                <BookmarkList onBookmarkClick={onBookmarkClick} />
-                <Divider />
-                <Divider />
-                <ListItem>
-                    <ListItemText primary="Tags" />
-                </ListItem>
+                <Collapse in={bookmarksOpen} timeout="auto" unmountOnExit>
+                    <BookmarkList onBookmarkClick={onBookmarkClick} />
+                </Collapse>
             </List>
         </Drawer>
     );

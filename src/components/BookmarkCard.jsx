@@ -47,8 +47,8 @@ const BookmarkCard = () => {
                         }}
                     >
                         <CardContent>
-                            <Typography variant="h5">{bookmark.title}</Typography>
-                            <Typography variant="body2">Notes: {bookmark.notes}</Typography>
+                            <Typography variant="h6">{bookmark.title}</Typography>
+                            <Typography variant="body2">{bookmark.notes}</Typography>
                             <Box sx={{ mt: 1 }}>
                                 {bookmark.tags.map((tag, index) => (
                                     <Chip key={index} label={tag.split("-")[1]} sx={{ mr: 1, mb: 1 }} />

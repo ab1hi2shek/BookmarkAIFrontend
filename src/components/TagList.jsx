@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { List, ListItem, IconButton, Chip } from '@mui/material';
+import { List, ListItem, IconButton, Chip, Box } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -33,21 +33,25 @@ const TagList = () => {
 
     return (
         <>
-            <List>
+            <List sx={{ padding: '12px' }}>
                 {allTags.map((tag, index) => (
-                    <ListItem key={tag.id}>
-                        <Chip
-                            label={tag.name}
-                            sx={{ mr: 1 }}
-                            onClick={() => handleTagClick(tag)}
-                            color={tag.isSelected ? 'primary' : 'default'}
-                        />
-                        <IconButton onClick={() => handleEditClick(tag)}>
-                            <EditIcon />
-                        </IconButton>
-                        <IconButton onClick={() => handleDeleteClick(tag)}>
-                            <DeleteIcon />
-                        </IconButton>
+                    <ListItem key={tag.id} dense sx={{ padding: '6px 0px' }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
+                            <Chip
+                                label={tag.name}
+                                onClick={() => handleTagClick(tag)}
+                                color={tag.isSelected ? 'primary' : 'default'}
+                                sx={{ fontSize: '0.8rem', fontWeight: 350 }}
+                            />
+                            <Box>
+                                <IconButton size="small" onClick={() => handleEditClick(tag)}>
+                                    <EditIcon fontSize="small" />
+                                </IconButton>
+                                <IconButton size="small" onClick={() => handleDeleteClick(tag)}>
+                                    <DeleteIcon fontSize="small" />
+                                </IconButton>
+                            </Box>
+                        </Box>
                     </ListItem>
                 ))}
             </List>
