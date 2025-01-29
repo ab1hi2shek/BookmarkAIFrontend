@@ -5,32 +5,26 @@ import SideBar from '../components/Sidebar';
 import SideBarClosed from '../components/SideBarClosed';
 import RightSideBar from '../components/RightSideBar';
 import MainLayout from '../components/MainLayout';
+import styles from './HomeStyles';
 
 const Home = () => {
-
     const isLeftSideBarOpen = useSelector((state) => state.sidebar.isLeftSidebarOpen);
     const isRightSideBarOpen = useSelector((state) => state.sidebar.isRightSidebarOpen);
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+        <div style={styles.container}>
             <Header />
 
-            <div style={{ display: 'flex', flex: 1, marginTop: '64px', position: 'relative' }}>
+            <div style={styles.contentWrapper}>
                 {/* Left Sidebar */}
                 {isLeftSideBarOpen ? <SideBar /> : <SideBarClosed />}
 
-                <div style={{
-                    flex: 1,
-                    transition: 'margin-right 0.3s ease, margin-left 0.3s ease',
-                    marginRight: isRightSideBarOpen ? '250px' : '0px',
-                    marginLeft: isLeftSideBarOpen ? '250px' : '0px'
-                }}>
+                <div style={styles.mainContent(isLeftSideBarOpen, isRightSideBarOpen)}>
                     <MainLayout />
                 </div>
 
                 {/* Right Sidebar */}
                 {isRightSideBarOpen && <RightSideBar />}
-
             </div>
         </div>
     );
