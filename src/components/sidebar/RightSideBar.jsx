@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Drawer, Box, Typography, Button, TextField, Chip, IconButton } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import { closeRightSideBar } from '../../features/sidebar/sidebarSlice';
 import { editBookmark } from '../../features/bookmarks/bookmarksSlice';
@@ -72,15 +71,15 @@ const RightSideBar = () => {
                 },
             }}
         >
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', padding: '8px', marginBottom: '10px' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-start', padding: '8px', marginBottom: '10px' }}>
                 <IconButton onClick={handleWhenCloseRightSideBar} sx={{ borderRadius: 0 }}>
-                    <MenuIcon />
+                    <CloseIcon />
                 </IconButton>
             </Box>
 
             {selectedBookmark ? (
                 <Box sx={{ padding: '16px' }}>
-                    <Typography variant="h6" sx={{ marginBottom: '16px' }}>
+                    <Typography variant="h6" sx={{ marginBottom: '30px', textAlign: 'center', width: '100%' }}>
                         Edit Bookmark
                     </Typography>
 
@@ -89,7 +88,7 @@ const RightSideBar = () => {
                         fullWidth
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        sx={{ marginBottom: '8px' }}
+                        sx={{ marginBottom: '24px' }}
                     />
                     <TextField
                         label="Notes"
@@ -98,7 +97,7 @@ const RightSideBar = () => {
                         rows={4}
                         value={notes}
                         onChange={(e) => setNotes(e.target.value)}
-                        sx={{ marginBottom: '8px' }}
+                        sx={{ marginBottom: '24px' }}
                     />
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, marginBottom: '8px' }}>
                         {tags.map((tag, index) => (
@@ -107,6 +106,7 @@ const RightSideBar = () => {
                                 label={tag}
                                 onDelete={() => handleTagDelete(tag)}
                                 deleteIcon={<CloseIcon />}
+                                size="small"
                             />
                         ))}
                     </Box>
@@ -116,14 +116,16 @@ const RightSideBar = () => {
                         value={newTag}
                         onChange={(e) => setNewTag(e.target.value)}
                         onKeyPress={handleTagKeyPress}
-                        sx={{ marginBottom: '8px' }}
+                        sx={{ marginBottom: '24px' }}
                     />
-                    <Button variant="contained" onClick={handleSaveClick} sx={{ marginRight: '8px' }}>
-                        Save
-                    </Button>
-                    <Button variant="contained" onClick={handleWhenCloseRightSideBar}>
-                        Cancel
-                    </Button>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: '16px', marginTop: '24px' }}>
+                        <Button variant="contained" onClick={handleSaveClick}>
+                            Save
+                        </Button>
+                        <Button variant="outlined" onClick={handleWhenCloseRightSideBar}>
+                            Cancel
+                        </Button>
+                    </Box>
                 </Box>
             ) : (
                 <Typography variant="body1" sx={{ padding: '16px' }}>

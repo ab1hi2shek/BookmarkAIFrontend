@@ -12,7 +12,7 @@ const styles = {
     },
     mainContent: (isRightSideBarOpen) => ({
         flex: 1,
-        transition: 'margin-right 0.1s ease',
+        // transition: 'margin-right 0.1s',
         marginRight: isRightSideBarOpen ? '500px' : '0px',
         marginLeft: '250px'
     }),
