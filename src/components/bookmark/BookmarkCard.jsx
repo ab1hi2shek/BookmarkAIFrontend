@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { Card, CardContent, Typography, Button, IconButton, Chip, Box, Divider } from '@mui/material';
+import { Card, CardContent, Typography, Button, IconButton, Chip, Box, Modal } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { deleteBookmark, editBookmark, updateSelectedBookmark } from '../../features/bookmarks/bookmarksSlice';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import { deleteBookmark, updateSelectedBookmark } from '../../features/bookmarks/bookmarksSlice';
 import { selectFilteredBookmarks } from '../../features/bookmarks/bookmarksSelectors';
 import { useSelector, useDispatch } from 'react-redux';
 import styles from '../../styles/bookmarkCardStyles';
 import { openRightSideBar } from '../../features/sidebar/sidebarSlice';
+import DeleteConfirmationModal from '../others/DeleteConfirmationModal';
 
 const truncateText = (text, limit) => {
     if (text.length <= limit) return text;
@@ -17,9 +19,20 @@ const truncateText = (text, limit) => {
 const BookmarkCard = () => {
     const dispatch = useDispatch();
     const filteredBookmarks = useSelector(selectFilteredBookmarks);
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [bookmarkIdToDelete, setBookmarkIdToDelete] = useState(null);
 
-    const handleDeleteBookmark = (id) => {
-        dispatch(deleteBookmark(id));
+    const handleDeleteClick = (bookmarkId) => {
+        setBookmarkIdToDelete(bookmarkId);
+        setDeleteModalOpen(true);
+    };
+
+    const confirmDelete = () => {
+        if (bookmarkIdToDelete) {
+            dispatch(deleteBookmark(bookmarkIdToDelete));
+        }
+        setDeleteModalOpen(false);
+        setBookmarkIdToDelete(null);
     };
 
     const handleEditBookmark = (updatedBookmark) => {
@@ -33,11 +46,9 @@ const BookmarkCard = () => {
                 {filteredBookmarks.map((bookmark) => (
                     <Card key={bookmark.id} sx={styles.card}>
                         {bookmark.imageUrl && (
-                            <>
-                                <Box sx={{ width: '100%', overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                    <img src={bookmark.imageUrl} alt={bookmark.title} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'cover' }} />
-                                </Box>
-                            </>
+                            <Box sx={{ width: '100%', overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                <img src={bookmark.imageUrl} alt={bookmark.title} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'cover' }} />
+                            </Box>
                         )}
                         <CardContent>
                             <Typography variant="h6" sx={styles.title}>
@@ -60,7 +71,7 @@ const BookmarkCard = () => {
                                 <IconButton onClick={() => handleEditBookmark(bookmark)} size="small">
                                     <EditIcon fontSize="small" />
                                 </IconButton>
-                                <IconButton onClick={() => handleDeleteBookmark(bookmark.id)} size="small">
+                                <IconButton onClick={() => handleDeleteClick(bookmark.id)} size="small">
                                     <DeleteIcon fontSize="small" />
                                 </IconButton>
                             </Box>
@@ -68,6 +79,13 @@ const BookmarkCard = () => {
                     </Card>
                 ))}
             </Box>
+
+            {/* Delete Confirmation Modal */}
+            <DeleteConfirmationModal
+                open={deleteModalOpen}
+                onClose={() => setDeleteModalOpen(false)}
+                onConfirm={confirmDelete}
+            />
         </>
     );
 };

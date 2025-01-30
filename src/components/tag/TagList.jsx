@@ -5,6 +5,7 @@ import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { useDispatch, useSelector } from 'react-redux';
 import { editTag, deleteTag, toggleSelectedTags } from '../../features/tags/tagsSlice';
 import styles from '../sidebar/SideBarStyles';
+import DeleteConfirmationModal from '../others/DeleteConfirmationModal';
 
 const TagList = () => {
     const [menuAnchor, setMenuAnchor] = useState(null);
@@ -120,14 +121,11 @@ const TagList = () => {
             </Menu>
 
             {/* Delete Confirmation Modal */}
-            <Modal open={deleteModalOpen} onClose={() => setDeleteModalOpen(false)}>
-                <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', bgcolor: '#1E1E1E', p: 4, width: 300, borderRadius: '8px', textAlign: 'center', boxShadow: 24 }}>
-                    <WarningAmberIcon sx={{ color: '#F1C40F', fontSize: '2rem', mb: 1 }} />
-                    <Typography variant="h6" sx={{ mb: 2, color: 'white' }}>Are you sure?</Typography>
-                    <Button onClick={confirmDelete} variant="contained" sx={{ bgcolor: '#DFC58B', width: '100%', mb: 1 }}>OK</Button>
-                    <Button onClick={() => setDeleteModalOpen(false)} variant="outlined" sx={{ width: '100%', color: 'white', borderColor: '#444' }}>Cancel</Button>
-                </Box>
-            </Modal>
+            <DeleteConfirmationModal
+                open={deleteModalOpen}
+                onClose={() => setDeleteModalOpen(false)}
+                onConfirm={confirmDelete}
+            />
         </>
     );
 };
