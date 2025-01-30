@@ -7,9 +7,6 @@ import { addBookmark } from '../../features/bookmarks/bookmarksSlice';
 const AddBookmark = () => {
     const [openTooltip, setOpenTooltip] = useState(false);
     const [bookmarkUrl, setBookmarkUrl] = useState('');
-    const [bookmarkTitle, setBookmarkTitle] = useState('');
-    const [bookmarkNotes, setBookmarkNotes] = useState('');
-    const [bookmarkImageUrl, setBookmarkImageUrl] = useState('');
     const dispatch = useDispatch();
     const inputRef = useRef(null);
 
@@ -32,9 +29,6 @@ const AddBookmark = () => {
     const handleCloseTooltip = () => {
         setOpenTooltip(false);
         setBookmarkUrl('');
-        setBookmarkTitle('');
-        setBookmarkNotes('');
-        setBookmarkImageUrl('');
     };
 
     // Function to fetch metadata from URL when Save is clicked

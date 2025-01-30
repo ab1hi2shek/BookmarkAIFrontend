@@ -14,7 +14,7 @@ const Breadcrumbs = () => {
     };
 
     return (
-        <MuiBreadcrumbs aria-label="breadcrumb">
+        <MuiBreadcrumbs aria-label="breadcrumb" separator="">
             <Link color="inherit" href="/">
                 <HomeIcon size="small" />
             </Link>
@@ -28,7 +28,7 @@ const Breadcrumbs = () => {
                     size="small"
                 />)
             ))}
-        </MuiBreadcrumbs>
+        // </MuiBreadcrumbs>
     );
 };
 
