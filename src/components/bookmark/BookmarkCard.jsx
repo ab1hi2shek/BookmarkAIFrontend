@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, CardContent, Typography, Button, IconButton, Chip, Box, Modal } from '@mui/material';
+import { Card, CardContent, Typography, Button, IconButton, Chip, Box, Divider } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
@@ -42,7 +42,8 @@ const BookmarkCard = () => {
 
     return (
         <>
-            <Box sx={{ columnCount: { xs: 1, sm: 3, md: 3 }, columnGap: '16px', marginTop: '20px' }}>
+            <Divider sx={{ marginTop: '20px' }} />
+            <Box sx={{ columnCount: { xs: 1, sm: 3, md: 3 }, columnGap: '16px', marginTop: '10px' }}>
                 {filteredBookmarks.map((bookmark) => (
                     <Card key={bookmark.id} sx={styles.card}>
                         {bookmark.imageUrl && (

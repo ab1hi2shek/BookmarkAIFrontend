@@ -10,7 +10,7 @@ import { closeLeftSideBar } from '../../features/sidebar/sidebarSlice';
 
 const SideBar = () => {
 
-    const [tagsOpen, setTagsOpen] = useState(false); // State to toggle tags section
+    const [tagsOpen, setTagsOpen] = useState(true); // State to toggle tags section
     const [bookmarksOpen, setBookmarksOpen] = useState(false); // State to toggle bookmark section
 
     const dispatch = useDispatch();
