@@ -7,6 +7,7 @@ import MainLayout from '../components/MainLayout';
 import SocialLogin from '../components/others/SocialLogin';
 import styles from './HomeStyles';
 import { auth } from '../firebaseConfig';
+import { createUser } from '../services/userService';
 
 const Home = () => {
     const isRightSideBarOpen = useSelector((state) => state.sidebar.isRightSidebarOpen);
@@ -14,7 +15,13 @@ const Home = () => {
 
     // 🔹 Check Firebase Authentication Status
     useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged((currentUser) => {
+        const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
+            console.log("currentUser", currentUser);
+            if (currentUser) {
+                const { uid, displayName, email, photoURL } = currentUser;
+                // Call API to save user data
+                await createUser({ userId: uid, name: displayName, email, avatarUrl: photoURL });
+            }
             setUser(currentUser);
         });
         return () => unsubscribe();

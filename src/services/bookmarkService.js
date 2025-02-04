@@ -11,6 +11,7 @@ const getHeaders = (userId) => ({
 
 // 🟢 Fetch all bookmarks (or filtered by tags)
 export const fetchBookmarks = async (userId, tags = []) => {
+    console.log("fetchBookmarks", userId)
     const response = await axios.post(
         `${BASE_URL}/filter`,
         tags.length ? { tags } : {}, // If tags exist, send them, else fetch all

@@ -6,9 +6,10 @@ import {
     deleteTag
 } from "../../services/tagService";
 import { fetchBookmarksThunk, updateBookmarkThunk, deleteBookmarkThunk } from "../bookmarks/bookmarksSlice";
+import { auth } from "../../firebaseConfig";
 
 // 🔹 User ID (Replace with actual authentication logic)
-const USER_ID = "user-7601dd26-64ac-4327-84e2-e2d758701934";
+const getUserId = () => auth.currentUser?.uid || null;
 
 // 🔹 Load selected tags from localStorage
 const loadSelectedTags = () => {
@@ -24,7 +25,7 @@ const saveSelectedTags = (tags) => {
 // 🟢 Fetch all tags (while preserving `isSelected`)
 export const fetchTagsThunk = createAsyncThunk("tags/fetch", async (_, { rejectWithValue }) => {
     try {
-        const fetchedTags = await fetchTags(USER_ID);
+        const fetchedTags = await fetchTags(getUserId());
         const selectedTagIds = loadSelectedTags(); // 🔹 Restore previous selection
 
         const updatedTags = fetchedTags.map((tag) => ({
@@ -41,7 +42,7 @@ export const fetchTagsThunk = createAsyncThunk("tags/fetch", async (_, { rejectW
 // 🟢 Create a new tag
 export const createTagThunk = createAsyncThunk("tags/create", async (tagName, { rejectWithValue }) => {
     try {
-        const newTag = await createTag(tagName, USER_ID);
+        const newTag = await createTag(tagName, getUserId());
         return newTag; // ✅ Return the created tag, so `extraReducers` can handle the update
     } catch (error) {
         return rejectWithValue(error.response?.data?.error || "Failed to create tag");
@@ -51,7 +52,7 @@ export const createTagThunk = createAsyncThunk("tags/create", async (tagName, { 
 // 🟢 Update a tag (Preserve selected tags)
 export const updateTagThunk = createAsyncThunk("tags/update", async ({ existingTag, tagName }, { rejectWithValue }) => {
     try {
-        await updateTag({ tagId: existingTag.tagId, tagName: tagName, userId: USER_ID });
+        await updateTag({ tagId: existingTag.tagId, tagName: tagName, userId: getUserId() });
         return { existingTag, tagName }; // ✅ Return updated tag details
     } catch (error) {
         return rejectWithValue(error.response?.data?.error || "Failed to update tag");
@@ -61,7 +62,7 @@ export const updateTagThunk = createAsyncThunk("tags/update", async ({ existingT
 // 🟢 Delete a tag (Preserve selected tags)
 export const deleteTagThunk = createAsyncThunk("tags/delete", async (tagToDelete, { rejectWithValue }) => {
     try {
-        await deleteTag(tagToDelete.tagId, USER_ID);
+        await deleteTag(tagToDelete.tagId, getUserId());
         return tagToDelete; // ✅ Return the deleted tag ID so we can remove it from Redux state
     } catch (error) {
         return rejectWithValue(error.response?.data?.error || "Failed to delete tag");

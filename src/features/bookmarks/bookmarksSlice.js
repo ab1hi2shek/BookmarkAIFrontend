@@ -7,16 +7,19 @@ import {
     togglefavoriteBookmark
 } from "../../services/bookmarkService";
 import { updateTagThunk, deleteTagThunk } from "../tags/tagsSlice";
+import { auth } from "../../firebaseConfig";
 
 // 🔹 User ID (Replace with actual authentication logic)
-const USER_ID = "user-7601dd26-64ac-4327-84e2-e2d758701934";
+const getUserId = () => auth.currentUser?.uid || null;
 
 // 🟢 Fetch bookmarks (all or filtered by tags)
 export const fetchBookmarksThunk = createAsyncThunk(
     "bookmarks/fetch",
     async (selectedTags, { rejectWithValue }) => {
         try {
-            return await fetchBookmarks(USER_ID, selectedTags);
+            const tt = getUserId();
+            console.log("getUserId()", getUserId())
+            return await fetchBookmarks(getUserId(), selectedTags);
         } catch (error) {
             return rejectWithValue(error.response.data);
         }
@@ -28,7 +31,7 @@ export const toggleFavoriteBookmarkThunk = createAsyncThunk(
     "bookmarks/favorite",
     async (bookmarkId, { rejectWithValue }) => {
         try {
-            return await togglefavoriteBookmark(bookmarkId, USER_ID);
+            return await togglefavoriteBookmark(bookmarkId, getUserId());
         } catch (error) {
             return rejectWithValue(error.response.data);
         }
@@ -40,7 +43,7 @@ export const createBookmarkThunk = createAsyncThunk(
     "bookmarks/create",
     async (bookmark, { rejectWithValue }) => {
         try {
-            return await createBookmark(bookmark, USER_ID);
+            return await createBookmark(bookmark, getUserId());
         } catch (error) {
             return rejectWithValue(error.response.data);
         }
@@ -52,7 +55,7 @@ export const updateBookmarkThunk = createAsyncThunk(
     "bookmarks/update",
     async ({ updatedBookmark }, { rejectWithValue }) => {
         try {
-            return await updateBookmark({ updatedBookmark }, USER_ID);
+            return await updateBookmark({ updatedBookmark }, getUserId());
         } catch (error) {
             return rejectWithValue(error.response.data);
         }
@@ -64,7 +67,7 @@ export const deleteBookmarkThunk = createAsyncThunk(
     "bookmarks/delete",
     async (bookmarkId, { rejectWithValue }) => {
         try {
-            return await deleteBookmark(bookmarkId, USER_ID);
+            return await deleteBookmark(bookmarkId, getUserId());
         } catch (error) {
             return rejectWithValue(error.response.data);
         }
