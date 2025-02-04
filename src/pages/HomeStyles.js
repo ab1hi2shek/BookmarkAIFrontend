@@ -13,7 +13,9 @@ const styles = {
     mainContent: (isRightSideBarOpen) => ({
         flex: 1,
         // transition: 'margin-right 0.1s',
-        marginRight: isRightSideBarOpen ? '500px' : '0px',
+        marginRight: isRightSideBarOpen ? '400px' : '0px', // Adjust for right sidebar
+        width: `calc(100% - ${isRightSideBarOpen ? '650px' : '250px'})`, // Adjust width dynamically
+        overflow: 'hidden',
         marginLeft: '250px'
     }),
 };

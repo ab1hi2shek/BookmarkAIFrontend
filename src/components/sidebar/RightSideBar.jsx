@@ -56,19 +56,19 @@ const RightSideBar = () => {
             variant="persistent"
             open={true}
             sx={{
-                width: 500,
+                width: 400,
                 flexShrink: 0,
                 position: "fixed",
                 right: 0,
                 '& .MuiDrawer-paper': {
-                    width: 500,
+                    width: 400,
                     boxSizing: 'border-box',
                     marginTop: '64px',
                     marginBottom: '64px',
                     paddingRight: '8px',
                     position: 'fixed',
                     right: 0,
-                    height: 'calc(100vh - 128px)'
+                    height: 'calc(100vh - 64px)'
                 },
             }}
         >

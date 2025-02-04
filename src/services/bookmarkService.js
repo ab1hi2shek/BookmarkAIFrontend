@@ -47,3 +47,13 @@ export const deleteBookmark = async (bookmarkId, userId) => {
     });
     return bookmarkId; // Return the deleted bookmark's ID for local state update
 };
+
+// 🟢 set a bookmark as favorite
+export const favoriteBookmark = async (bookmarkId, userId) => {
+    const response = await axios.post(
+        `${BASE_URL}/favorite/${bookmarkId}`,
+        {},
+        { headers: getHeaders(userId) }
+    );
+    return response.data.data.isFavorite;
+};
