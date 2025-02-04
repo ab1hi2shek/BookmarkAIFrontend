@@ -114,11 +114,15 @@ const TagList = () => {
                                 sx={{
                                     fontSize: tag.isSelected ? '0.85rem' : '0.8rem',
                                     fontWeight: tag.isSelected ? 600 : 400,
-                                    color: tag.isSelected ? 'primary.main' : 'text.primary',
+                                    color: tag.isSelected ? 'rgba(192, 137, 27, 0.8)' : 'text.primary',
                                     cursor: 'pointer',
+                                    transition: 'color 0.2s ease-in-out', // Smooth transition effect
+                                    '&:hover': {
+                                        color: 'rgba(192, 137, 27, 0.8)', // Change color on hover
+                                    },
                                 }}
                             >
-                                {tag.tagName}
+                                #{tag.tagName}
                             </Typography>
                         )}
                         <Box sx={styles.moreIconContainer}>

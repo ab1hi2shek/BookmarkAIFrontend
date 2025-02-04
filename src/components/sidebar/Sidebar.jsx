@@ -1,44 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
-import { Drawer, List, ListItem, ListItemText, IconButton, Collapse, Box } from '@mui/material';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import {
+    Drawer, List, ListItem, ListItemText, Collapse, Box, Menu, MenuItem, Typography, Button
+} from '@mui/material';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+import TagIcon from '@mui/icons-material/Tag';
 import TagList from '../tag/TagList';
-import { closeLeftSideBar } from '../../features/sidebar/sidebarSlice';
 
 const SideBar = () => {
-
-    const [tagsOpen, setTagsOpen] = useState(true); // State to toggle tags section
-    const [bookmarksOpen, setBookmarksOpen] = useState(false); // State to toggle bookmark section
-
     const dispatch = useDispatch();
 
-    const handleWhenCloseLeftSideBar = () => {
-        dispatch(closeLeftSideBar());
-    }
+    const [filtersVisible, setFiltersVisible] = useState(() => JSON.parse(localStorage.getItem("filtersVisible")) ?? true);
+    const [tagsVisible, setTagsVisible] = useState(() => JSON.parse(localStorage.getItem("tagsVisible")) ?? true);
 
-    const handleToggleTags = () => {
-        setTagsOpen((prev) => !prev);
+    const [tagsMenuAnchor, setTagsMenuAnchor] = useState(null);
+    const tagsMenuButtonRef = useRef(null); // ✅ Ref to track button position
+
+    const handleToggleFilters = () => {
+        const newState = !filtersVisible;
+        setFiltersVisible(newState);
+        localStorage.setItem("filtersVisible", JSON.stringify(newState));
     };
 
-    const handleToggleBookmarks = () => {
-        setBookmarksOpen((prev) => !prev);
+    const handleTagsMenuOpen = (event) => {
+        setTagsMenuAnchor(event.currentTarget);
+    };
+
+    const handleTagsMenuClose = () => {
+        setTagsMenuAnchor(null);
+    };
+
+    const handleToggleTags = () => {
+        const newState = !tagsVisible;
+        setTagsVisible(newState);
+        localStorage.setItem("tagsVisible", JSON.stringify(newState));
+        setTagsMenuAnchor(null); // ✅ Close menu when toggling
     };
 
     return (
         <Drawer
             variant="persistent"
-            anchor='left'
+            anchor="left"
             open={true}
             sx={{
-                width: 250, // Fixed width for the sidebar
+                width: 250,
                 flexShrink: 0,
                 position: "fixed",
                 right: 0,
                 '& .MuiDrawer-paper': {
-                    width: 250, // Fixed width for the sidebar
+                    width: 250,
                     boxSizing: 'border-box',
-                    marginTop: '64px', // Adjust based on header height
+                    marginTop: '64px',
                     marginBottom: '64px',
                     paddingRight: '8px',
                     position: 'fixed',
@@ -46,30 +59,139 @@ const SideBar = () => {
                 },
             }}
         >
-            {/* <Box sx={{ display: 'flex', justifyContent: 'flex-end', padding: '8px', marginBottom: '10px' }}>
-                <IconButton onClick={handleWhenCloseLeftSideBar} sx={{ borderRadius: 0 }}>
-                    <MenuIcon />
-                </IconButton>
-            </Box> */}
+            {/* Filters Section */}
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    padding: '8px 12px',
+                    marginTop: '20px',
+                    marginBottom: filtersVisible ? '8px' : '0px'
+                }}
+            >
+                <Typography variant="subtitle1" sx={{ fontSize: '0.9rem', fontWeight: 500 }}>Filters</Typography>
+                <Button
+                    size="small"
+                    sx={{
+                        backgroundColor: "rgba(219, 194, 143, 0.8)",
+                        fontSize: "0.6rem",
+                        padding: "1px 6px",
+                        borderRadius: "3px",
+                        minWidth: "20px",     // 🔹 Ensures button remains compact
+                        height: "20px",
+                        color: "black",
+                        '&:hover': { backgroundColor: "rgba(219, 194, 143, 1)" }
+                    }}
+                    onClick={handleToggleFilters}
+                >
+                    {filtersVisible ? "Hide" : "Show"}
+                </Button>
+            </Box>
 
-            <List sx={{ marginBottom: '100px' }}>
-                {/* Tags Section with Expand/Collapse */}
-                <ListItem
-                    button
+            <Collapse in={filtersVisible} timeout="auto" unmountOnExit>
+                <List sx={{ padding: 0 }}>
+                    <ListItem button onClick={() => console.log("Favorites clicked")} sx={{ padding: '4px 8px' }}>
+                        <FavoriteBorderIcon sx={{ color: 'red', fontSize: '0.85rem', marginRight: 1 }} />
+                        <ListItemText primary="Favorites" primaryTypographyProps={{ fontSize: '0.8rem' }} />
+                    </ListItem>
+                    <ListItem button onClick={() => console.log("Notes clicked")} sx={{ padding: '4px 8px' }}>
+                        <DescriptionOutlinedIcon sx={{ fontSize: '0.85rem', marginRight: 1 }} />
+                        <ListItemText primary="Notes" primaryTypographyProps={{ fontSize: '0.8rem' }} />
+                    </ListItem>
+                    <ListItem button onClick={() => console.log("Without Tags clicked")} sx={{ padding: '4px 8px' }}>
+                        <TagIcon sx={{ fontSize: '0.85rem', marginRight: 1 }} />
+                        <ListItemText primary="Without Tags" primaryTypographyProps={{ fontSize: '0.8rem' }} />
+                    </ListItem>
+                </List>
+            </Collapse>
+
+            {/* Space Between Filters & Tags */}
+            {filtersVisible && <Box sx={{ height: '8px' }} />}
+
+            {/* Tags Section */}
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    padding: '8px 12px',
+                    marginTop: filtersVisible ? '0px' : '8px'
+                }}
+            >
+                <Typography variant="subtitle1" sx={{ fontSize: '0.9rem', fontWeight: 500 }}>Tags</Typography>
+
+                {/* ✅ Always show "..." button */}
+                <Button
+                    size="small"
+                    ref={tagsMenuButtonRef}
+                    sx={{
+                        backgroundColor: "rgba(219, 194, 143, 0.8)",
+                        fontSize: "0.6rem",  // 🔹 Slightly smaller font
+                        padding: "1px 6px",   // 🔹 Reduced padding
+                        borderRadius: "3px",  // 🔹 Smaller border radius
+                        minWidth: "20px",     // 🔹 Ensures button remains compact
+                        height: "20px",       // 🔹 Forces a smaller height
+                        color: "black",
+                        '&:hover': { backgroundColor: "rgba(219, 194, 143, 1)" }
+                    }}
+                    onClick={handleTagsMenuOpen}
+                >
+                    options
+                </Button>
+            </Box>
+
+            {/* Tags Menu (Always Opens Bottom-Right of "..." Button) */}
+            <Menu
+                anchorEl={tagsMenuButtonRef.current} // ✅ Ensure correct positioning
+                open={Boolean(tagsMenuAnchor)}
+                onClose={handleTagsMenuClose}
+                anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                }}
+                transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                }}
+                PaperProps={{ sx: { mt: 1 } }} // ✅ Small margin to separate from button
+                MenuListProps={{ sx: { padding: 0 } }}
+            >
+                <MenuItem
                     onClick={handleToggleTags}
                     sx={{
-                        // border: '0.2px solid #ccc', // Light border
-                        // borderRadius: 1,
-                        margin: '4px',
+                        fontSize: "0.8rem",
+                        padding: "6px 12px",
+                        '&:hover': { backgroundColor: "rgba(219, 194, 143, 0.8)" }
                     }}
                 >
-                    <ListItemText primary="Tags" />
-                    {tagsOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                </ListItem>
-                <Collapse in={tagsOpen} timeout="auto" unmountOnExit>
-                    <TagList />
-                </Collapse>
-            </List>
+                    {tagsVisible ? "Hide" : "Show"}
+                </MenuItem>
+                <MenuItem
+                    onClick={() => console.log("Sort alphabetically")}
+                    sx={{
+                        fontSize: "0.8rem",
+                        padding: "6px 12px",
+                        '&:hover': { backgroundColor: "rgba(219, 194, 143, 0.8)" }
+                    }}
+                >
+                    Sort alphabetically
+                </MenuItem>
+                <MenuItem
+                    onClick={() => console.log("Sort by bookmarks")}
+                    sx={{
+                        fontSize: "0.8rem",
+                        padding: "6px 12px",
+                        '&:hover': { backgroundColor: "rgba(219, 194, 143, 0.8)" }
+                    }}
+                >
+                    Sort by bookmarks
+                </MenuItem>
+            </Menu>
+
+            <Collapse in={tagsVisible} timeout="auto" unmountOnExit>
+                <TagList />
+            </Collapse>
         </Drawer>
     );
 };
