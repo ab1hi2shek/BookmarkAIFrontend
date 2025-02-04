@@ -71,10 +71,23 @@ export const deleteBookmarkThunk = createAsyncThunk(
     }
 );
 
+const filterBookmarksFunction = (bookmarks, filterBy) => {
+    if (filterBy === "favorite") {
+        return bookmarks.filter((b) => b.isFavorite);
+    } else if (filterBy === "with_notes") {
+        return bookmarks.filter((b) => b.notes && b.notes.trim() !== "");
+    } else if (filterBy === "without_tags") {
+        return bookmarks.filter((b) => !b.tags || b.tags.length === 0)
+    }
+    return bookmarks;
+};
+
 const bookmarksSlice = createSlice({
     name: "bookmarks",
     initialState: {
         allBookmarks: [],
+        filteredBookmarks: [],
+        useFiltered: "none",
         selectedBookmark: null,
         status: "idle", // "loading" | "succeeded" | "failed"
         error: null,
@@ -83,6 +96,15 @@ const bookmarksSlice = createSlice({
         setSelectedBookmark: (state, action) => {
             state.selectedBookmark = action.payload;
         },
+        filterBookmarks: (state, action) => {
+            const { filterBy } = action.payload;
+            if (state.useFiltered === filterBy) {
+                state.useFiltered = 'none';
+                return;
+            }
+            state.filteredBookmarks = filterBookmarksFunction(state.allBookmarks, filterBy);
+            state.useFiltered = filterBy;
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -93,6 +115,8 @@ const bookmarksSlice = createSlice({
             .addCase(fetchBookmarksThunk.fulfilled, (state, action) => {
                 state.status = "succeeded";
                 state.allBookmarks = action.payload;
+                state.filteredBookmarks = action.payload;
+                state.useFiltered = "none";
             })
             .addCase(fetchBookmarksThunk.rejected, (state, action) => {
                 state.status = "failed";
@@ -153,14 +177,12 @@ const bookmarksSlice = createSlice({
             // 🟢 Update Tag (Update tag name inside bookmarks)
             .addCase(updateTagThunk.fulfilled, (state, action) => {
                 const { existingTag, tagName } = action.payload;
-                console.log("new orelans", existingTag, tagName, state.allBookmarks)
                 state.allBookmarks = state.allBookmarks.map((bookmark) => ({
                     ...bookmark,
                     tags: bookmark.tags.map((tag) =>
                         tag === existingTag.tagName ? tagName : tag
                     )
                 }));
-                console.log("state.allBookmarks", state.allBookmarks)
             })
 
             // When a tag is deleted, update bookmarks in state.
@@ -184,5 +206,5 @@ const bookmarksSlice = createSlice({
     },
 });
 
-export const { setSelectedBookmark } = bookmarksSlice.actions;
+export const { setSelectedBookmark, filterBookmarks } = bookmarksSlice.actions;
 export default bookmarksSlice.reducer;

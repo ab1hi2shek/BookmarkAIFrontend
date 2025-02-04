@@ -149,13 +149,13 @@ const RightSideBar = () => {
                             marginBottom: '24px',
                             '& .MuiOutlinedInput-root': {
                                 '& fieldset': {
-                                    borderColor: 'rgb(199, 165, 98)', // ✅ Changed border color
+                                    borderColor: 'rgb(199, 165, 98)',
                                 },
                                 '&:hover fieldset': {
-                                    borderColor: 'rgb(231, 162, 24)', // ✅ Darker color on hover
+                                    borderColor: 'rgb(231, 162, 24)',
                                 },
                                 '&.Mui-focused fieldset': {
-                                    borderColor: 'rgba(192, 137, 27, 1)', // ✅ Focus color for better visibility
+                                    borderColor: 'rgba(192, 137, 27, 1)',
                                 },
                             },
                         }}

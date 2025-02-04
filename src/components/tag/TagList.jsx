@@ -91,7 +91,23 @@ const TagList = () => {
                 {allTags && allTags
                     .filter(tag => tag.bookmarksCount > 0)
                     .map((tag) => (
-                        <ListItem key={tag.tagId} dense sx={{ padding: '2px 12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <ListItem
+                            key={tag.tagId}
+                            dense
+                            onClick={() => handleTagClick(tag)}
+                            sx={{
+                                padding: '2px 12px',
+                                margin: '4px 0px',
+                                display: 'flex',
+                                cursor: 'pointer',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                backgroundColor: tag.isSelected && editingTag?.tagId !== tag.tagId ? 'rgba(244, 229, 201, 0.8)' : 'transparent',
+                                '&:hover': {
+                                    backgroundColor: editingTag?.tagId !== tag.tagId ? 'rgba(244, 229, 201, 0.8)' : 'transparent'
+                                }
+                            }}
+                        >
                             {editingTag?.tagId === tag.tagId ? (
                                 <TextField
                                     variant="standard"
@@ -101,54 +117,61 @@ const TagList = () => {
                                     onKeyDown={handleEditSave}
                                     autoFocus
                                     inputRef={inputRef}
-                                    sx={{ fontSize: '0.8rem', border: 'none', borderBottom: '1px solid #ccc', pb: 0.5 }}
+                                    sx={{ fontSize: '0.8rem', border: 'none', borderBottom: '2px solid rgba(219, 194, 143, 0.8)', pb: 0.5 }}
                                     InputProps={{
                                         disableUnderline: true,
                                     }}
                                 />
                             ) : (
                                 <Box
-                                    sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
-                                    onClick={() => handleTagClick(tag)}
+                                    sx={{ display: 'flex', alignItems: 'center' }}
                                 >
                                     <Typography
                                         variant="body2"
                                         sx={{
                                             fontSize: tag.isSelected ? '0.85rem' : '0.8rem',
-                                            fontWeight: tag.isSelected ? 600 : 400,
-                                            color: tag.isSelected ? 'rgba(192, 137, 27, 0.8)' : 'text.primary',
+                                            fontWeight: tag.isSelected ? 550 : 400,
+                                            color: 'text.primary',
                                             transition: 'color 0.2s ease-in-out',
-                                            '&:hover': { color: 'rgba(192, 137, 27, 0.8)' },
                                         }}
                                     >
                                         #{tag.tagName}
                                     </Typography>
                                     <Typography
                                         variant="caption"
-                                        sx={{ marginLeft: 1, fontSize: '0.75rem', color: 'gray' }}
+                                        sx={{ marginLeft: 1, fontSize: '0.75rem', color: 'text.primary' }}
                                     >
                                         ({tag.bookmarksCount})
                                     </Typography>
                                 </Box>
 
                             )}
-                            <Box sx={styles.moreIconContainer}>
+                            <Box onClick={(e) => e.stopPropagation()} >
                                 <Tooltip>
-                                    <IconButton size="small" onClick={(event) => handleMenuOpen(event, tag)}>
+                                    <IconButton
+                                        size="small"
+                                        onClick={(event) => handleMenuOpen(event, tag)}
+                                        sx={{
+                                            '&:hover': {
+                                                backgroundColor: 'rgba(228, 183, 100, 0.8)',
+                                                borderRadius: 0,
+                                            },
+                                        }}
+                                    >
                                         ...
                                     </IconButton>
                                 </Tooltip>
                             </Box>
                         </ListItem>
                     ))}
-            </List>
+            </List >
             <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={handleMenuClose}>
                 <MenuItem
                     onClick={handleEditClick}
                     sx={{
                         fontSize: "0.8rem",
                         padding: "6px 12px",
-                        '&:hover': { backgroundColor: "rgba(219, 194, 143, 0.8)" }
+                        '&:hover': { backgroundColor: "rgba(219, 194, 143, 0.8)" },
                     }}>
                     Edit
                 </MenuItem>

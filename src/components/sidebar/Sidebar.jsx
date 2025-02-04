@@ -8,6 +8,7 @@ import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import TagIcon from '@mui/icons-material/Tag';
 import TagList from '../tag/TagList';
 import { sortTags } from '../../features/tags/tagsSlice';
+import { filterBookmarks } from '../../features/bookmarks/bookmarksSlice';
 
 const SideBar = () => {
     const dispatch = useDispatch();
@@ -35,6 +36,7 @@ const SideBar = () => {
             bookmarksWithNoTags: noTagsCount,
         };
     });
+    const useFiltered = useSelector((state) => state.bookmarks.useFiltered);
 
 
 
@@ -62,6 +64,10 @@ const SideBar = () => {
     const handleSortTags = (sortBy) => {
         dispatch(sortTags({ sortBy }));
         setTagsMenuAnchor(null);
+    }
+
+    const filterBookmarksForUI = (filterBy) => {
+        dispatch(filterBookmarks({ filterBy }));
     }
 
     return (
@@ -118,7 +124,17 @@ const SideBar = () => {
 
             <Collapse in={filtersVisible} timeout="auto" unmountOnExit>
                 <List sx={{ paddingLeft: 1 }}>
-                    <ListItem button onClick={() => console.log("Favorites clicked")} sx={{ padding: '4px 8px' }}>
+                    <ListItem
+                        button
+                        onClick={() => filterBookmarksForUI("favorite")}
+                        sx={{
+                            padding: '4px 8px',
+                            backgroundColor: useFiltered === "favorite" ? "rgba(244, 229, 201, 0.8)" : "transparent",
+                            '&:hover': {
+                                backgroundColor: "rgba(244, 229, 201, 0.8)" // ✅ Same color on hover
+                            }
+                        }}
+                    >
                         <FavoriteBorderIcon sx={{ color: 'red', fontSize: '0.85rem', marginRight: 1 }} />
                         <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
                             <ListItemText primary="Favorites" primaryTypographyProps={{ fontSize: '0.85rem' }} />
@@ -127,7 +143,17 @@ const SideBar = () => {
                             </Typography>
                         </Box>
                     </ListItem>
-                    <ListItem button onClick={() => console.log("Notes clicked")} sx={{ padding: '4px 8px' }}>
+                    <ListItem
+                        button
+                        onClick={() => filterBookmarksForUI("with_notes")}
+                        sx={{
+                            padding: '4px 8px',
+                            backgroundColor: useFiltered === "with_notes" ? "rgba(244, 229, 201, 0.8)" : "transparent",
+                            '&:hover': {
+                                backgroundColor: "rgba(244, 229, 201, 0.8)" // ✅ Same color on hover
+                            }
+                        }}
+                    >
                         <DescriptionOutlinedIcon sx={{ fontSize: '0.85rem', marginRight: 1 }} />
                         <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
                             <ListItemText primary="With Notes" primaryTypographyProps={{ fontSize: '0.85rem' }} />
@@ -136,7 +162,17 @@ const SideBar = () => {
                             </Typography>
                         </Box>
                     </ListItem>
-                    <ListItem button onClick={() => console.log("Without Tags clicked")} sx={{ padding: '4px 8px' }}>
+                    <ListItem
+                        button
+                        onClick={() => filterBookmarksForUI("without_tags")}
+                        sx={{
+                            padding: '4px 8px',
+                            backgroundColor: useFiltered === "without_tags" ? "rgba(244, 229, 201, 0.8)" : "transparent",
+                            '&:hover': {
+                                backgroundColor: "rgba(244, 229, 201, 0.8)" // ✅ Same color on hover
+                            }
+                        }}
+                    >
                         <TagIcon sx={{ fontSize: '0.85rem', marginRight: 1 }} />
                         <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
                             <ListItemText primary="Without Tags" primaryTypographyProps={{ fontSize: '0.85rem' }} />

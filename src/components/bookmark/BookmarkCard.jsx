@@ -22,7 +22,8 @@ const BookmarkCard = () => {
     const [bookmarkIdToDelete, setBookmarkIdToDelete] = useState(null);
     const [hoveredCard, setHoveredCard] = useState(null);
 
-    const filteredBookmarks = useSelector((state) => state.bookmarks.allBookmarks);
+    const useFiltered = useSelector((state) => state.bookmarks.useFiltered !== "none");
+    const filteredBookmarks = useSelector((state) => useFiltered ? state.bookmarks.filteredBookmarks : state.bookmarks.allBookmarks);
     const status = useSelector((state) => state.bookmarks.status);
 
     // 🟢 Fetch Bookmarks When Component Mounts
