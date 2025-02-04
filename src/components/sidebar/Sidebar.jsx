@@ -135,9 +135,9 @@ const SideBar = () => {
                         color: "black",
                         '&:hover': { backgroundColor: "rgba(219, 194, 143, 1)" }
                     }}
-                    onClick={handleTagsMenuOpen}
+                    onClick={tagsVisible ? handleTagsMenuOpen : handleToggleTags}
                 >
-                    options
+                    {tagsVisible ? "Options" : "Show"}
                 </Button>
             </Box>
 
