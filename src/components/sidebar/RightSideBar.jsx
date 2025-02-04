@@ -74,7 +74,7 @@ const RightSideBar = () => {
             }}
         >
             <Box sx={{ display: 'flex', justifyContent: 'flex-start', padding: '8px', marginBottom: '10px' }}>
-                <IconButton onClick={handleWhenCloseRightSideBar} sx={{ borderRadius: 0 }}>
+                <IconButton onClick={handleWhenCloseRightSideBar} sx={{ borderRadius: 0, color: "rgb(176, 127, 29)" }}>
                     <CloseIcon />
                 </IconButton>
             </Box>
@@ -90,7 +90,20 @@ const RightSideBar = () => {
                         fullWidth
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
-                        sx={{ marginBottom: '24px' }}
+                        sx={{
+                            marginBottom: '24px',
+                            '& .MuiOutlinedInput-root': {
+                                '& fieldset': {
+                                    borderColor: 'rgb(199, 165, 98)', // ✅ Changed border color
+                                },
+                                '&:hover fieldset': {
+                                    borderColor: 'rgb(231, 162, 24)', // ✅ Darker color on hover
+                                },
+                                '&.Mui-focused fieldset': {
+                                    borderColor: 'rgba(192, 137, 27, 1)', // ✅ Focus color for better visibility
+                                },
+                            },
+                        }}
                     />
                     <TextField
                         label="Notes"
@@ -99,7 +112,20 @@ const RightSideBar = () => {
                         rows={4}
                         value={notes}
                         onChange={(e) => setNotes(e.target.value)}
-                        sx={{ marginBottom: '24px' }}
+                        sx={{
+                            marginBottom: '24px',
+                            '& .MuiOutlinedInput-root': {
+                                '& fieldset': {
+                                    borderColor: 'rgb(199, 165, 98)', // ✅ Changed border color
+                                },
+                                '&:hover fieldset': {
+                                    borderColor: 'rgb(231, 162, 24)', // ✅ Darker color on hover
+                                },
+                                '&.Mui-focused fieldset': {
+                                    borderColor: 'rgba(192, 137, 27, 1)', // ✅ Focus color for better visibility
+                                },
+                            },
+                        }}
                     />
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, marginBottom: '8px' }}>
                         {tags.map((tag, index) => (
@@ -109,6 +135,7 @@ const RightSideBar = () => {
                                 onDelete={() => handleTagDelete(tag)}
                                 deleteIcon={<CloseIcon />}
                                 size="small"
+                                sx={{ backgroundColor: 'rgba(219, 194, 143, 0.8)' }}
                             />
                         ))}
                     </Box>
@@ -118,7 +145,20 @@ const RightSideBar = () => {
                         value={newTag}
                         onChange={(e) => setNewTag(e.target.value)}
                         onKeyPress={handleTagKeyPress}
-                        sx={{ marginBottom: '24px' }}
+                        sx={{
+                            marginBottom: '24px',
+                            '& .MuiOutlinedInput-root': {
+                                '& fieldset': {
+                                    borderColor: 'rgb(199, 165, 98)', // ✅ Changed border color
+                                },
+                                '&:hover fieldset': {
+                                    borderColor: 'rgb(231, 162, 24)', // ✅ Darker color on hover
+                                },
+                                '&.Mui-focused fieldset': {
+                                    borderColor: 'rgba(192, 137, 27, 1)', // ✅ Focus color for better visibility
+                                },
+                            },
+                        }}
                     />
                     <Box sx={{ display: 'flex', justifyContent: 'center', gap: '16px', marginTop: '24px' }}>
                         <Button variant="contained" onClick={handleSaveClick}>
