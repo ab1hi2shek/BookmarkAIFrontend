@@ -7,6 +7,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import TagIcon from '@mui/icons-material/Tag';
 import TagList from '../tag/TagList';
+import { sortTags } from '../../features/tags/tagsSlice';
 
 const SideBar = () => {
     const dispatch = useDispatch();
@@ -37,6 +38,11 @@ const SideBar = () => {
         localStorage.setItem("tagsVisible", JSON.stringify(newState));
         setTagsMenuAnchor(null); // ✅ Close menu when toggling
     };
+
+    const handleSortTags = (sortBy) => {
+        dispatch(sortTags({ sortBy }));
+        setTagsMenuAnchor(null);
+    }
 
     return (
         <Drawer
@@ -168,7 +174,7 @@ const SideBar = () => {
                     {tagsVisible ? "Hide" : "Show"}
                 </MenuItem>
                 <MenuItem
-                    onClick={() => console.log("Sort alphabetically")}
+                    onClick={() => handleSortTags("alphabetical")}
                     sx={{
                         fontSize: "0.8rem",
                         padding: "6px 12px",
@@ -178,7 +184,7 @@ const SideBar = () => {
                     Sort alphabetically
                 </MenuItem>
                 <MenuItem
-                    onClick={() => console.log("Sort by bookmarks")}
+                    onClick={() => handleSortTags("bookmarks")}
                     sx={{
                         fontSize: "0.8rem",
                         padding: "6px 12px",

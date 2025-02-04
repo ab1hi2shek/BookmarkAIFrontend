@@ -79,6 +79,15 @@ export const toggleSelectedTagsThunk = (selectedTagId) => (dispatch, getState) =
     dispatch(fetchBookmarksThunk(selectedTags)); // 🔹 Fetch filtered bookmarks after updating selection
 };
 
+const sortTagsFunction = (tags, sortBy) => {
+    if (sortBy === "alphabetical") {
+        return [...tags].sort((a, b) => a.tagName.localeCompare(b.tagName));
+    } else if (sortBy === "bookmarks") {
+        return [...tags].sort((a, b) => b.bookmarksCount - a.bookmarksCount);
+    }
+    return tags;
+};
+
 const tagsSlice = createSlice({
     name: "tags",
     initialState: {
@@ -104,6 +113,11 @@ const tagsSlice = createSlice({
             }));
 
             saveSelectedTags(state.allTags); // 🔹 Save reset state to localStorage
+        },
+        sortTags: (state, action) => {
+            const { sortBy } = action.payload;
+            state.allTags = sortTagsFunction(state.allTags, sortBy);
+            localStorage.setItem("tagsSortPreference", sortBy);
         }
     },
     extraReducers: (builder) => {
@@ -114,8 +128,11 @@ const tagsSlice = createSlice({
             })
             .addCase(fetchTagsThunk.fulfilled, (state, action) => {
                 state.status = "succeeded";
-                state.allTags = action.payload;
-                console.log("hahaha", state.allTags)
+                const tags = action.payload;
+
+                // 🟢 Get the sorting preference from localStorage
+                const sortPreference = localStorage.getItem("tagsSortPreference") || "alphabetical";
+                state.allTags = sortTagsFunction(tags, sortPreference);
             })
             .addCase(fetchTagsThunk.rejected, (state, action) => {
                 state.status = "failed";
@@ -159,5 +176,5 @@ const tagsSlice = createSlice({
     }
 });
 
-export const { toggleSelectedTags, clearSelectedTags } = tagsSlice.actions;
+export const { toggleSelectedTags, clearSelectedTags, sortTags } = tagsSlice.actions;
 export default tagsSlice.reducer;
