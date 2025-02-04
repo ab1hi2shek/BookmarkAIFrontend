@@ -27,7 +27,7 @@ export const createTag = async (tagName, userId) => {
 };
 
 // 🟢 **Update a tag**
-export const updateTag = async (tagId, tagName, userId) => {
+export const updateTag = async ({ tagId, tagName, userId }) => {
     const response = await axios.post(
         `${BASE_URL}/update/${tagId}`,
         { tagName },

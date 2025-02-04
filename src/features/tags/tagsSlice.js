@@ -49,10 +49,10 @@ export const createTagThunk = createAsyncThunk("tags/create", async (tagName, { 
 });
 
 // 🟢 Update a tag (Preserve selected tags)
-export const updateTagThunk = createAsyncThunk("tags/update", async ({ tagId, tagName }, { rejectWithValue }) => {
+export const updateTagThunk = createAsyncThunk("tags/update", async ({ existingTag, tagName }, { rejectWithValue }) => {
     try {
-        await updateTag(tagId, tagName, USER_ID);
-        return { tagId, tagName }; // ✅ Return updated tag details
+        await updateTag({ tagId: existingTag.tagId, tagName: tagName, userId: USER_ID });
+        return { existingTag, tagName }; // ✅ Return updated tag details
     } catch (error) {
         return rejectWithValue(error.response?.data?.error || "Failed to update tag");
     }
@@ -129,10 +129,12 @@ const tagsSlice = createSlice({
 
             // 🟢 Update Tag (Now updates only the edited tag)
             .addCase(updateTagThunk.fulfilled, (state, action) => {
-                const { tagId, tagName } = action.payload;
+                const { existingTag, tagName } = action.payload;
+                console.log("existingTag, tagName", existingTag, tagName)
                 state.allTags = state.allTags.map((tag) =>
-                    tag.tagId === tagId ? { ...tag, tagName } : tag
+                    tag.tagId === existingTag.tagId ? { ...tag, tagName } : tag
                 );
+                console.log(" state.allTags", state.allTags)
             })
             .addCase(updateTagThunk.rejected, (state, action) => {
                 state.error = action.payload;

@@ -78,8 +78,7 @@ const TagList = () => {
 
     const handleEditSave = (e) => {
         if (e.key === 'Enter' && newTagName.trim() !== '') {
-            console.log(editingTag.tagId, newTagName)
-            dispatch(updateTagThunk({ tagId: editingTag.tagId, tagName: newTagName }));
+            dispatch(updateTagThunk({ existingTag: editingTag, tagName: newTagName }));
             setEditingTag(null);
         }
     };

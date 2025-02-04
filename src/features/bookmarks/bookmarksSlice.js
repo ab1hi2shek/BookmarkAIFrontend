@@ -130,11 +130,12 @@ const bookmarksSlice = createSlice({
 
             // 🟢 Update Tag (Update tag name inside bookmarks)
             .addCase(updateTagThunk.fulfilled, (state, action) => {
-                const { tagId, tagName } = action.payload;
+                const { existingTag, tagName } = action.payload;
+                console.log("new orelans", existingTag, tagName, state.allBookmarks)
                 state.allBookmarks = state.allBookmarks.map((bookmark) => ({
                     ...bookmark,
                     tags: bookmark.tags.map((tag) =>
-                        tag.tagId === tagId ? { ...tag, tagName } : tag
+                        tag === existingTag.tagName ? tagName : tag
                     )
                 }));
                 console.log("state.allBookmarks", state.allBookmarks)
