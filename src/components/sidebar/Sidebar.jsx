@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
     Drawer, List, ListItem, ListItemText, Collapse, Box, Menu, MenuItem, Typography, Button
 } from '@mui/material';
@@ -17,6 +17,26 @@ const SideBar = () => {
 
     const [tagsMenuAnchor, setTagsMenuAnchor] = useState(null);
     const tagsMenuButtonRef = useRef(null); // ✅ Ref to track button position
+
+    const { favoriteBookmarksCount, bookmarksWithNotesCount, bookmarksWithNoTags } = useSelector((state) => {
+        let favoriteCount = 0;
+        let notesCount = 0;
+        let noTagsCount = 0;
+
+        state.bookmarks.allBookmarks.forEach((b) => {
+            if (b.isFavorite) favoriteCount++;
+            if (b.notes && b.notes.trim() !== "") notesCount++;
+            if (!b.tags || b.tags.length === 0) noTagsCount++;
+        });
+
+        return {
+            favoriteBookmarksCount: favoriteCount,
+            bookmarksWithNotesCount: notesCount,
+            bookmarksWithNoTags: noTagsCount,
+        };
+    });
+
+
 
     const handleToggleFilters = () => {
         const newState = !filtersVisible;
@@ -71,7 +91,7 @@ const SideBar = () => {
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    padding: '8px 12px',
+                    padding: '4px 12px',
                     marginTop: '20px',
                     marginBottom: filtersVisible ? '8px' : '0px'
                 }}
@@ -96,18 +116,33 @@ const SideBar = () => {
             </Box>
 
             <Collapse in={filtersVisible} timeout="auto" unmountOnExit>
-                <List sx={{ padding: 0 }}>
+                <List sx={{ paddingLeft: 1 }}>
                     <ListItem button onClick={() => console.log("Favorites clicked")} sx={{ padding: '4px 8px' }}>
                         <FavoriteBorderIcon sx={{ color: 'red', fontSize: '0.85rem', marginRight: 1 }} />
-                        <ListItemText primary="Favorites" primaryTypographyProps={{ fontSize: '0.8rem' }} />
+                        <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                            <ListItemText primary="Favorites" primaryTypographyProps={{ fontSize: '0.85rem' }} />
+                            <Typography variant="caption" sx={{ fontSize: '0.75rem', color: 'gray', marginLeft: 1 }}>
+                                ({favoriteBookmarksCount})
+                            </Typography>
+                        </Box>
                     </ListItem>
                     <ListItem button onClick={() => console.log("Notes clicked")} sx={{ padding: '4px 8px' }}>
                         <DescriptionOutlinedIcon sx={{ fontSize: '0.85rem', marginRight: 1 }} />
-                        <ListItemText primary="Notes" primaryTypographyProps={{ fontSize: '0.8rem' }} />
+                        <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                            <ListItemText primary="With Notes" primaryTypographyProps={{ fontSize: '0.85rem' }} />
+                            <Typography variant="caption" sx={{ fontSize: '0.75rem', color: 'gray', marginLeft: 1 }}>
+                                ({bookmarksWithNotesCount})
+                            </Typography>
+                        </Box>
                     </ListItem>
                     <ListItem button onClick={() => console.log("Without Tags clicked")} sx={{ padding: '4px 8px' }}>
                         <TagIcon sx={{ fontSize: '0.85rem', marginRight: 1 }} />
-                        <ListItemText primary="Without Tags" primaryTypographyProps={{ fontSize: '0.8rem' }} />
+                        <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                            <ListItemText primary="Without Tags" primaryTypographyProps={{ fontSize: '0.85rem' }} />
+                            <Typography variant="caption" sx={{ fontSize: '0.75rem', color: 'gray', marginLeft: 1 }}>
+                                ({bookmarksWithNoTags})
+                            </Typography>
+                        </Box>
                     </ListItem>
                 </List>
             </Collapse>
