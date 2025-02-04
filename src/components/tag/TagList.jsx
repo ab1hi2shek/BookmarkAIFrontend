@@ -24,8 +24,6 @@ const TagList = () => {
     useEffect(() => {
         if (status === "idle" || status === "fetchTags") {
             dispatch(fetchTagsThunk());
-
-            console.log("hahaaha")
         }
     }, [status, dispatch]);
 
@@ -90,50 +88,59 @@ const TagList = () => {
     return (
         <>
             <List sx={{ padding: '4px' }}>
-                {allTags && allTags.map((tag) => (
-                    <ListItem key={tag.tagId} dense sx={{ padding: '2px 8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        {editingTag?.tagId === tag.tagId ? (
-                            <TextField
-                                variant="standard"
-                                fullWidth
-                                value={newTagName}
-                                onChange={(e) => setNewTagName(e.target.value)}
-                                onKeyDown={handleEditSave}
-                                autoFocus
-                                inputRef={inputRef}
-                                sx={{ fontSize: '0.8rem', border: 'none', borderBottom: '1px solid #ccc', pb: 0.5 }}
-                                InputProps={{
-                                    disableUnderline: true,
-                                }}
-                            />
-                        ) : (
-                            <Typography
-                                variant="body2"
-                                key={tag.tagId}
-                                onClick={() => handleTagClick(tag)}
-                                sx={{
-                                    fontSize: tag.isSelected ? '0.85rem' : '0.8rem',
-                                    fontWeight: tag.isSelected ? 600 : 400,
-                                    color: tag.isSelected ? 'rgba(192, 137, 27, 0.8)' : 'text.primary',
-                                    cursor: 'pointer',
-                                    transition: 'color 0.2s ease-in-out', // Smooth transition effect
-                                    '&:hover': {
-                                        color: 'rgba(192, 137, 27, 0.8)', // Change color on hover
-                                    },
-                                }}
-                            >
-                                #{tag.tagName}
-                            </Typography>
-                        )}
-                        <Box sx={styles.moreIconContainer}>
-                            <Tooltip title="More">
-                                <IconButton size="small" onClick={(event) => handleMenuOpen(event, tag)}>
-                                    <MoreVertIcon sx={styles.moreIcon} />
-                                </IconButton>
-                            </Tooltip>
-                        </Box>
-                    </ListItem>
-                ))}
+                {allTags && allTags
+                    .filter(tag => tag.bookmarksCount > 0)
+                    .map((tag) => (
+                        <ListItem key={tag.tagId} dense sx={{ padding: '2px 8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            {editingTag?.tagId === tag.tagId ? (
+                                <TextField
+                                    variant="standard"
+                                    fullWidth
+                                    value={newTagName}
+                                    onChange={(e) => setNewTagName(e.target.value)}
+                                    onKeyDown={handleEditSave}
+                                    autoFocus
+                                    inputRef={inputRef}
+                                    sx={{ fontSize: '0.8rem', border: 'none', borderBottom: '1px solid #ccc', pb: 0.5 }}
+                                    InputProps={{
+                                        disableUnderline: true,
+                                    }}
+                                />
+                            ) : (
+                                <Box
+                                    sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+                                    onClick={() => handleTagClick(tag)}
+                                >
+                                    <Typography
+                                        variant="body2"
+                                        sx={{
+                                            fontSize: tag.isSelected ? '0.85rem' : '0.8rem',
+                                            fontWeight: tag.isSelected ? 600 : 400,
+                                            color: tag.isSelected ? 'rgba(192, 137, 27, 0.8)' : 'text.primary',
+                                            transition: 'color 0.2s ease-in-out',
+                                            '&:hover': { color: 'rgba(192, 137, 27, 0.8)' },
+                                        }}
+                                    >
+                                        #{tag.tagName}
+                                    </Typography>
+                                    <Typography
+                                        variant="caption"
+                                        sx={{ marginLeft: 1, fontSize: '0.75rem', color: 'gray' }}
+                                    >
+                                        ({tag.bookmarksCount})
+                                    </Typography>
+                                </Box>
+
+                            )}
+                            <Box sx={styles.moreIconContainer}>
+                                <Tooltip title="More">
+                                    <IconButton size="small" onClick={(event) => handleMenuOpen(event, tag)}>
+                                        <MoreVertIcon sx={styles.moreIcon} />
+                                    </IconButton>
+                                </Tooltip>
+                            </Box>
+                        </ListItem>
+                    ))}
             </List>
             <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={handleMenuClose}>
                 <MenuItem onClick={handleEditClick}>Edit</MenuItem>

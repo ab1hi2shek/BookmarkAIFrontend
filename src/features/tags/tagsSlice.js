@@ -5,7 +5,7 @@ import {
     updateTag,
     deleteTag
 } from "../../services/tagService";
-import { fetchBookmarksThunk, updateBookmarkThunk } from "../bookmarks/bookmarksSlice";
+import { fetchBookmarksThunk, updateBookmarkThunk, deleteBookmarkThunk } from "../bookmarks/bookmarksSlice";
 
 // 🔹 User ID (Replace with actual authentication logic)
 const USER_ID = "user-7601dd26-64ac-4327-84e2-e2d758701934";
@@ -150,7 +150,10 @@ const tagsSlice = createSlice({
 
             // 🟢 When a bookmark is updated, if tags are updated, update tag list
             .addCase(updateBookmarkThunk.fulfilled, (state, action) => {
-                console.log("here I am")
+                state.status = "fetchTags";
+            })
+
+            .addCase(deleteBookmarkThunk.fulfilled, (state, action) => {
                 state.status = "fetchTags";
             })
     }
