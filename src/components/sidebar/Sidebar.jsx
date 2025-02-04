@@ -81,7 +81,8 @@ const SideBar = () => {
                     marginBottom: '64px',
                     paddingRight: '8px',
                     position: 'fixed',
-                    right: 0
+                    right: 0,
+                    borderRight: "1px solid rgb(180, 152, 97)"
                 },
             }}
         >

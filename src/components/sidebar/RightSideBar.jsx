@@ -68,7 +68,8 @@ const RightSideBar = () => {
                     paddingRight: '8px',
                     position: 'fixed',
                     right: 0,
-                    height: 'calc(100vh - 64px)'
+                    height: 'calc(100vh - 64px)',
+                    borderLeft: "1px solid rgb(180, 152, 97)"
                 },
             }}
         >
