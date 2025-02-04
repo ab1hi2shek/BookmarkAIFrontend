@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Drawer, List, ListItem, ListItemText, IconButton, Collapse, Box } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import TagList from '../tag/TagList';
-import BookmarkList from '../bookmark/BookmarkList';
 import { closeLeftSideBar } from '../../features/sidebar/sidebarSlice';
 
 const SideBar = () => {
@@ -71,23 +69,6 @@ const SideBar = () => {
                 <Collapse in={tagsOpen} timeout="auto" unmountOnExit>
                     <TagList />
                 </Collapse>
-
-                {/* Bookmarks Section with Expand/Collapse
-                <ListItem
-                    button
-                    onClick={handleToggleBookmarks}
-                    sx={{
-                        border: '0.2px solid #ccc', // Light border
-                        borderRadius: 1,
-                        margin: '4px',
-                    }}
-                >
-                    <ListItemText primary="Bookmarks" />
-                    {bookmarksOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                </ListItem>
-                <Collapse in={bookmarksOpen} timeout="auto" unmountOnExit>
-                    <BookmarkList />
-                </Collapse> */}
             </List>
         </Drawer>
     );

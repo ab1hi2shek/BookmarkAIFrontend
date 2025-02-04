@@ -1,9 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { List, ListItem, IconButton, TextField, Box, Tooltip, Menu, MenuItem, Typography, Modal, Button } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import { useDispatch, useSelector } from 'react-redux';
-import { editTag, deleteTag, toggleSelectedTags } from '../../features/tags/tagsSlice';
+import { updateTagThunk, deleteTagThunk, toggleSelectedTagsThunk, fetchTagsThunk } from '../../features/tags/tagsSlice';
 import styles from '../sidebar/SideBarStyles';
 import DeleteConfirmationModal from '../others/DeleteConfirmationModal';
 
@@ -15,9 +14,24 @@ const TagList = () => {
     const [newTagName, setNewTagName] = useState('');
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const inputRef = useRef(null);
+    const [forceRender, setForceRender] = useState(false);
 
     const dispatch = useDispatch();
     const allTags = useSelector((state) => state.tags.allTags);
+    const status = useSelector((state) => state.tags.status);
+
+    // 🟢 Fetch Tags When Component Mounts
+    useEffect(() => {
+        if (status === "idle" || status === "fetchTags") {
+            dispatch(fetchTagsThunk());
+
+            console.log("hahaaha")
+        }
+    }, [status, dispatch]);
+
+    useEffect(() => {
+        console.log("Updated Tags:", allTags);
+    }, [allTags]);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -42,8 +56,9 @@ const TagList = () => {
     };
 
     const handleEditClick = () => {
+        console.log("i am here", selectedTag);
         setEditingTag(selectedTag);
-        setNewTagName(selectedTag.name);
+        setNewTagName(selectedTag.tagName);
         handleMenuClose();
     };
 
@@ -55,7 +70,7 @@ const TagList = () => {
 
     const confirmDelete = () => {
         if (tagToDelete) {
-            dispatch(deleteTag(tagToDelete.id));
+            dispatch(deleteTagThunk(tagToDelete));
             setTagToDelete(null);
         }
         setDeleteModalOpen(false);
@@ -63,21 +78,22 @@ const TagList = () => {
 
     const handleEditSave = (e) => {
         if (e.key === 'Enter' && newTagName.trim() !== '') {
-            dispatch(editTag({ oldTagId: editingTag.id, newTagName }));
+            console.log(editingTag.tagId, newTagName)
+            dispatch(updateTagThunk({ tagId: editingTag.tagId, tagName: newTagName }));
             setEditingTag(null);
         }
     };
 
     const handleTagClick = (tag) => {
-        dispatch(toggleSelectedTags(tag.id));
+        dispatch(toggleSelectedTagsThunk(tag.tagId));
     };
 
     return (
         <>
             <List sx={{ padding: '4px' }}>
-                {allTags.map((tag) => (
-                    <ListItem key={tag.id} dense sx={{ padding: '2px 8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        {editingTag?.id === tag.id ? (
+                {allTags && allTags.map((tag) => (
+                    <ListItem key={tag.tagId} dense sx={{ padding: '2px 8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        {editingTag?.tagId === tag.tagId ? (
                             <TextField
                                 variant="standard"
                                 fullWidth
@@ -88,12 +104,13 @@ const TagList = () => {
                                 inputRef={inputRef}
                                 sx={{ fontSize: '0.8rem', border: 'none', borderBottom: '1px solid #ccc', pb: 0.5 }}
                                 InputProps={{
-                                    disableUnderline: true, // <== added this
+                                    disableUnderline: true,
                                 }}
                             />
                         ) : (
                             <Typography
                                 variant="body2"
+                                key={tag.tagId}
                                 onClick={() => handleTagClick(tag)}
                                 sx={{
                                     fontSize: tag.isSelected ? '0.85rem' : '0.8rem',
@@ -102,7 +119,7 @@ const TagList = () => {
                                     cursor: 'pointer',
                                 }}
                             >
-                                {tag.name}
+                                {tag.tagName}
                             </Typography>
                         )}
                         <Box sx={styles.moreIconContainer}>

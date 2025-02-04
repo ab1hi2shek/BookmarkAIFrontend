@@ -9,7 +9,6 @@ const sidebarSlice = createSlice({
     reducers: {
         // Left sidebar
         openLeftSideBar: (state) => {
-            console.log("I ama in sidebarSlice", state);
             return { ...state, isLeftSidebarOpen: true };
         },
         closeLeftSideBar: (state) => {
@@ -21,7 +20,6 @@ const sidebarSlice = createSlice({
 
         // Right sidebar
         openRightSideBar: (state) => {
-            console.log("openRightSideBar = ", state)
             return { ...state, isRightSidebarOpen: true };
         },
         closeRightSideBar: (state) => {

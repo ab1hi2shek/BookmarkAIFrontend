@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Button, Tooltip, TextField, Box, ClickAwayListener } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useDispatch } from 'react-redux';
-import { addBookmark } from '../../features/bookmarks/bookmarksSlice';
+import { createBookmarkThunk } from '../../features/bookmarks/bookmarksSlice';
 
 const AddBookmark = () => {
     const [openTooltip, setOpenTooltip] = useState(false);
@@ -39,17 +39,13 @@ const AddBookmark = () => {
             const data = await response.json();
 
             return {
-                title: data.title || 'New Bookmark',
+                title: data.title || '',
                 notes: data.description || '',
                 imageUrl: data.image || ''
             };
         } catch (error) {
             console.error('Error fetching metadata:', error);
-            return {
-                title: 'New Bookmark',
-                notes: '',
-                imageUrl: ''
-            };
+            return { title: '', notes: '', imageUrl: '' };
         }
     };
 
@@ -58,7 +54,6 @@ const AddBookmark = () => {
             const metadata = await fetchMetadataFromURL(bookmarkUrl);
 
             const newBookmark = {
-                id: `bookmark-${Date.now()}`,
                 title: metadata.title,
                 url: bookmarkUrl,
                 notes: metadata.notes,
@@ -66,8 +61,10 @@ const AddBookmark = () => {
                 tags: []
             };
 
-            dispatch(addBookmark(newBookmark));
-            handleCloseTooltip();
+            // Dispatch Redux Thunk to save in API
+            dispatch(createBookmarkThunk(newBookmark)).then(() => {
+                handleCloseTooltip();
+            });
         }
     };
 

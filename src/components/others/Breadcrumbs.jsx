@@ -1,34 +1,41 @@
-import React from 'react';
-import { Breadcrumbs as MuiBreadcrumbs, Link, Typography, Chip } from '@mui/material';
-import HomeIcon from '@mui/icons-material/Home';
-import { useDispatch, useSelector } from 'react-redux';
-import { toggleSelectedTags } from '../../features/tags/tagsSlice';
+import React from "react";
+import { Breadcrumbs as MuiBreadcrumbs, Link, Chip } from "@mui/material";
+import HomeIcon from "@mui/icons-material/Home";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleSelectedTagsThunk, clearSelectedTags } from "../../features/tags/tagsSlice";
+import { fetchBookmarksThunk } from "../../features/bookmarks/bookmarksSlice";
 
 const Breadcrumbs = () => {
-
     const dispatch = useDispatch();
     const allTags = useSelector((state) => state.tags.allTags);
 
     const handleTagClick = (tag) => {
-        dispatch(toggleSelectedTags(tag.id));
+        dispatch(toggleSelectedTagsThunk(tag.tagId));
+    };
+
+    const handleHomeClick = () => {
+        dispatch(clearSelectedTags()); // 🔹 Reset all selected tags
+        dispatch(fetchBookmarksThunk([])); // 🔹 Fetch all bookmarks (no filters)
     };
 
     return (
         <MuiBreadcrumbs aria-label="breadcrumb" separator="">
-            <Link color="inherit" href="/">
+            <Link color="inherit" onClick={handleHomeClick} style={{ cursor: "pointer" }}>
                 <HomeIcon size="small" />
             </Link>
-            {allTags.map((tag, index) => (
-                tag.isSelected && (<Chip
-                    key={index}
-                    label={tag.name}
-                    onDelete={() => handleTagClick(tag)}
-                    color="primary"
-                    variant="outlined"
-                    size="small"
-                />)
-            ))}
-        // </MuiBreadcrumbs>
+            {allTags && allTags.map((tag) =>
+                tag.isSelected ? (
+                    <Chip
+                        key={tag.tagId}
+                        label={tag.tagName}
+                        onDelete={() => handleTagClick(tag)}
+                        color="primary"
+                        variant="outlined"
+                        size="small"
+                    />
+                ) : null
+            )}
+        </MuiBreadcrumbs>
     );
 };
 

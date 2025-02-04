@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Drawer, Box, Typography, Button, TextField, Chip, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { closeRightSideBar } from '../../features/sidebar/sidebarSlice';
-import { editBookmark } from '../../features/bookmarks/bookmarksSlice';
+import { updateBookmarkThunk } from '../../features/bookmarks/bookmarksSlice';
 
 const RightSideBar = () => {
     const dispatch = useDispatch();
@@ -31,7 +31,7 @@ const RightSideBar = () => {
             notes,
             tags,
         };
-        dispatch(editBookmark({ updatedBookmark }));
+        dispatch(updateBookmarkThunk({ updatedBookmark }));
         handleWhenCloseRightSideBar();
     };
 
@@ -41,6 +41,7 @@ const RightSideBar = () => {
 
     const handleTagKeyPress = (e) => {
         if (e.key === 'Enter' && newTag.trim() !== '') {
+            console.log(tags)
             if (!tags.includes(newTag.trim())) {
                 setTags([...tags, newTag.trim()]);
             }
