@@ -83,11 +83,11 @@ const BookmarkCard = () => {
                     >
                         {/* Bookmark Image */}
                         {bookmark?.imageUrl && (
-                            <Box sx={{ width: '100%', overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <Box sx={{ width: '100%', overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center', maxHeight: '100px' }}>
                                 <img
                                     src={bookmark.imageUrl}
                                     alt={bookmark.title}
-                                    style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'cover' }}
+                                    style={{ maxWidth: '100%', maxHeight: '100px', objectFit: 'contain' }}
                                 />
                             </Box>
                         )}
@@ -101,7 +101,6 @@ const BookmarkCard = () => {
                                     right: 10,
                                     display: 'flex',
                                     gap: 1,
-                                    backgroundColor: 'rgba(255, 255, 255, 0.7)',
                                     borderRadius: '8px',
                                     padding: '4px',
                                 }}
