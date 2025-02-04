@@ -4,6 +4,7 @@ import {
     createBookmark,
     updateBookmark,
     deleteBookmark,
+    togglefavoriteBookmark
 } from "../../services/bookmarkService";
 import { updateTagThunk, deleteTagThunk } from "../tags/tagsSlice";
 
@@ -16,6 +17,18 @@ export const fetchBookmarksThunk = createAsyncThunk(
     async (selectedTags, { rejectWithValue }) => {
         try {
             return await fetchBookmarks(USER_ID, selectedTags);
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
+// 🟢 Set bookmark to favorite
+export const toggleFavoriteBookmarkThunk = createAsyncThunk(
+    "bookmarks/favorite",
+    async (bookmarkId, { rejectWithValue }) => {
+        try {
+            return await togglefavoriteBookmark(bookmarkId, USER_ID);
         } catch (error) {
             return rejectWithValue(error.response.data);
         }
@@ -126,6 +139,15 @@ const bookmarksSlice = createSlice({
             .addCase(deleteBookmarkThunk.rejected, (state, action) => {
                 state.status = "failed";
                 state.error = action.payload || "Failed to delete bookmark";
+            })
+
+            // 🟢 favorite Bookmark
+            .addCase(toggleFavoriteBookmarkThunk.fulfilled, (state, action) => {
+                const { bookmarkId, isFavorite } = action.payload;
+                state.allBookmarks = state.allBookmarks.map((b) =>
+                    b.bookmarkId === bookmarkId ? { ...b, isFavorite } : b
+                );
+                state.status = "succeeded";
             })
 
             // 🟢 Update Tag (Update tag name inside bookmarks)

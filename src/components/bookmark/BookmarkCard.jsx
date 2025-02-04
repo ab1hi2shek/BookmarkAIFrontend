@@ -4,7 +4,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FavoriteIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteFilledIcon from '@mui/icons-material/Favorite';
-import { deleteBookmarkThunk, setSelectedBookmark, fetchBookmarksThunk } from '../../features/bookmarks/bookmarksSlice';
+import { deleteBookmarkThunk, setSelectedBookmark, fetchBookmarksThunk, toggleFavoriteBookmarkThunk } from '../../features/bookmarks/bookmarksSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import styles from '../../styles/bookmarkCardStyles';
 import { openRightSideBar } from '../../features/sidebar/sidebarSlice';
@@ -21,7 +21,6 @@ const BookmarkCard = () => {
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [bookmarkIdToDelete, setBookmarkIdToDelete] = useState(null);
     const [hoveredCard, setHoveredCard] = useState(null);
-    const [favoriteBookmarks, setFavoriteBookmarks] = useState({});
 
     const filteredBookmarks = useSelector((state) => state.bookmarks.allBookmarks);
     const status = useSelector((state) => state.bookmarks.status);
@@ -52,10 +51,7 @@ const BookmarkCard = () => {
     };
 
     const toggleFavorite = (bookmarkId) => {
-        setFavoriteBookmarks((prev) => ({
-            ...prev,
-            [bookmarkId]: !prev[bookmarkId],
-        }));
+        dispatch(toggleFavoriteBookmarkThunk(bookmarkId))
     };
 
     return (
@@ -120,7 +116,7 @@ const BookmarkCard = () => {
                                             '&:hover': { backgroundColor: '#292a2b' },
                                         }}
                                     >
-                                        {favoriteBookmarks[bookmark.bookmarkId] ? (
+                                        {bookmark.isFavorite ? (
                                             <FavoriteFilledIcon sx={{ color: 'red' }} fontSize="small" />
                                         ) : (
                                             <FavoriteIcon fontSize="small" />

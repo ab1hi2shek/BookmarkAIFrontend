@@ -49,11 +49,11 @@ export const deleteBookmark = async (bookmarkId, userId) => {
 };
 
 // 🟢 set a bookmark as favorite
-export const favoriteBookmark = async (bookmarkId, userId) => {
+export const togglefavoriteBookmark = async (bookmarkId, userId) => {
     const response = await axios.post(
         `${BASE_URL}/favorite/${bookmarkId}`,
         {},
         { headers: getHeaders(userId) }
     );
-    return response.data.data.isFavorite;
+    return response.data.data;
 };
