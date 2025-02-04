@@ -87,11 +87,11 @@ const TagList = () => {
 
     return (
         <>
-            <List sx={{ padding: '4px' }}>
+            <List sx={{ padding: 1 }}>
                 {allTags && allTags
                     .filter(tag => tag.bookmarksCount > 0)
                     .map((tag) => (
-                        <ListItem key={tag.tagId} dense sx={{ padding: '2px 8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <ListItem key={tag.tagId} dense sx={{ padding: '2px 12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             {editingTag?.tagId === tag.tagId ? (
                                 <TextField
                                     variant="standard"
@@ -133,9 +133,9 @@ const TagList = () => {
 
                             )}
                             <Box sx={styles.moreIconContainer}>
-                                <Tooltip title="More">
+                                <Tooltip>
                                     <IconButton size="small" onClick={(event) => handleMenuOpen(event, tag)}>
-                                        <MoreVertIcon sx={styles.moreIcon} />
+                                        ...
                                     </IconButton>
                                 </Tooltip>
                             </Box>
@@ -143,8 +143,24 @@ const TagList = () => {
                     ))}
             </List>
             <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={handleMenuClose}>
-                <MenuItem onClick={handleEditClick}>Edit</MenuItem>
-                <MenuItem onClick={handleDeleteClick}>Delete</MenuItem>
+                <MenuItem
+                    onClick={handleEditClick}
+                    sx={{
+                        fontSize: "0.8rem",
+                        padding: "6px 12px",
+                        '&:hover': { backgroundColor: "rgba(219, 194, 143, 0.8)" }
+                    }}>
+                    Edit
+                </MenuItem>
+                <MenuItem
+                    onClick={handleDeleteClick}
+                    sx={{
+                        fontSize: "0.8rem",
+                        padding: "6px 12px",
+                        '&:hover': { backgroundColor: "rgba(219, 194, 143, 0.8)" }
+                    }}>
+                    Delete
+                </MenuItem>
             </Menu>
 
             {/* Delete Confirmation Modal */}
