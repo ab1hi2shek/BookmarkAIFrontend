@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Button, Tooltip, TextField, Box, ClickAwayListener } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { createBookmarkThunk } from '../../features/bookmarks/bookmarksSlice';
 
 const AddBookmark = () => {
@@ -9,6 +9,8 @@ const AddBookmark = () => {
     const [bookmarkUrl, setBookmarkUrl] = useState('');
     const dispatch = useDispatch();
     const inputRef = useRef(null);
+
+    const { user } = useSelector((state) => state.user)
 
     const handleOpenTooltip = async () => {
         setOpenTooltip(true);
@@ -62,9 +64,14 @@ const AddBookmark = () => {
             };
 
             // Dispatch Redux Thunk to save in API
-            dispatch(createBookmarkThunk(newBookmark)).then(() => {
+            if (user?.uid) {
+                dispatch(createBookmarkThunk({ userId: user.uid, bookmark: newBookmark })).then(() => {
+                    handleCloseTooltip();
+                });
+            } else {
+                console.log("error while createBookmarkThunk");
                 handleCloseTooltip();
-            });
+            }
         }
     };
 

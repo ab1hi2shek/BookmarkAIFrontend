@@ -8,14 +8,15 @@ import { fetchBookmarksThunk } from "../../features/bookmarks/bookmarksSlice";
 const Breadcrumbs = () => {
     const dispatch = useDispatch();
     const allTags = useSelector((state) => state.tags.allTags);
+    const user = useSelector((state) => state.user.user)
 
     const handleTagClick = (tag) => {
-        dispatch(toggleSelectedTagsThunk(tag.tagId));
+        dispatch(toggleSelectedTagsThunk({ selectedTagId: tag.tagId, userId: user?.uid }));
     };
 
     const handleHomeClick = () => {
         dispatch(clearSelectedTags()); // 🔹 Reset all selected tags
-        dispatch(fetchBookmarksThunk([])); // 🔹 Fetch all bookmarks (no filters)
+        dispatch(fetchBookmarksThunk({ userId: user.uid, selectedTags: [] }));
     };
 
     return (

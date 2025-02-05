@@ -6,10 +6,6 @@ import {
     deleteTag
 } from "../../services/tagService";
 import { fetchBookmarksThunk, updateBookmarkThunk, deleteBookmarkThunk } from "../bookmarks/bookmarksSlice";
-import { auth } from "../../firebaseConfig";
-
-// 🔹 User ID (Replace with actual authentication logic)
-const getUserId = () => auth.currentUser?.uid || null;
 
 // 🔹 Load selected tags from localStorage
 const loadSelectedTags = () => {
@@ -23,9 +19,9 @@ const saveSelectedTags = (tags) => {
 };
 
 // 🟢 Fetch all tags (while preserving `isSelected`)
-export const fetchTagsThunk = createAsyncThunk("tags/fetch", async (_, { rejectWithValue }) => {
+export const fetchTagsThunk = createAsyncThunk("tags/fetch", async ({ userId }, { rejectWithValue }) => {
     try {
-        const fetchedTags = await fetchTags(getUserId());
+        const fetchedTags = await fetchTags(userId);
         const selectedTagIds = loadSelectedTags(); // 🔹 Restore previous selection
 
         const updatedTags = fetchedTags.map((tag) => ({
@@ -40,9 +36,9 @@ export const fetchTagsThunk = createAsyncThunk("tags/fetch", async (_, { rejectW
 });
 
 // 🟢 Create a new tag
-export const createTagThunk = createAsyncThunk("tags/create", async (tagName, { rejectWithValue }) => {
+export const createTagThunk = createAsyncThunk("tags/create", async ({ tagName, userId }, { rejectWithValue }) => {
     try {
-        const newTag = await createTag(tagName, getUserId());
+        const newTag = await createTag(tagName, userId);
         return newTag; // ✅ Return the created tag, so `extraReducers` can handle the update
     } catch (error) {
         return rejectWithValue(error.response?.data?.error || "Failed to create tag");
@@ -50,9 +46,9 @@ export const createTagThunk = createAsyncThunk("tags/create", async (tagName, { 
 });
 
 // 🟢 Update a tag (Preserve selected tags)
-export const updateTagThunk = createAsyncThunk("tags/update", async ({ existingTag, tagName }, { rejectWithValue }) => {
+export const updateTagThunk = createAsyncThunk("tags/update", async ({ existingTag, tagName, userId }, { rejectWithValue }) => {
     try {
-        await updateTag({ tagId: existingTag.tagId, tagName: tagName, userId: getUserId() });
+        await updateTag({ tagId: existingTag.tagId, tagName: tagName, userId: userId });
         return { existingTag, tagName }; // ✅ Return updated tag details
     } catch (error) {
         return rejectWithValue(error.response?.data?.error || "Failed to update tag");
@@ -60,9 +56,9 @@ export const updateTagThunk = createAsyncThunk("tags/update", async ({ existingT
 });
 
 // 🟢 Delete a tag (Preserve selected tags)
-export const deleteTagThunk = createAsyncThunk("tags/delete", async (tagToDelete, { rejectWithValue }) => {
+export const deleteTagThunk = createAsyncThunk("tags/delete", async ({ tagToDelete, userId }, { rejectWithValue }) => {
     try {
-        await deleteTag(tagToDelete.tagId, getUserId());
+        await deleteTag(tagToDelete.tagId, userId);
         return tagToDelete; // ✅ Return the deleted tag ID so we can remove it from Redux state
     } catch (error) {
         return rejectWithValue(error.response?.data?.error || "Failed to delete tag");
@@ -70,14 +66,14 @@ export const deleteTagThunk = createAsyncThunk("tags/delete", async (tagToDelete
 });
 
 // 🟢 Toggle a tag and fetch bookmarks
-export const toggleSelectedTagsThunk = (selectedTagId) => (dispatch, getState) => {
+export const toggleSelectedTagsThunk = ({ selectedTagId, userId }) => (dispatch, getState) => {
     dispatch(toggleSelectedTags(selectedTagId)); // 🔹 First, update selection in Redux store
 
     const selectedTags = getState().tags.allTags
         .filter((tag) => tag.isSelected)
         .map((tag) => tag.tagId);
 
-    dispatch(fetchBookmarksThunk(selectedTags)); // 🔹 Fetch filtered bookmarks after updating selection
+    dispatch(fetchBookmarksThunk({ userId: userId, selectedTags: selectedTags })); // 🔹 Fetch filtered bookmarks after updating selection
 };
 
 const sortTagsFunction = (tags, sortBy) => {
@@ -119,7 +115,13 @@ const tagsSlice = createSlice({
             const { sortBy } = action.payload;
             state.allTags = sortTagsFunction(state.allTags, sortBy);
             localStorage.setItem("tagsSortPreference", sortBy);
-        }
+        },
+        // 🟢 Reset bookmarks state on logout
+        resetTagsState: (state) => {
+            state.allTags = [];
+            state.status = "idle"; // Reset status to ensure refetch on next login
+            state.error = null;
+        },
     },
     extraReducers: (builder) => {
         // 🟢 Fetch Tags
@@ -177,5 +179,5 @@ const tagsSlice = createSlice({
     }
 });
 
-export const { toggleSelectedTags, clearSelectedTags, sortTags } = tagsSlice.actions;
+export const { toggleSelectedTags, clearSelectedTags, sortTags, resetTagsState } = tagsSlice.actions;
 export default tagsSlice.reducer;

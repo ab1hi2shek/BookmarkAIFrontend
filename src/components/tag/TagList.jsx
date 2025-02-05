@@ -1,9 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { List, ListItem, IconButton, TextField, Box, Tooltip, Menu, MenuItem, Typography, Modal, Button } from '@mui/material';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTagThunk, deleteTagThunk, toggleSelectedTagsThunk, fetchTagsThunk } from '../../features/tags/tagsSlice';
-import styles from '../sidebar/SideBarStyles';
 import DeleteConfirmationModal from '../others/DeleteConfirmationModal';
 
 const TagList = () => {
@@ -14,21 +12,20 @@ const TagList = () => {
     const [newTagName, setNewTagName] = useState('');
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const inputRef = useRef(null);
-    const [forceRender, setForceRender] = useState(false);
 
     const dispatch = useDispatch();
     const allTags = useSelector((state) => state.tags.allTags);
     const status = useSelector((state) => state.tags.status);
+    const user = useSelector((state) => state.user.user)
 
     // 🟢 Fetch Tags When Component Mounts
     useEffect(() => {
         if (status === "idle" || status === "fetchTags") {
-            dispatch(fetchTagsThunk());
+            dispatch(fetchTagsThunk({ userId: user?.uid }));
         }
     }, [status, dispatch]);
 
     useEffect(() => {
-        console.log("Updated Tags:", allTags);
     }, [allTags]);
 
     useEffect(() => {
@@ -54,7 +51,6 @@ const TagList = () => {
     };
 
     const handleEditClick = () => {
-        console.log("i am here", selectedTag);
         setEditingTag(selectedTag);
         setNewTagName(selectedTag.tagName);
         handleMenuClose();
@@ -68,7 +64,7 @@ const TagList = () => {
 
     const confirmDelete = () => {
         if (tagToDelete) {
-            dispatch(deleteTagThunk(tagToDelete));
+            dispatch(deleteTagThunk({ tagToDelete: tagToDelete, userId: user?.uid }));
             setTagToDelete(null);
         }
         setDeleteModalOpen(false);
@@ -76,13 +72,13 @@ const TagList = () => {
 
     const handleEditSave = (e) => {
         if (e.key === 'Enter' && newTagName.trim() !== '') {
-            dispatch(updateTagThunk({ existingTag: editingTag, tagName: newTagName }));
+            dispatch(updateTagThunk({ existingTag: editingTag, tagName: newTagName, userId: user?.uid }));
             setEditingTag(null);
         }
     };
 
     const handleTagClick = (tag) => {
-        dispatch(toggleSelectedTagsThunk(tag.tagId));
+        dispatch(toggleSelectedTagsThunk({ selectedTagId: tag.tagId, userId: user?.uid }));
     };
 
     return (

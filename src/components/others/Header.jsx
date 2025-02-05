@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { AppBar, Toolbar, Typography, Button, Box, Avatar } from "@mui/material";
-import { auth, logout } from "../../firebaseConfig";
+import { logout } from "../../firebaseConfig";
+import { logoutUser, handleLogoutThunk } from "../../features/users/userSlice";
 
 const Header = () => {
-    const [user, setUser] = useState(null);
+    const { user } = useSelector((state) => state.user);
+    const dispatch = useDispatch();
 
-    // 🔹 Check Firebase Authentication Status
-    useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged((currentUser) => {
-            setUser(currentUser);
-        });
-        return () => unsubscribe();
-    }, []);
+    const handleLogout = async () => {
+        await logout();
+        dispatch(logoutUser()); // Clear user state in Redux
+    };
 
     return (
         <AppBar position="fixed" sx={{ height: 64, backgroundColor: "rgba(248, 237, 214, 0.8)" }}>
@@ -54,7 +54,7 @@ const Header = () => {
                                 borderRadius: "6px",
                                 "&:hover": { backgroundColor: "#c1aa7e" },
                             }}
-                            onClick={logout}
+                            onClick={() => dispatch(handleLogoutThunk())}
                         >
                             Log out
                         </Button>

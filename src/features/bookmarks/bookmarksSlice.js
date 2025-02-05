@@ -7,19 +7,13 @@ import {
     togglefavoriteBookmark
 } from "../../services/bookmarkService";
 import { updateTagThunk, deleteTagThunk } from "../tags/tagsSlice";
-import { auth } from "../../firebaseConfig";
-
-// 🔹 User ID (Replace with actual authentication logic)
-const getUserId = () => auth.currentUser?.uid || null;
 
 // 🟢 Fetch bookmarks (all or filtered by tags)
 export const fetchBookmarksThunk = createAsyncThunk(
     "bookmarks/fetch",
-    async (selectedTags, { rejectWithValue }) => {
+    async ({ userId, selectedTags }, { rejectWithValue }) => {
         try {
-            const tt = getUserId();
-            console.log("getUserId()", getUserId())
-            return await fetchBookmarks(getUserId(), selectedTags);
+            return await fetchBookmarks(userId, selectedTags);
         } catch (error) {
             return rejectWithValue(error.response.data);
         }
@@ -29,9 +23,9 @@ export const fetchBookmarksThunk = createAsyncThunk(
 // 🟢 Set bookmark to favorite
 export const toggleFavoriteBookmarkThunk = createAsyncThunk(
     "bookmarks/favorite",
-    async (bookmarkId, { rejectWithValue }) => {
+    async ({ userId, bookmarkId }, { rejectWithValue }) => {
         try {
-            return await togglefavoriteBookmark(bookmarkId, getUserId());
+            return await togglefavoriteBookmark(bookmarkId, userId);
         } catch (error) {
             return rejectWithValue(error.response.data);
         }
@@ -41,9 +35,9 @@ export const toggleFavoriteBookmarkThunk = createAsyncThunk(
 // 🟢 Create a bookmark
 export const createBookmarkThunk = createAsyncThunk(
     "bookmarks/create",
-    async (bookmark, { rejectWithValue }) => {
+    async ({ userId, bookmark }, { rejectWithValue }) => {
         try {
-            return await createBookmark(bookmark, getUserId());
+            return await createBookmark(bookmark, userId);
         } catch (error) {
             return rejectWithValue(error.response.data);
         }
@@ -53,9 +47,9 @@ export const createBookmarkThunk = createAsyncThunk(
 // 🟢 Update a bookmark
 export const updateBookmarkThunk = createAsyncThunk(
     "bookmarks/update",
-    async ({ updatedBookmark }, { rejectWithValue }) => {
+    async ({ userId, updatedBookmark }, { rejectWithValue }) => {
         try {
-            return await updateBookmark({ updatedBookmark }, getUserId());
+            return await updateBookmark({ updatedBookmark }, userId);
         } catch (error) {
             return rejectWithValue(error.response.data);
         }
@@ -65,9 +59,9 @@ export const updateBookmarkThunk = createAsyncThunk(
 // 🟢 Delete a bookmark
 export const deleteBookmarkThunk = createAsyncThunk(
     "bookmarks/delete",
-    async (bookmarkId, { rejectWithValue }) => {
+    async ({ userId, bookmarkId }, { rejectWithValue }) => {
         try {
-            return await deleteBookmark(bookmarkId, getUserId());
+            return await deleteBookmark(bookmarkId, userId);
         } catch (error) {
             return rejectWithValue(error.response.data);
         }
@@ -107,7 +101,16 @@ const bookmarksSlice = createSlice({
             }
             state.filteredBookmarks = filterBookmarksFunction(state.allBookmarks, filterBy);
             state.useFiltered = filterBy;
-        }
+        },
+        // 🟢 Reset bookmarks state on logout
+        resetBookmarksState: (state) => {
+            state.allBookmarks = [];
+            state.filteredBookmarks = [];
+            state.useFiltered = "none";
+            state.selectedBookmark = null;
+            state.status = "idle"; // Reset status to ensure refetch on next login
+            state.error = null;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -209,5 +212,5 @@ const bookmarksSlice = createSlice({
     },
 });
 
-export const { setSelectedBookmark, filterBookmarks } = bookmarksSlice.actions;
+export const { setSelectedBookmark, filterBookmarks, resetBookmarksState } = bookmarksSlice.actions;
 export default bookmarksSlice.reducer;

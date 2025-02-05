@@ -11,21 +11,11 @@ import { createUser } from '../services/userService';
 
 const Home = () => {
     const isRightSideBarOpen = useSelector((state) => state.sidebar.isRightSidebarOpen);
-    const [user, setUser] = useState(null);
+    const { user, loading } = useSelector((state) => state.user);
 
-    // 🔹 Check Firebase Authentication Status
-    useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged(async (currentUser) => {
-            console.log("currentUser", currentUser);
-            if (currentUser) {
-                const { uid, displayName, email, photoURL } = currentUser;
-                // Call API to save user data
-                await createUser({ userId: uid, name: displayName, email, avatarUrl: photoURL });
-            }
-            setUser(currentUser);
-        });
-        return () => unsubscribe();
-    }, []);
+    if (loading) {
+        return <div>Loading...</div>; // Show loading indicator
+    }
 
     // 🔹 If the user is not logged in, show the login component
     if (!user) {
@@ -33,7 +23,7 @@ const Home = () => {
             <div style={styles.container}>
                 <Header />
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-                    <SocialLogin setUser={setUser} />
+                    <SocialLogin />
                 </div>
             </div>
         );

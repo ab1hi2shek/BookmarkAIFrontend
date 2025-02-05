@@ -25,11 +25,12 @@ const BookmarkCard = () => {
     const useFiltered = useSelector((state) => state.bookmarks.useFiltered !== "none");
     const filteredBookmarks = useSelector((state) => useFiltered ? state.bookmarks.filteredBookmarks : state.bookmarks.allBookmarks);
     const status = useSelector((state) => state.bookmarks.status);
+    const { user } = useSelector((state) => state.user)
 
     // 🟢 Fetch Bookmarks When Component Mounts
     useEffect(() => {
-        if (status === "idle") {
-            dispatch(fetchBookmarksThunk());
+        if (status === "idle" && user?.uid) {
+            dispatch(fetchBookmarksThunk({ userId: user.uid, selectedTags: [] }));
         }
     }, [status, dispatch]);
 
@@ -40,7 +41,7 @@ const BookmarkCard = () => {
 
     const confirmDelete = () => {
         if (bookmarkIdToDelete) {
-            dispatch(deleteBookmarkThunk(bookmarkIdToDelete));
+            dispatch(deleteBookmarkThunk({ userId: user.uid, bookmarkId: bookmarkIdToDelete }));
         }
         setDeleteModalOpen(false);
         setBookmarkIdToDelete(null);
@@ -52,7 +53,7 @@ const BookmarkCard = () => {
     };
 
     const toggleFavorite = (bookmarkId) => {
-        dispatch(toggleFavoriteBookmarkThunk(bookmarkId))
+        dispatch(toggleFavoriteBookmarkThunk({ userId: user.uid, bookmarkId: bookmarkId }))
     };
 
     return (

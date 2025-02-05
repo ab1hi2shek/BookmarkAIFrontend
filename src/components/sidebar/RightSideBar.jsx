@@ -8,6 +8,7 @@ import { updateBookmarkThunk } from '../../features/bookmarks/bookmarksSlice';
 const RightSideBar = () => {
     const dispatch = useDispatch();
     const selectedBookmark = useSelector((state) => state.bookmarks.selectedBookmark);
+    const user = useSelector((state) => state.user.user)
 
     const [title, setTitle] = useState(selectedBookmark?.title || '');
     const [notes, setNotes] = useState(selectedBookmark?.notes || '');
@@ -31,7 +32,7 @@ const RightSideBar = () => {
             notes,
             tags,
         };
-        dispatch(updateBookmarkThunk({ updatedBookmark }));
+        dispatch(updateBookmarkThunk({ userId: user.uid, updatedBookmark: updatedBookmark }));
         handleWhenCloseRightSideBar();
     };
 

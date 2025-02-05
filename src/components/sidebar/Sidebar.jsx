@@ -19,6 +19,7 @@ const SideBar = () => {
     const [tagsMenuAnchor, setTagsMenuAnchor] = useState(null);
     const tagsMenuButtonRef = useRef(null); // ✅ Ref to track button position
 
+    // Optimize it using reselect.
     const { favoriteBookmarksCount, bookmarksWithNotesCount, bookmarksWithNoTags } = useSelector((state) => {
         let favoriteCount = 0;
         let notesCount = 0;

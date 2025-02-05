@@ -1,19 +1,27 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import { Box, Typography, Avatar, Card } from "@mui/material";
 import { signInWithGoogle, signInWithGithub } from "../../firebaseConfig";
+import { checkAuthStatus } from "../../features/users/userSlice";
 import GoogleIcon from "@mui/icons-material/Google";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import ButtonBase from "@mui/material/ButtonBase";
 
-const SocialLogin = ({ setUser }) => {
+const SocialLogin = () => {
+    const dispatch = useDispatch();
+
     const handleGoogleLogin = async () => {
         const user = await signInWithGoogle();
-        if (user) setUser(user);
+        if (user) {
+            dispatch(checkAuthStatus()); // Update Redux state
+        }
     };
 
     const handleGithubLogin = async () => {
         const user = await signInWithGithub();
-        if (user) setUser(user);
+        if (user) {
+            dispatch(checkAuthStatus());
+        }
     };
 
     return (
