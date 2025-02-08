@@ -1,13 +1,16 @@
 import React, { useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    Drawer, List, ListItem, ListItemText, Collapse, Box, Menu, MenuItem, Typography, Button
+    Drawer, List, ListItem, ListItemText, Collapse, Box, Menu, MenuItem, Typography, Button,
+    Divider
 } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import TagIcon from '@mui/icons-material/Tag';
 import TagList from '../tag/TagList';
+import DirectoryList from '../directory/DirectoryList';
 import { sortTags } from '../../features/tags/tagsSlice';
+import { sortDirectories } from '../../features/directory/directorySlice';
 import { filterBookmarks } from '../../features/bookmarks/bookmarksSlice';
 
 const SideBar = () => {
@@ -15,9 +18,13 @@ const SideBar = () => {
 
     const [filtersVisible, setFiltersVisible] = useState(() => JSON.parse(localStorage.getItem("filtersVisible")) ?? true);
     const [tagsVisible, setTagsVisible] = useState(() => JSON.parse(localStorage.getItem("tagsVisible")) ?? true);
+    const [directoryVisible, setDirectoryVisible] = useState(() => JSON.parse(localStorage.getItem("directoryVisible")) ?? true);
 
     const [tagsMenuAnchor, setTagsMenuAnchor] = useState(null);
     const tagsMenuButtonRef = useRef(null); // ✅ Ref to track button position
+
+    const [directoryMenuAnchor, setDirectoryMenuAnchor] = useState(null);
+    const directoryMenuButtonRef = useRef(null); // ✅ Ref to track button position
 
     // Optimize it using reselect.
     const { favoriteBookmarksCount, bookmarksWithNotesCount, bookmarksWithNoTags } = useSelector((state) => {
@@ -47,13 +54,31 @@ const SideBar = () => {
         localStorage.setItem("filtersVisible", JSON.stringify(newState));
     };
 
-    const handleTagsMenuOpen = (event) => {
-        setTagsMenuAnchor(event.currentTarget);
+    const handleDirectoryMenuOpen = (event) => {
+        setDirectoryMenuAnchor(event.currentTarget);
     };
 
-    const handleTagsMenuClose = () => {
-        setTagsMenuAnchor(null);
+    const handleDirectoryMenuClose = () => {
+        setDirectoryMenuAnchor(null);
     };
+
+    const handleToggleDirectory = () => {
+        const newState = !directoryVisible;
+        setDirectoryVisible(newState);
+        localStorage.setItem("directoryVisible", JSON.stringify(newState));
+        setDirectoryMenuAnchor(null); // ✅ Close menu when toggling
+    };
+
+    const handleSortDirectory = (sortBy) => {
+        dispatch(sortDirectories({ sortBy }));
+        setDirectoryMenuAnchor(null);
+    }
+
+    const handleCreateNewDirectory = () => {
+        console.log("handleSortDirectory");
+        setDirectoryMenuAnchor(null);
+    }
+
 
     const handleToggleTags = () => {
         const newState = !tagsVisible;
@@ -70,6 +95,14 @@ const SideBar = () => {
     const filterBookmarksForUI = (filterBy) => {
         dispatch(filterBookmarks({ filterBy }));
     }
+
+    const handleTagsMenuOpen = (event) => {
+        setTagsMenuAnchor(event.currentTarget);
+    };
+
+    const handleTagsMenuClose = () => {
+        setTagsMenuAnchor(null);
+    };
 
     return (
         <Drawer
@@ -185,10 +218,10 @@ const SideBar = () => {
                 </List>
             </Collapse>
 
-            {/* Space Between Filters & Tags */}
+            {/* Space Between Filters & Directory */}
             {filtersVisible && <Box sx={{ height: '8px' }} />}
 
-            {/* Tags Section */}
+            {/* Directory Section */}
             <Box
                 sx={{
                     display: 'flex',
@@ -198,9 +231,105 @@ const SideBar = () => {
                     marginTop: filtersVisible ? '0px' : '8px'
                 }}
             >
+                <Typography variant="subtitle1" sx={{ fontSize: '0.9rem', fontWeight: 500 }}>Directories</Typography>
+
+                <Button
+                    size="small"
+                    ref={directoryMenuButtonRef}
+                    sx={{
+                        backgroundColor: "rgba(219, 194, 143, 0.8)",
+                        fontSize: "0.6rem",  // 🔹 Slightly smaller font
+                        padding: "1px 6px",   // 🔹 Reduced padding
+                        borderRadius: "3px",  // 🔹 Smaller border radius
+                        minWidth: "20px",     // 🔹 Ensures button remains compact
+                        height: "20px",       // 🔹 Forces a smaller height
+                        color: "black",
+                        '&:hover': { backgroundColor: "rgba(219, 194, 143, 1)" }
+                    }}
+                    onClick={directoryVisible ? handleDirectoryMenuOpen : handleToggleDirectory}
+                >
+                    {directoryVisible ? "..." : "Show"}
+                </Button>
+            </Box>
+
+            {/* Directory Menu (Always Opens Bottom-Right of "..." Button) */}
+            <Menu
+                anchorEl={directoryMenuButtonRef.current} // ✅ Ensure correct positioning
+                open={Boolean(directoryMenuAnchor)}
+                onClose={handleDirectoryMenuClose}
+                anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                }}
+                transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                }}
+                PaperProps={{ sx: { mt: 1 } }} // ✅ Small margin to separate from button
+                MenuListProps={{ sx: { padding: 0 } }}
+            >
+                <MenuItem
+                    onClick={handleToggleDirectory}
+                    sx={{
+                        fontSize: "0.8rem",
+                        padding: "6px 12px",
+                        '&:hover': { backgroundColor: "rgba(219, 194, 143, 0.8)" }
+                    }}
+                >
+                    {tagsVisible ? "Hide" : "Show"}
+                </MenuItem>
+                <MenuItem
+                    onClick={() => handleSortDirectory("alphabetical")}
+                    sx={{
+                        fontSize: "0.8rem",
+                        padding: "6px 12px",
+                        '&:hover': { backgroundColor: "rgba(219, 194, 143, 0.8)" }
+                    }}
+                >
+                    Sort alphabetically
+                </MenuItem>
+                <MenuItem
+                    onClick={() => handleSortDirectory("bookmarks")}
+                    sx={{
+                        fontSize: "0.8rem",
+                        padding: "6px 12px",
+                        '&:hover': { backgroundColor: "rgba(219, 194, 143, 0.8)" }
+                    }}
+                >
+                    Sort by bookmarks
+                </MenuItem>
+                <Divider />
+                <MenuItem
+                    onClick={() => handleCreateNewDirectory()}
+                    sx={{
+                        fontSize: "0.8rem",
+                        padding: "6px 12px",
+                        '&:hover': { backgroundColor: "rgba(219, 194, 143, 0.8)" }
+                    }}
+                >
+                    Create directory
+                </MenuItem>
+            </Menu>
+
+            <Collapse in={directoryVisible} timeout="auto" unmountOnExit>
+                <DirectoryList />
+            </Collapse>
+
+            {/* Space Between Directory & Tags */}
+            {directoryVisible && <Box sx={{ height: '8px' }} />}
+
+            {/* Tags Section */}
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    padding: '8px 12px',
+                    marginTop: directoryVisible ? '0px' : '8px'
+                }}
+            >
                 <Typography variant="subtitle1" sx={{ fontSize: '0.9rem', fontWeight: 500 }}>Tags</Typography>
 
-                {/* ✅ Always show "..." button */}
                 <Button
                     size="small"
                     ref={tagsMenuButtonRef}
@@ -216,7 +345,7 @@ const SideBar = () => {
                     }}
                     onClick={tagsVisible ? handleTagsMenuOpen : handleToggleTags}
                 >
-                    {tagsVisible ? "Options" : "Show"}
+                    {tagsVisible ? "..." : "Show"}
                 </Button>
             </Box>
 

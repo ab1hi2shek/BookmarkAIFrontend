@@ -10,13 +10,36 @@ const getHeaders = (userId) => ({
 });
 
 // 🟢 Fetch all bookmarks (or filtered by tags)
-export const fetchBookmarks = async (userId, tags = []) => {
-    const response = await axios.post(
-        `${BASE_URL}/filter`,
-        tags.length ? { tags } : {}, // If tags exist, send them, else fetch all
+export const fetchBookmarks = async (userId, tags = [], matchType = "AND") => {
+    // Construct query params
+    const queryParams = new URLSearchParams();
+    queryParams.append("match_type", matchType.toUpperCase());
+
+    if (tags.length) {
+        queryParams.append("tags", tags.join(",")); // Convert array to comma-separated string
+    }
+
+    // Send GET request
+    const response = await axios.get(
+        `${BASE_URL}/filter-by-tags?${queryParams.toString()}`,
         { headers: getHeaders(userId) }
     );
     return response.data.data.bookmarks;
+};
+
+// Fetch bookmarks by directory
+export const fetchBookmarksWithDirectory = async (userId, directoryId) => {
+    try {
+        const response = await axios.get(
+            `${BASE_URL}/directory/${directoryId}`,
+            { headers: { "Content-Type": "application/json", "userId": userId } }
+        );
+
+        return response.data.data.bookmarks; // ✅ Return bookmarks from API response
+    } catch (error) {
+        console.error("Error fetching bookmarks:", error);
+        return []; // Return empty array if there's an error
+    }
 };
 
 // 🟢 Create a new bookmark

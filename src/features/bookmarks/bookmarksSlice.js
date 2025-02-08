@@ -4,7 +4,8 @@ import {
     createBookmark,
     updateBookmark,
     deleteBookmark,
-    togglefavoriteBookmark
+    togglefavoriteBookmark,
+    fetchBookmarksWithDirectory
 } from "../../services/bookmarkService";
 import { updateTagThunk, deleteTagThunk } from "../tags/tagsSlice";
 
@@ -14,6 +15,18 @@ export const fetchBookmarksThunk = createAsyncThunk(
     async ({ userId, selectedTags }, { rejectWithValue }) => {
         try {
             return await fetchBookmarks(userId, selectedTags);
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
+    }
+);
+
+// 🟢 Fetch bookmarks by directory)
+export const fetchBookmarksThunkByDirectory = createAsyncThunk(
+    "bookmarks/fetchByDirectory",
+    async ({ userId, directoryId }, { rejectWithValue }) => {
+        try {
+            return await fetchBookmarksWithDirectory(userId, directoryId);
         } catch (error) {
             return rejectWithValue(error.response.data);
         }
@@ -125,6 +138,21 @@ const bookmarksSlice = createSlice({
                 state.useFiltered = "none";
             })
             .addCase(fetchBookmarksThunk.rejected, (state, action) => {
+                state.status = "failed";
+                state.error = action.payload || "Failed to fetch bookmarks";
+            })
+
+            // 🟢 Fetch Bookmarks by directory
+            .addCase(fetchBookmarksThunkByDirectory.pending, (state) => {
+                state.status = "loading";
+            })
+            .addCase(fetchBookmarksThunkByDirectory.fulfilled, (state, action) => {
+                state.status = "succeeded";
+                state.allBookmarks = action.payload;
+                state.filteredBookmarks = action.payload;
+                state.useFiltered = "none";
+            })
+            .addCase(fetchBookmarksThunkByDirectory.rejected, (state, action) => {
                 state.status = "failed";
                 state.error = action.payload || "Failed to fetch bookmarks";
             })

@@ -6,6 +6,7 @@ import {
     deleteTag
 } from "../../services/tagService";
 import { fetchBookmarksThunk, updateBookmarkThunk, deleteBookmarkThunk } from "../bookmarks/bookmarksSlice";
+import { selectDirectoryThunk } from "../directory/directorySlice";
 
 // 🔹 Load selected tags from localStorage
 const loadSelectedTags = () => {
@@ -66,7 +67,7 @@ export const deleteTagThunk = createAsyncThunk("tags/delete", async ({ tagToDele
 });
 
 // 🟢 Toggle a tag and fetch bookmarks
-export const toggleSelectedTagsThunk = ({ selectedTagId, userId }) => (dispatch, getState) => {
+export const toggleSelectedTagsThunk = createAsyncThunk("tags/toggle", async ({ selectedTagId, userId }, { dispatch, getState }) => {
     dispatch(toggleSelectedTags(selectedTagId)); // 🔹 First, update selection in Redux store
 
     const selectedTags = getState().tags.allTags
@@ -74,7 +75,7 @@ export const toggleSelectedTagsThunk = ({ selectedTagId, userId }) => (dispatch,
         .map((tag) => tag.tagId);
 
     dispatch(fetchBookmarksThunk({ userId: userId, selectedTags: selectedTags })); // 🔹 Fetch filtered bookmarks after updating selection
-};
+});
 
 const sortTagsFunction = (tags, sortBy) => {
     if (sortBy === "alphabetical") {
@@ -176,6 +177,16 @@ const tagsSlice = createSlice({
             .addCase(deleteBookmarkThunk.fulfilled, (state, action) => {
                 state.status = "fetchTags";
             })
+
+            // 🟢 Unselect all tags when directory is clicked
+            .addCase(selectDirectoryThunk.fulfilled, (state, action) => {
+                state.allTags = state.allTags.map((tag) => ({
+                    ...tag,
+                    isSelected: false
+                }));
+            })
+
+
     }
 });
 
