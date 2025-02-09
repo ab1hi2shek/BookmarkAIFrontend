@@ -7,7 +7,7 @@ import Breadcrumbs from '../components/others/Breadcrumbs';
 import AddBookmark from '../components/bookmark/AddBookmark';
 import BookmarkCard from '../components/bookmark/BookmarkCard';
 import LeftSideBar from '../components/sidebar/LeftSideBar/LeftSideBar';
-import RightSideBar from '../components/sidebar/RightSideBar';
+import RightSideBar from '../components/sidebar/RightSideBar/RightSideBar';
 import SocialLogin from '../components/others/SocialLogin';
 import styles from './HomeStyles';
 import { fetchDirectoryBookmarksThunk } from '../features/directorySlice';

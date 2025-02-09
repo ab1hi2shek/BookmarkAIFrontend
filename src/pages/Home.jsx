@@ -4,7 +4,7 @@ import { Box } from "@mui/material";
 import Header from '../components/others/Header';
 import AddBookmark from '../components/bookmark/AddBookmark';
 import BookmarkCard from '../components/bookmark/BookmarkCard';
-import RightSideBar from '../components/sidebar/RightSideBar';
+import RightSideBar from '../components/sidebar/RightSideBar/RightSideBar';
 import SocialLogin from '../components/others/SocialLogin';
 import styles from './HomeStyles';
 import { fetchBookmarksThunk } from '../features/bookmarksSlice'
