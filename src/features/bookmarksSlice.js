@@ -4,29 +4,16 @@ import {
     createBookmark,
     updateBookmark,
     deleteBookmark,
-    togglefavoriteBookmark,
-    fetchBookmarksWithDirectory
-} from "../../services/bookmarkService";
-import { updateTagThunk, deleteTagThunk } from "../tags/tagsSlice";
+    togglefavoriteBookmark
+} from "../services/bookmarkService";
+import { updateTagThunk, deleteTagThunk } from "./tagsSlice";
 
 // 🟢 Fetch bookmarks (all or filtered by tags)
 export const fetchBookmarksThunk = createAsyncThunk(
     "bookmarks/fetch",
-    async ({ userId, selectedTags }, { rejectWithValue }) => {
+    async ({ userId }, { rejectWithValue }) => {
         try {
-            return await fetchBookmarks(userId, selectedTags);
-        } catch (error) {
-            return rejectWithValue(error.response.data);
-        }
-    }
-);
-
-// 🟢 Fetch bookmarks by directory)
-export const fetchBookmarksThunkByDirectory = createAsyncThunk(
-    "bookmarks/fetchByDirectory",
-    async ({ userId, directoryId }, { rejectWithValue }) => {
-        try {
-            return await fetchBookmarksWithDirectory(userId, directoryId);
+            return await fetchBookmarks(userId);
         } catch (error) {
             return rejectWithValue(error.response.data);
         }
@@ -96,8 +83,6 @@ const bookmarksSlice = createSlice({
     name: "bookmarks",
     initialState: {
         allBookmarks: [],
-        filteredBookmarks: [],
-        useFiltered: "none",
         selectedBookmark: null,
         status: "idle", // "loading" | "succeeded" | "failed"
         error: null,
@@ -108,18 +93,11 @@ const bookmarksSlice = createSlice({
         },
         filterBookmarks: (state, action) => {
             const { filterBy } = action.payload;
-            if (state.useFiltered === filterBy) {
-                state.useFiltered = 'none';
-                return;
-            }
-            state.filteredBookmarks = filterBookmarksFunction(state.allBookmarks, filterBy);
-            state.useFiltered = filterBy;
         },
+
         // 🟢 Reset bookmarks state on logout
         resetBookmarksState: (state) => {
             state.allBookmarks = [];
-            state.filteredBookmarks = [];
-            state.useFiltered = "none";
             state.selectedBookmark = null;
             state.status = "idle"; // Reset status to ensure refetch on next login
             state.error = null;
@@ -134,25 +112,8 @@ const bookmarksSlice = createSlice({
             .addCase(fetchBookmarksThunk.fulfilled, (state, action) => {
                 state.status = "succeeded";
                 state.allBookmarks = action.payload;
-                state.filteredBookmarks = action.payload;
-                state.useFiltered = "none";
             })
             .addCase(fetchBookmarksThunk.rejected, (state, action) => {
-                state.status = "failed";
-                state.error = action.payload || "Failed to fetch bookmarks";
-            })
-
-            // 🟢 Fetch Bookmarks by directory
-            .addCase(fetchBookmarksThunkByDirectory.pending, (state) => {
-                state.status = "loading";
-            })
-            .addCase(fetchBookmarksThunkByDirectory.fulfilled, (state, action) => {
-                state.status = "succeeded";
-                state.allBookmarks = action.payload;
-                state.filteredBookmarks = action.payload;
-                state.useFiltered = "none";
-            })
-            .addCase(fetchBookmarksThunkByDirectory.rejected, (state, action) => {
                 state.status = "failed";
                 state.error = action.payload || "Failed to fetch bookmarks";
             })
@@ -176,8 +137,9 @@ const bookmarksSlice = createSlice({
             })
             .addCase(updateBookmarkThunk.fulfilled, (state, action) => {
                 state.status = "succeeded";
+                console.log("updateBookmarkThunk.fulfilled ", action.payload)
+                // Issue: TODO: not updating as I am only updating state.allBookmarks, tagSlice have diff.
                 state.allBookmarks = state.allBookmarks.map((bookmark) => {
-                    console.log(bookmark.bookmarkId, action.payload.bookmarkId)
                     return bookmark.bookmarkId === action.payload.bookmarkId ? action.payload : bookmark
                 });
             })

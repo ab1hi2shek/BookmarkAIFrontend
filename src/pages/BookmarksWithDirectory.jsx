@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Box } from "@mui/material";
 import Header from '../components/others/Header';
@@ -9,25 +10,23 @@ import SideBar from '../components/sidebar/Sidebar';
 import RightSideBar from '../components/sidebar/RightSideBar';
 import SocialLogin from '../components/others/SocialLogin';
 import styles from './HomeStyles';
-import { fetchBookmarksThunk } from '../features/bookmarksSlice'
+import { fetchDirectoryBookmarksThunk } from '../features/directorySlice';
 
-const Home = () => {
+const BookmarksWithDirectory = () => {
+    const { directoryId } = useParams();
     const dispatch = useDispatch();
     const isRightSideBarOpen = useSelector((state) => state.sidebar.isRightSidebarOpen);
     const { user, loading } = useSelector((state) => state.user);
-    const allBookmarks = useSelector((state) => state.bookmarks.allBookmarks);
+    const directoryBookmarks = useSelector((state) => state.directories.directoryBookmarks);
 
     useEffect(() => {
-        if (user?.uid) {
-            dispatch(fetchBookmarksThunk({ userId: user.uid }));
+        if (directoryId && user?.uid) {
+            dispatch(fetchDirectoryBookmarksThunk({ userId: user.uid, directoryId }));
         }
-    }, [user, dispatch]);
+    }, [directoryId, user, dispatch]);
 
-    if (loading) {
-        return <div>Loading...</div>; // Show loading indicator
-    }
+    if (loading) return <div>Loading...</div>;
 
-    // 🔹 If the user is not logged in, show the login component
     if (!user) {
         return (
             <div style={styles.container}>
@@ -40,28 +39,21 @@ const Home = () => {
     }
 
     return (
-
         <div style={styles.container}>
             <Header />
-
             <div style={styles.contentWrapper}>
-                {/* Left Sidebar */}
-                <SideBar />
-
-                {/* 🟢 Main Content (Previously in `MainLayout`) */}
+                <SideBar directorySelected={directoryId} />
                 <div style={styles.mainContent(isRightSideBarOpen)}>
                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                        {/* <Breadcrumbs /> */}
+                        <Breadcrumbs />
                         <AddBookmark />
                     </Box>
-                    <BookmarkCard bookmarks={allBookmarks} />
+                    <BookmarkCard bookmarks={directoryBookmarks} />
                 </div>
-
-                {/* Right Sidebar */}
                 {isRightSideBarOpen && <RightSideBar />}
             </div>
         </div>
     );
 };
 
-export default Home;
+export default BookmarksWithDirectory;

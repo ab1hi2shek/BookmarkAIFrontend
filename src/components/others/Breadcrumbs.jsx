@@ -1,22 +1,17 @@
 import React from "react";
 import { Breadcrumbs as MuiBreadcrumbs, Link, Chip } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
-import { useDispatch, useSelector } from "react-redux";
-import { toggleSelectedTagsThunk, clearSelectedTags } from "../../features/tags/tagsSlice";
-import { fetchBookmarksThunk } from "../../features/bookmarks/bookmarksSlice";
+import { useSelector } from "react-redux";
 
 const Breadcrumbs = () => {
-    const dispatch = useDispatch();
     const allTags = useSelector((state) => state.tags.allTags);
-    const user = useSelector((state) => state.user.user)
 
     const handleTagClick = (tag) => {
-        dispatch(toggleSelectedTagsThunk({ selectedTagId: tag.tagId, userId: user?.uid }));
+        console.log("handleTagClick");
     };
 
     const handleHomeClick = () => {
-        dispatch(clearSelectedTags()); // 🔹 Reset all selected tags
-        dispatch(fetchBookmarksThunk({ userId: user.uid, selectedTags: [] }));
+        console.log("handleHomeClick");
     };
 
     return (

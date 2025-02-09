@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Button, Tooltip, TextField, Box, ClickAwayListener } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useDispatch, useSelector } from 'react-redux';
-import { createBookmarkThunk } from '../../features/bookmarks/bookmarksSlice';
+import { createBookmarkThunk } from '../../features/bookmarksSlice';
 
 const AddBookmark = () => {
     const [openTooltip, setOpenTooltip] = useState(false);

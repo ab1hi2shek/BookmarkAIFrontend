@@ -2,8 +2,11 @@ import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Provider, useDispatch } from "react-redux";
 import { store } from "./app/store"; // Import Redux store
-import { checkAuthStatus } from "./features/users/userSlice";
+import { checkAuthStatus } from "./features/userSlice";
 import Home from "./pages/Home";
+import BookmarksWithDirectory from "./pages/BookmarksWithDirectory";
+import BookmarksWithTags from "./pages/BookmarksWithTags";
+import BookmarksWithFilters from "./pages/BookmarksWithFilters"
 
 function App() {
     return (
@@ -24,6 +27,9 @@ const AppContent = () => {
         <Router>
             <Routes>
                 <Route path="/" element={<Home />} />
+                <Route path="/bookmarks/directory/:directoryId" element={< BookmarksWithDirectory />} />
+                <Route path="/bookmarks/tag/:tagId" element={< BookmarksWithTags />} />
+                <Route path="/bookmarks/filter/:filterType" element={< BookmarksWithFilters />} />
             </Routes>
         </Router>
     );

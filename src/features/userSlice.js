@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { auth } from "../../firebaseConfig";
-import { createUser } from "../../services/userService";
-import { resetBookmarksState } from "../bookmarks/bookmarksSlice";
-import { resetTagsState } from "../tags/tagsSlice";
+import { auth } from "../firebaseConfig";
+import { createUser } from "../services/userService";
+import { resetBookmarksState } from "./bookmarksSlice";
+import { resetTagsState } from "./tagsSlice";
 
 // 🔹 Async thunk to check authentication status
 export const checkAuthStatus = createAsyncThunk("user/checkAuthStatus", async (_, { rejectWithValue }) => {

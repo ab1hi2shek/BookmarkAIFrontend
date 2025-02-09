@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { List, ListItem, IconButton, TextField, Box, Tooltip, Menu, MenuItem, Typography, Modal, Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { renameDirectoryThunk, deleteDirectoryThunk, fetchDirectoriesThunk, selectDirectoryThunk } from '../../features/directory/directorySlice';
+import { renameDirectoryThunk, deleteDirectoryThunk, fetchDirectoriesThunk } from '../../features/directorySlice';
 import DeleteConfirmationModal from '../others/DeleteConfirmationModal';
 
-const DirectoryList = () => {
+const DirectoryList = ({ directorySelected }) => {
     const [menuAnchor, setMenuAnchor] = useState(null);
     const [selectedDirectory, setSelectedDirectory] = useState(null);
     const [directoryIdToDelete, setDirectoryIdToDelete] = useState(null);
@@ -14,15 +15,14 @@ const DirectoryList = () => {
     const inputRef = useRef(null);
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const allDirectorys = useSelector((state) => state.directories.allDirectories);
-    console.log("allDirectorys", allDirectorys)
     const status = useSelector((state) => state.directories.status);
-    const selectedDirectoryForClick = useSelector((state) => state.directories.selectedDirectory);
     const user = useSelector((state) => state.user.user)
 
     // 🟢 Fetch Directorys When Component Mounts
     useEffect(() => {
-        if (status === "idle" || status === "fetchDirectorys") {
+        if (status === "idle") {
             dispatch(fetchDirectoriesThunk({ userId: user?.uid }));
         }
     }, [status, dispatch]);
@@ -88,12 +88,7 @@ const DirectoryList = () => {
     };
 
     const handleDirectoryClick = (directory) => {
-        console.log("hhhhh", selectedDirectoryForClick, directory)
-        if (selectedDirectoryForClick.directoryId === directory.directoryId) {
-            dispatch(selectDirectoryThunk({ directory: {}, userId: user?.uid }));
-        } else {
-            dispatch(selectDirectoryThunk({ directory: directory, userId: user?.uid }));
-        }
+        navigate(`/bookmarks/directory/${directory.directoryId}`);
     };
 
     return (
@@ -112,7 +107,7 @@ const DirectoryList = () => {
                                 cursor: 'pointer',
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
-                                backgroundColor: selectedDirectoryForClick.directoryId == directory.directoryId && editingDirectory?.directoryId !== directory.directoryId ? 'rgba(244, 229, 201, 0.8)' : 'transparent',
+                                backgroundColor: directorySelected == directory.directoryId && editingDirectory?.directoryId !== directory.directoryId ? 'rgba(244, 229, 201, 0.8)' : 'transparent',
                                 '&:hover': {
                                     backgroundColor: editingDirectory?.directoryId !== directory.directoryId ? 'rgba(244, 229, 201, 0.8)' : 'transparent'
                                 }
@@ -139,8 +134,8 @@ const DirectoryList = () => {
                                     <Typography
                                         variant="body2"
                                         sx={{
-                                            fontSize: selectedDirectoryForClick.directoryId == directory.directoryId ? '0.85rem' : '0.8rem',
-                                            fontWeight: selectedDirectoryForClick.directoryId == directory.directoryId ? 550 : 400,
+                                            fontSize: directorySelected == directory.directoryId ? '0.85rem' : '0.8rem',
+                                            fontWeight: directorySelected == directory.directoryId ? 550 : 400,
                                             color: 'text.primary',
                                             transition: 'color 0.2s ease-in-out',
                                         }}

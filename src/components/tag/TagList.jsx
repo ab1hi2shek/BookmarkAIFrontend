@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { List, ListItem, IconButton, TextField, Box, Tooltip, Menu, MenuItem, Typography, Modal, Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { List, ListItem, IconButton, TextField, Box, Tooltip, Menu, MenuItem, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateTagThunk, deleteTagThunk, toggleSelectedTagsThunk, fetchTagsThunk } from '../../features/tags/tagsSlice';
+import { updateTagThunk, deleteTagThunk, fetchTagsThunk } from '../../features/tagsSlice';
 import DeleteConfirmationModal from '../others/DeleteConfirmationModal';
 
-const TagList = () => {
+const TagList = ({ tagSelected }) => {
     const [menuAnchor, setMenuAnchor] = useState(null);
     const [selectedTag, setSelectedTag] = useState(null);
     const [tagToDelete, setTagToDelete] = useState(null);
@@ -13,9 +14,17 @@ const TagList = () => {
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const inputRef = useRef(null);
 
+    const navigate = useNavigate();
     const dispatch = useDispatch();
-    const allTags = useSelector((state) => state.tags.allTags);
-    const status = useSelector((state) => state.tags.status);
+    // ✅ Memoize selector to prevent unnecessary re-renders
+    const { allTags, status } = useSelector(
+        (state) => ({
+            allTags: state.tags.allTags,
+            status: state.tags.status,
+        }),
+        (prev, next) => prev.allTags === next.allTags && prev.status === next.status
+    );
+
     const user = useSelector((state) => state.user.user)
 
     // 🟢 Fetch Tags When Component Mounts
@@ -77,8 +86,8 @@ const TagList = () => {
         }
     };
 
-    const handleTagClick = (tag) => {
-        dispatch(toggleSelectedTagsThunk({ selectedTagId: tag.tagId, userId: user?.uid }));
+    const handleTagClick = (clickedTagId) => {
+        navigate(`/bookmarks/tag/${clickedTagId}`);
     };
 
     return (
@@ -90,7 +99,7 @@ const TagList = () => {
                         <ListItem
                             key={tag.tagId}
                             dense
-                            onClick={() => handleTagClick(tag)}
+                            onClick={() => handleTagClick(tag.tagId)}
                             sx={{
                                 padding: '2px 12px',
                                 margin: '4px 0px',
@@ -98,7 +107,7 @@ const TagList = () => {
                                 cursor: 'pointer',
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
-                                backgroundColor: tag.isSelected && editingTag?.tagId !== tag.tagId ? 'rgba(244, 229, 201, 0.8)' : 'transparent',
+                                backgroundColor: tagSelected === tag.tagId && editingTag?.tagId !== tag.tagId ? 'rgba(244, 229, 201, 0.8)' : 'transparent',
                                 '&:hover': {
                                     backgroundColor: editingTag?.tagId !== tag.tagId ? 'rgba(244, 229, 201, 0.8)' : 'transparent'
                                 }
@@ -125,8 +134,8 @@ const TagList = () => {
                                     <Typography
                                         variant="body2"
                                         sx={{
-                                            fontSize: tag.isSelected ? '0.85rem' : '0.8rem',
-                                            fontWeight: tag.isSelected ? 550 : 400,
+                                            fontSize: tagSelected === tag.tagId ? '0.85rem' : '0.8rem',
+                                            fontWeight: tagSelected === tag.tagId ? 550 : 400,
                                             color: 'text.primary',
                                             transition: 'color 0.2s ease-in-out',
                                         }}

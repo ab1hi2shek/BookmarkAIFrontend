@@ -4,10 +4,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FavoriteIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteFilledIcon from '@mui/icons-material/Favorite';
-import { deleteBookmarkThunk, setSelectedBookmark, fetchBookmarksThunk, toggleFavoriteBookmarkThunk } from '../../features/bookmarks/bookmarksSlice';
+import { deleteBookmarkThunk, setSelectedBookmark, fetchBookmarksThunk, toggleFavoriteBookmarkThunk } from '../../features/bookmarksSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import styles from '../../styles/bookmarkCardStyles';
-import { openRightSideBar } from '../../features/sidebar/sidebarSlice';
+import { openRightSideBar } from '../../features/sidebarSlice';
 import DeleteConfirmationModal from '../others/DeleteConfirmationModal';
 
 const truncateText = (text, limit) => {
@@ -16,21 +16,22 @@ const truncateText = (text, limit) => {
     return truncated.slice(0, truncated.lastIndexOf(' ')) + ' ...';
 };
 
-const BookmarkCard = () => {
+const BookmarkCard = ({ bookmarks = [] }) => {
+    console.log(bookmarks)
     const dispatch = useDispatch();
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [bookmarkIdToDelete, setBookmarkIdToDelete] = useState(null);
     const [hoveredCard, setHoveredCard] = useState(null);
 
-    const useFiltered = useSelector((state) => state.bookmarks.useFiltered !== "none");
-    const filteredBookmarks = useSelector((state) => useFiltered ? state.bookmarks.filteredBookmarks : state.bookmarks.allBookmarks);
     const status = useSelector((state) => state.bookmarks.status);
     const { user } = useSelector((state) => state.user)
 
     // 🟢 Fetch Bookmarks When Component Mounts
     useEffect(() => {
         if (status === "idle" && user?.uid) {
-            dispatch(fetchBookmarksThunk({ userId: user.uid, selectedTags: [] }));
+
+            console.log("user?.uid", user?.uid);
+            dispatch(fetchBookmarksThunk({ userId: user.uid }));
         }
     }, [status, dispatch]);
 
@@ -60,7 +61,7 @@ const BookmarkCard = () => {
         <>
             <Divider sx={{ marginTop: '20px' }} />
             <Box sx={{ columnCount: { xs: 1, sm: 3, md: 4 }, columnGap: '16px', marginTop: '10px' }}>
-                {filteredBookmarks?.map((bookmark) => (
+                {bookmarks?.map((bookmark) => (
                     <Card
                         key={bookmark.bookmarkId}
                         sx={{

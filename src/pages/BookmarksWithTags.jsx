@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { Box } from "@mui/material";
 import Header from '../components/others/Header';
 import Breadcrumbs from '../components/others/Breadcrumbs';
@@ -9,19 +10,22 @@ import SideBar from '../components/sidebar/Sidebar';
 import RightSideBar from '../components/sidebar/RightSideBar';
 import SocialLogin from '../components/others/SocialLogin';
 import styles from './HomeStyles';
-import { fetchBookmarksThunk } from '../features/bookmarksSlice'
+import { fetchBookmarksByTagThunk } from '../features/tagsSlice';
 
-const Home = () => {
+const BookmarksWithTags = () => {
+
+    const { tagId } = useParams();
     const dispatch = useDispatch();
     const isRightSideBarOpen = useSelector((state) => state.sidebar.isRightSidebarOpen);
     const { user, loading } = useSelector((state) => state.user);
-    const allBookmarks = useSelector((state) => state.bookmarks.allBookmarks);
+    const tagsBookmarks = useSelector((state) => state.tags.tagsBookmarks);
+
 
     useEffect(() => {
-        if (user?.uid) {
-            dispatch(fetchBookmarksThunk({ userId: user.uid }));
+        if (tagId && user?.uid) {
+            dispatch(fetchBookmarksByTagThunk({ userId: user.uid, tagId: tagId }));
         }
-    }, [user, dispatch]);
+    }, [tagId, user, dispatch]);
 
     if (loading) {
         return <div>Loading...</div>; // Show loading indicator
@@ -46,15 +50,15 @@ const Home = () => {
 
             <div style={styles.contentWrapper}>
                 {/* Left Sidebar */}
-                <SideBar />
+                <SideBar tagSelected={tagId} />
 
                 {/* 🟢 Main Content (Previously in `MainLayout`) */}
                 <div style={styles.mainContent(isRightSideBarOpen)}>
                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                        {/* <Breadcrumbs /> */}
+                        <Breadcrumbs />
                         <AddBookmark />
                     </Box>
-                    <BookmarkCard bookmarks={allBookmarks} />
+                    <BookmarkCard bookmarks={tagsBookmarks} />
                 </div>
 
                 {/* Right Sidebar */}
@@ -64,4 +68,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default BookmarksWithTags;

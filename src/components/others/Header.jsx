@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { AppBar, Toolbar, Typography, Button, Box, Avatar } from "@mui/material";
 import { logout } from "../../firebaseConfig";
-import { logoutUser, handleLogoutThunk } from "../../features/users/userSlice";
+import { logoutUser, handleLogoutThunk } from "../../features/userSlice";
 
 const Header = () => {
     const { user } = useSelector((state) => state.user);

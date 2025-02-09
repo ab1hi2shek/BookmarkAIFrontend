@@ -16,7 +16,8 @@ const styles = {
         marginRight: isRightSideBarOpen ? '400px' : '0px', // Adjust for right sidebar
         width: `calc(100% - ${isRightSideBarOpen ? '650px' : '250px'})`, // Adjust width dynamically
         overflow: 'hidden',
-        marginLeft: '250px'
+        marginLeft: '250px',
+        padding: '16px'
     }),
 };
 

@@ -10,29 +10,50 @@ const getHeaders = (userId) => ({
 });
 
 // 🟢 Fetch all bookmarks (or filtered by tags)
-export const fetchBookmarks = async (userId, tags = [], matchType = "AND") => {
-    // Construct query params
-    const queryParams = new URLSearchParams();
-    queryParams.append("match_type", matchType.toUpperCase());
-
-    if (tags.length) {
-        queryParams.append("tags", tags.join(",")); // Convert array to comma-separated string
-    }
-
-    // Send GET request
+export const fetchBookmarks = async (userId) => {
     const response = await axios.get(
-        `${BASE_URL}/filter-by-tags?${queryParams.toString()}`,
+        `${BASE_URL}/all`,
         { headers: getHeaders(userId) }
     );
     return response.data.data.bookmarks;
 };
 
-// Fetch bookmarks by directory
-export const fetchBookmarksWithDirectory = async (userId, directoryId) => {
+// Fetch bookmarks with filters
+export const fetchBookmarksWithFilters = async (userId, filterType) => {
+    try {
+        const response = await axios.get(
+            `${BASE_URL}/filter/${filterType}`,
+            { headers: getHeaders(userId) }
+        );
+
+        return response.data.data.bookmarks; // ✅ Return bookmarks from API response
+    } catch (error) {
+        console.error("Error fetching bookmarks:", error);
+        return []; // Return empty array if there's an error
+    }
+};
+
+// Fetch bookmarks by directoryId
+export const fetchBookmarksWithTagId = async (userId, tagId) => {
+    try {
+        const response = await axios.get(
+            `${BASE_URL}/tag/${tagId}`,
+            { headers: getHeaders(userId) }
+        );
+
+        return response.data.data.bookmarks; // ✅ Return bookmarks from API response
+    } catch (error) {
+        console.error("Error fetching bookmarks:", error);
+        return []; // Return empty array if there's an error
+    }
+};
+
+// Fetch bookmarks by directoryId
+export const fetchBookmarksWithDirectoryId = async (userId, directoryId) => {
     try {
         const response = await axios.get(
             `${BASE_URL}/directory/${directoryId}`,
-            { headers: { "Content-Type": "application/json", "userId": userId } }
+            { headers: getHeaders(userId) }
         );
 
         return response.data.data.bookmarks; // ✅ Return bookmarks from API response

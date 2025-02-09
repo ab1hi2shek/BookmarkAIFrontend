@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { Box } from "@mui/material";
 import Header from '../components/others/Header';
 import Breadcrumbs from '../components/others/Breadcrumbs';
@@ -9,19 +10,22 @@ import SideBar from '../components/sidebar/Sidebar';
 import RightSideBar from '../components/sidebar/RightSideBar';
 import SocialLogin from '../components/others/SocialLogin';
 import styles from './HomeStyles';
-import { fetchBookmarksThunk } from '../features/bookmarksSlice'
+import { fetchBookmarksByFilterThunk } from '../features/filterBookmarksSlice';
 
-const Home = () => {
+const BookmarksWithFilters = () => {
+
+    const { filterType } = useParams();
     const dispatch = useDispatch();
     const isRightSideBarOpen = useSelector((state) => state.sidebar.isRightSidebarOpen);
     const { user, loading } = useSelector((state) => state.user);
-    const allBookmarks = useSelector((state) => state.bookmarks.allBookmarks);
+    const filteredBookmarks = useSelector((state) => state.filterBookmarks.filteredBookmarks);
+
 
     useEffect(() => {
-        if (user?.uid) {
-            dispatch(fetchBookmarksThunk({ userId: user.uid }));
+        if (filterType && user?.uid) {
+            dispatch(fetchBookmarksByFilterThunk({ userId: user.uid, filterType: filterType }));
         }
-    }, [user, dispatch]);
+    }, [filterType, user, dispatch]);
 
     if (loading) {
         return <div>Loading...</div>; // Show loading indicator
@@ -46,15 +50,15 @@ const Home = () => {
 
             <div style={styles.contentWrapper}>
                 {/* Left Sidebar */}
-                <SideBar />
+                <SideBar filterSelected={filterType} />
 
                 {/* 🟢 Main Content (Previously in `MainLayout`) */}
                 <div style={styles.mainContent(isRightSideBarOpen)}>
                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                        {/* <Breadcrumbs /> */}
+                        <Breadcrumbs />
                         <AddBookmark />
                     </Box>
-                    <BookmarkCard bookmarks={allBookmarks} />
+                    <BookmarkCard bookmarks={filteredBookmarks} />
                 </div>
 
                 {/* Right Sidebar */}
@@ -64,4 +68,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default BookmarksWithFilters;

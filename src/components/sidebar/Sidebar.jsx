@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     Drawer, List, ListItem, ListItemText, Collapse, Box, Menu, MenuItem, Typography, Button,
@@ -9,22 +10,25 @@ import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import TagIcon from '@mui/icons-material/Tag';
 import TagList from '../tag/TagList';
 import DirectoryList from '../directory/DirectoryList';
-import { sortTags } from '../../features/tags/tagsSlice';
-import { sortDirectories } from '../../features/directory/directorySlice';
-import { filterBookmarks } from '../../features/bookmarks/bookmarksSlice';
+import { sortTags } from '../../features/tagsSlice';
+import { sortDirectories } from '../../features/directorySlice';
+import { fetchBookmarksByFilterThunk } from '../../features/filterBookmarksSlice';
 
-const SideBar = () => {
+const SideBar = ({ directorySelected = null, tagSelected = null, filterSelected = null }) => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [filtersVisible, setFiltersVisible] = useState(() => JSON.parse(localStorage.getItem("filtersVisible")) ?? true);
     const [tagsVisible, setTagsVisible] = useState(() => JSON.parse(localStorage.getItem("tagsVisible")) ?? true);
     const [directoryVisible, setDirectoryVisible] = useState(() => JSON.parse(localStorage.getItem("directoryVisible")) ?? true);
 
     const [tagsMenuAnchor, setTagsMenuAnchor] = useState(null);
-    const tagsMenuButtonRef = useRef(null); // ✅ Ref to track button position
+    const tagsMenuButtonRef = useRef(null); // Ref to track button position
 
     const [directoryMenuAnchor, setDirectoryMenuAnchor] = useState(null);
-    const directoryMenuButtonRef = useRef(null); // ✅ Ref to track button position
+    const directoryMenuButtonRef = useRef(null); // Ref to track button position
+
+    const user = useSelector((state) => state.user.user)
 
     // Optimize it using reselect.
     const { favoriteBookmarksCount, bookmarksWithNotesCount, bookmarksWithNoTags } = useSelector((state) => {
@@ -44,9 +48,6 @@ const SideBar = () => {
             bookmarksWithNoTags: noTagsCount,
         };
     });
-    const useFiltered = useSelector((state) => state.bookmarks.useFiltered);
-
-
 
     const handleToggleFilters = () => {
         const newState = !filtersVisible;
@@ -66,7 +67,7 @@ const SideBar = () => {
         const newState = !directoryVisible;
         setDirectoryVisible(newState);
         localStorage.setItem("directoryVisible", JSON.stringify(newState));
-        setDirectoryMenuAnchor(null); // ✅ Close menu when toggling
+        setDirectoryMenuAnchor(null); // Close menu when toggling
     };
 
     const handleSortDirectory = (sortBy) => {
@@ -84,7 +85,7 @@ const SideBar = () => {
         const newState = !tagsVisible;
         setTagsVisible(newState);
         localStorage.setItem("tagsVisible", JSON.stringify(newState));
-        setTagsMenuAnchor(null); // ✅ Close menu when toggling
+        setTagsMenuAnchor(null); // Close menu when toggling
     };
 
     const handleSortTags = (sortBy) => {
@@ -92,8 +93,8 @@ const SideBar = () => {
         setTagsMenuAnchor(null);
     }
 
-    const filterBookmarksForUI = (filterBy) => {
-        dispatch(filterBookmarks({ filterBy }));
+    const filterBookmarksForUI = (filterType) => {
+        navigate(`/bookmarks/filter/${filterType}`);
     }
 
     const handleTagsMenuOpen = (event) => {
@@ -163,7 +164,7 @@ const SideBar = () => {
                         onClick={() => filterBookmarksForUI("favorite")}
                         sx={{
                             padding: '4px 8px',
-                            backgroundColor: useFiltered === "favorite" ? "rgba(244, 229, 201, 0.8)" : "transparent",
+                            backgroundColor: filterSelected === "favorite" ? "rgba(244, 229, 201, 0.8)" : "transparent",
                             '&:hover': {
                                 backgroundColor: "rgba(244, 229, 201, 0.8)" // ✅ Same color on hover
                             }
@@ -182,7 +183,7 @@ const SideBar = () => {
                         onClick={() => filterBookmarksForUI("with_notes")}
                         sx={{
                             padding: '4px 8px',
-                            backgroundColor: useFiltered === "with_notes" ? "rgba(244, 229, 201, 0.8)" : "transparent",
+                            backgroundColor: filterSelected === "with_notes" ? "rgba(244, 229, 201, 0.8)" : "transparent",
                             '&:hover': {
                                 backgroundColor: "rgba(244, 229, 201, 0.8)" // ✅ Same color on hover
                             }
@@ -201,7 +202,7 @@ const SideBar = () => {
                         onClick={() => filterBookmarksForUI("without_tags")}
                         sx={{
                             padding: '4px 8px',
-                            backgroundColor: useFiltered === "without_tags" ? "rgba(244, 229, 201, 0.8)" : "transparent",
+                            backgroundColor: filterSelected === "without_tags" ? "rgba(244, 229, 201, 0.8)" : "transparent",
                             '&:hover': {
                                 backgroundColor: "rgba(244, 229, 201, 0.8)" // ✅ Same color on hover
                             }
@@ -312,7 +313,7 @@ const SideBar = () => {
             </Menu>
 
             <Collapse in={directoryVisible} timeout="auto" unmountOnExit>
-                <DirectoryList />
+                <DirectoryList directorySelected={directorySelected} />
             </Collapse>
 
             {/* Space Between Directory & Tags */}
@@ -398,7 +399,7 @@ const SideBar = () => {
             </Menu>
 
             <Collapse in={tagsVisible} timeout="auto" unmountOnExit>
-                <TagList />
+                <TagList tagSelected={tagSelected} />
             </Collapse>
         </Drawer>
     );

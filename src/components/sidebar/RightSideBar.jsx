@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Drawer, Box, Typography, Button, TextField, Chip, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { closeRightSideBar } from '../../features/sidebar/sidebarSlice';
-import { updateBookmarkThunk } from '../../features/bookmarks/bookmarksSlice';
+import { closeRightSideBar } from '../../features/sidebarSlice';
+import { updateBookmarkThunk } from '../../features/bookmarksSlice';
 
 const RightSideBar = () => {
     const dispatch = useDispatch();
