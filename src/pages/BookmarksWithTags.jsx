@@ -5,7 +5,7 @@ import { Box } from "@mui/material";
 import Header from '../components/header/Header';
 import Breadcrumbs from '../components/mainLayout/Breadcrumbs';
 import AddBookmark from '../components/mainLayout/AddBookmark';
-import BookmarkCard from '../components/mainLayout/BookmarkCard';
+import MainLayout from '../components/mainLayout/MainLayout';
 import LeftSideBar from '../components/sidebar/LeftSideBar/LeftSideBar';
 import RightSideBar from '../components/sidebar/RightSideBar/RightSideBar';
 import SocialLogin from '../components/authentication/SocialLogin';
@@ -58,7 +58,7 @@ const BookmarksWithTags = () => {
                         <Breadcrumbs />
                         <AddBookmark />
                     </Box>
-                    <BookmarkCard bookmarks={tagsBookmarks} />
+                    <MainLayout bookmarks={tagsBookmarks} />
                 </div>
 
                 {/* Right Sidebar */}

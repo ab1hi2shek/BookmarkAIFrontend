@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Box } from "@mui/material";
 import Header from '../components/header/Header';
 import AddBookmark from '../components/mainLayout/AddBookmark';
-import BookmarkCard from '../components/mainLayout/BookmarkCard';
+import MainLayout from '../components/mainLayout/MainLayout';
 import RightSideBar from '../components/sidebar/RightSideBar/RightSideBar';
 import SocialLogin from '../components/authentication/SocialLogin';
 import styles from './HomeStyles';
@@ -53,7 +53,7 @@ const Home = () => {
                         {/* <Breadcrumbs /> */}
                         <AddBookmark />
                     </Box>
-                    <BookmarkCard bookmarks={allBookmarks} />
+                    <MainLayout bookmarks={allBookmarks} />
                 </div>
 
                 {/* Right Sidebar */}
