@@ -6,7 +6,7 @@ import Header from '../components/others/Header';
 import Breadcrumbs from '../components/others/Breadcrumbs';
 import AddBookmark from '../components/bookmark/AddBookmark';
 import BookmarkCard from '../components/bookmark/BookmarkCard';
-import SideBar from '../components/sidebar/Sidebar';
+import LeftSideBar from '../components/sidebar/LeftSideBar/LeftSideBar';
 import RightSideBar from '../components/sidebar/RightSideBar';
 import SocialLogin from '../components/others/SocialLogin';
 import styles from './HomeStyles';
@@ -50,7 +50,7 @@ const BookmarksWithFilters = () => {
 
             <div style={styles.contentWrapper}>
                 {/* Left Sidebar */}
-                <SideBar filterSelected={filterType} />
+                <LeftSideBar filterSelected={filterType} />
 
                 {/* 🟢 Main Content (Previously in `MainLayout`) */}
                 <div style={styles.mainContent(isRightSideBarOpen)}>

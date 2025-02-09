@@ -2,14 +2,13 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Box } from "@mui/material";
 import Header from '../components/others/Header';
-import Breadcrumbs from '../components/others/Breadcrumbs';
 import AddBookmark from '../components/bookmark/AddBookmark';
 import BookmarkCard from '../components/bookmark/BookmarkCard';
-import SideBar from '../components/sidebar/Sidebar';
 import RightSideBar from '../components/sidebar/RightSideBar';
 import SocialLogin from '../components/others/SocialLogin';
 import styles from './HomeStyles';
 import { fetchBookmarksThunk } from '../features/bookmarksSlice'
+import LeftSideBar from '../components/sidebar/LeftSideBar/LeftSideBar';
 
 const Home = () => {
     const dispatch = useDispatch();
@@ -46,7 +45,7 @@ const Home = () => {
 
             <div style={styles.contentWrapper}>
                 {/* Left Sidebar */}
-                <SideBar />
+                <LeftSideBar />
 
                 {/* 🟢 Main Content (Previously in `MainLayout`) */}
                 <div style={styles.mainContent(isRightSideBarOpen)}>

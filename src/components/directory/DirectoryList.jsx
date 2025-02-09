@@ -140,7 +140,7 @@ const DirectoryList = ({ directorySelected }) => {
                                             transition: 'color 0.2s ease-in-out',
                                         }}
                                     >
-                                        #{directory.name}
+                                        {directory.name}
                                     </Typography>
                                     <Typography
                                         variant="caption"
