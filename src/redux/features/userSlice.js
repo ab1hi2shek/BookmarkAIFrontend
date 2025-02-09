@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { auth } from "../firebaseConfig";
+import { auth } from "../../firebaseConfig";
 import { createUser } from "../services/userService";
 import { resetBookmarksState } from "./bookmarksSlice";
 import { resetTagsState } from "./tagsSlice";

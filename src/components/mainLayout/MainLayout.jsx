@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Divider } from '@mui/material';
-import { deleteBookmarkThunk, fetchBookmarksThunk } from '../../features/bookmarksSlice';
+import { deleteBookmarkThunk, fetchBookmarksThunk } from '../../redux/features/bookmarksSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import DeleteConfirmationModal from '../modals/DeleteConfirmationModal';
 import BookmarkCard from './BookmarkCard';
@@ -36,6 +36,7 @@ const MainLayout = ({ bookmarks = [] }) => {
             <Box sx={{ columnCount: { xs: 1, sm: 3, md: 4 }, columnGap: '16px', marginTop: '10px' }}>
                 {bookmarks?.map((bookmark) => (
                     <BookmarkCard
+                        key={bookmark.bookmarkId}
                         bookmark={bookmark}
                         setBookmarkIdToDelete={setBookmarkIdToDelete}
                         setDeleteModalOpen={setDeleteModalOpen}

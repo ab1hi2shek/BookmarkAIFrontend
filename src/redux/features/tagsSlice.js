@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { useDispatch } from 'react-redux';
 import {
     fetchTags,
     createTag,
@@ -54,7 +55,7 @@ export const updateTagThunk = createAsyncThunk("tags/update", async ({ existingT
 export const deleteTagThunk = createAsyncThunk("tags/delete", async ({ tagToDelete, userId }, { rejectWithValue }) => {
     try {
         await deleteTag(tagToDelete.tagId, userId);
-        return tagToDelete; // ✅ Return the deleted tag ID so we can remove it from Redux state
+        return tagToDelete; // ✅ Return the deleted tag object so we can remove it from Redux state
     } catch (error) {
         return rejectWithValue(error.response?.data?.error || "Failed to delete tag");
     }
@@ -88,6 +89,9 @@ const tagsSlice = createSlice({
             state.status = "idle"; // Reset status to ensure refetch on next login
             state.error = null;
         },
+        updateTagsBookmarks: (state, action) => {
+            state.tagsBookmarks = action.payload;
+        }
     },
     extraReducers: (builder) => {
         // 🟢 Fetch Tags
@@ -150,5 +154,5 @@ const tagsSlice = createSlice({
     }
 });
 
-export const { sortTags, resetTagsState } = tagsSlice.actions;
+export const { sortTags, resetTagsState, updateTagsBookmarks } = tagsSlice.actions;
 export default tagsSlice.reducer;

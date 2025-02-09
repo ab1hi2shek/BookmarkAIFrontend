@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Provider, useDispatch } from "react-redux";
 import { store } from "./app/store"; // Import Redux store
-import { checkAuthStatus } from "./features/userSlice";
+import { checkAuthStatus } from "./redux/features/userSlice";
 import Home from "./pages/Home";
 import BookmarksWithDirectory from "./pages/BookmarksWithDirectory";
 import BookmarksWithTags from "./pages/BookmarksWithTags";

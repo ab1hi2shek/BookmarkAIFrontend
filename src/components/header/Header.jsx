@@ -2,16 +2,11 @@ import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { AppBar, Toolbar, Typography, Button, Box, Avatar } from "@mui/material";
 import { logout } from "../../firebaseConfig";
-import { logoutUser, handleLogoutThunk } from "../../features/userSlice";
+import { logoutUser, handleLogoutThunk } from "../../redux/features/userSlice";
 
 const Header = () => {
     const { user } = useSelector((state) => state.user);
     const dispatch = useDispatch();
-
-    const handleLogout = async () => {
-        await logout();
-        dispatch(logoutUser()); // Clear user state in Redux
-    };
 
     return (
         <AppBar position="fixed" sx={{ height: 64, backgroundColor: "rgba(248, 237, 214, 0.8)" }}>

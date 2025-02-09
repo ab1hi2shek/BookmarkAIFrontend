@@ -5,7 +5,7 @@ import {
     Divider
 } from '@mui/material';
 import DirectoryList from './DirectoryList';
-import { sortDirectories } from '../../../features/directorySlice';
+import { sortDirectories } from '../../../redux/features/directorySlice';
 
 const DirectorySection = ({ directorySelected = null }) => {
     const dispatch = useDispatch();

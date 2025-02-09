@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
-import tagsReducer from '../features/tagsSlice';
-import bookmarksReducer from '../features/bookmarksSlice';
-import sidebarReducer from '../features/sidebarSlice';
-import userReducer from "../features/userSlice";
-import directoriesReducer from "../features/directorySlice";
-import filterBookmarksReducer from "../features/filterBookmarksSlice";
+import tagsReducer from '../redux/features/tagsSlice';
+import bookmarksReducer from '../redux/features/bookmarksSlice';
+import sidebarReducer from '../redux/features/sidebarSlice';
+import userReducer from "../redux/features/userSlice";
+import directoriesReducer from "../redux/features/directorySlice";
+import filterBookmarksReducer from "../redux/features/filterBookmarksSlice";
+import tagActionsMiddleware from "../redux/middlewares/tagActionsListener";
+import bookmarkActionsMiddleware from '../redux/middlewares/bookmarkActionsListener';
 
 export const store = configureStore({
     reducer: {
@@ -15,6 +17,10 @@ export const store = configureStore({
         directories: directoriesReducer,
         filterBookmarks: filterBookmarksReducer
     },
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware()
+            .concat(tagActionsMiddleware.middleware)
+            .concat(bookmarkActionsMiddleware.middleware),
 });
 
 export default store;

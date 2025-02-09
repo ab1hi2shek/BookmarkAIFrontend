@@ -7,7 +7,7 @@ import MainLayout from '../components/mainLayout/MainLayout';
 import RightSideBar from '../components/sidebar/RightSideBar/RightSideBar';
 import SocialLogin from '../components/authentication/SocialLogin';
 import styles from './HomeStyles';
-import { fetchBookmarksThunk } from '../features/bookmarksSlice'
+import { fetchBookmarksThunk } from '../redux/features/bookmarksSlice'
 import LeftSideBar from '../components/sidebar/LeftSideBar/LeftSideBar';
 import Breadcrumbs from '../components/mainLayout/Breadcrumbs';
 

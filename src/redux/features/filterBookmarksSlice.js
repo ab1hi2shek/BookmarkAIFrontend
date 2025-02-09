@@ -21,6 +21,9 @@ const filterBookmarksSlice = createSlice({
         error: null,
     },
     reducers: {
+        updateFilteredBookmarks: (state, action) => {
+            state.filteredBookmarks = action.payload;
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -39,5 +42,5 @@ const filterBookmarksSlice = createSlice({
     },
 });
 
-export const { } = filterBookmarksSlice.actions;
+export const { updateFilteredBookmarks } = filterBookmarksSlice.actions;
 export default filterBookmarksSlice.reducer;

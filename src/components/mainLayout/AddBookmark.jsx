@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Button, Tooltip, TextField, Box, ClickAwayListener } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useDispatch, useSelector } from 'react-redux';
-import { createBookmarkThunk } from '../../features/bookmarksSlice';
+import { createBookmarkThunk } from '../../redux/features/bookmarksSlice';
 
 const AddBookmark = () => {
     const [openTooltip, setOpenTooltip] = useState(false);
@@ -60,6 +60,7 @@ const AddBookmark = () => {
                 url: bookmarkUrl,
                 notes: metadata.notes,
                 imageUrl: metadata.imageUrl,
+                directoryId: 'directory-165ee178-7c68-4134-a2f6-9455be8ec55e',
                 tags: []
             };
 

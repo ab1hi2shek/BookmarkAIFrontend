@@ -2,7 +2,7 @@ import React, { } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Drawer, Box, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { closeRightSideBar } from '../../../features/sidebarSlice';
+import { closeRightSideBar } from '../../../redux/features/sidebarSlice';
 import EditBookmark from './EditBookmark';
 
 const RightSideBar = () => {

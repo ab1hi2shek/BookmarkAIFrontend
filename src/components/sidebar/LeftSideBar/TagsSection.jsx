@@ -4,7 +4,7 @@ import {
     Collapse, Box, Menu, MenuItem, Typography, Button
 } from '@mui/material';
 import TagList from './TagList';
-import { sortTags } from '../../../features/tagsSlice';
+import { sortTags } from '../../../redux/features/tagsSlice';
 
 const TagsSection = ({ tagSelected = null }) => {
     const dispatch = useDispatch();

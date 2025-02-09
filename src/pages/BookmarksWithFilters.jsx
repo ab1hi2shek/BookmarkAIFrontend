@@ -10,7 +10,7 @@ import LeftSideBar from '../components/sidebar/LeftSideBar/LeftSideBar';
 import RightSideBar from '../components/sidebar/RightSideBar/RightSideBar';
 import SocialLogin from '../components/authentication/SocialLogin';
 import styles from './HomeStyles';
-import { fetchBookmarksByFilterThunk } from '../features/filterBookmarksSlice';
+import { fetchBookmarksByFilterThunk } from '../redux/features/filterBookmarksSlice';
 
 const BookmarksWithFilters = () => {
 

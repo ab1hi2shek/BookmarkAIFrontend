@@ -4,10 +4,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FavoriteIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteFilledIcon from '@mui/icons-material/Favorite';
-import { toggleFavoriteBookmarkThunk } from '../../features/bookmarksSlice';
+import { toggleFavoriteBookmarkThunk } from '../../redux/features/bookmarksSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import styles from '../../styles/bookmarkCardStyles';
-import { openRightSideBar } from '../../features/sidebarSlice';
+import { openRightSideBar } from '../../redux/features/sidebarSlice';
 
 const truncateText = (text, limit) => {
     if (text.length <= limit) return text;

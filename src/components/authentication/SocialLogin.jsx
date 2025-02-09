@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { Box, Typography, Avatar, Card } from "@mui/material";
 import { signInWithGoogle, signInWithGithub } from "../../firebaseConfig";
-import { checkAuthStatus } from "../../features/userSlice";
+import { checkAuthStatus } from "../../redux/features/userSlice";
 import GoogleIcon from "@mui/icons-material/Google";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import ButtonBase from "@mui/material/ButtonBase";

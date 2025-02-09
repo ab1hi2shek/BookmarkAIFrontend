@@ -97,6 +97,9 @@ const directorySlice = createSlice({
             const { sortBy } = action.payload;
             state.allDirectories = sortDirectoriesFunction(state.allDirectories, sortBy);
             localStorage.setItem("directorySortPreference", sortBy);
+        },
+        updateDirectoryBookmarks: (state, action) => {
+            state.directoryBookmarks = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -156,5 +159,5 @@ const directorySlice = createSlice({
     }
 });
 
-export const { setSelectedDirectory, resetDirectoriesState, sortDirectories } = directorySlice.actions;
+export const { resetDirectoriesState, sortDirectories, updateDirectoryBookmarks } = directorySlice.actions;
 export default directorySlice.reducer;

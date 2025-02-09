@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { List, ListItem, IconButton, TextField, Box, Tooltip, Menu, MenuItem, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateTagThunk, deleteTagThunk, fetchTagsThunk } from '../../../features/tagsSlice';
+import { updateTagThunk, deleteTagThunk, fetchTagsThunk } from '../../../redux/features/tagsSlice';
 import DeleteConfirmationModal from '../../modals/DeleteConfirmationModal';
 
 const TagList = ({ tagSelected }) => {
@@ -99,12 +99,10 @@ const TagList = ({ tagSelected }) => {
                         <ListItem
                             key={tag.tagId}
                             dense
-                            onClick={() => handleTagClick(tag.tagId)}
                             sx={{
                                 padding: '2px 12px',
                                 margin: '4px 0px',
                                 display: 'flex',
-                                cursor: 'pointer',
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
                                 backgroundColor: tagSelected === tag.tagId && editingTag?.tagId !== tag.tagId ? 'rgba(244, 229, 201, 0.8)' : 'transparent',
@@ -129,7 +127,8 @@ const TagList = ({ tagSelected }) => {
                                 />
                             ) : (
                                 <Box
-                                    sx={{ display: 'flex', alignItems: 'center' }}
+                                    sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+                                    onClick={() => handleTagClick(tag.tagId)}
                                 >
                                     <Typography
                                         variant="body2"

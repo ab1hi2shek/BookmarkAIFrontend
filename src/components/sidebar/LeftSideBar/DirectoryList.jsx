@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { List, ListItem, IconButton, TextField, Box, Tooltip, Menu, MenuItem, Typography, Modal, Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { renameDirectoryThunk, deleteDirectoryThunk, fetchDirectoriesThunk } from '../../../features/directorySlice';
+import { renameDirectoryThunk, deleteDirectoryThunk, fetchDirectoriesThunk } from '../../../redux/features/directorySlice';
 import DeleteConfirmationModal from '../../modals/DeleteConfirmationModal';
 
 const DirectoryList = ({ directorySelected }) => {

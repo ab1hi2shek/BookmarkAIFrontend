@@ -10,7 +10,7 @@ import LeftSideBar from '../components/sidebar/LeftSideBar/LeftSideBar';
 import RightSideBar from '../components/sidebar/RightSideBar/RightSideBar';
 import SocialLogin from '../components/authentication/SocialLogin';
 import styles from './HomeStyles';
-import { fetchDirectoryBookmarksThunk } from '../features/directorySlice';
+import { fetchDirectoryBookmarksThunk } from '../redux/features/directorySlice';
 
 const BookmarksWithDirectory = () => {
     const { directoryId } = useParams();

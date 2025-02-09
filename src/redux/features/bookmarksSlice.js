@@ -82,6 +82,9 @@ const bookmarksSlice = createSlice({
             state.status = "idle"; // Reset status to ensure refetch on next login
             state.error = null;
         },
+        updateAllBookmarks: (state, action) => {
+            state.allBookmarks = action.payload;
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -117,11 +120,6 @@ const bookmarksSlice = createSlice({
             })
             .addCase(updateBookmarkThunk.fulfilled, (state, action) => {
                 state.status = "succeeded";
-                console.log("updateBookmarkThunk.fulfilled ", action.payload)
-                // Issue: TODO: not updating as I am only updating state.allBookmarks, tagSlice have diff.
-                state.allBookmarks = state.allBookmarks.map((bookmark) => {
-                    return bookmark.bookmarkId === action.payload.bookmarkId ? action.payload : bookmark
-                });
             })
             .addCase(updateBookmarkThunk.rejected, (state, action) => {
                 state.status = "failed";
@@ -134,7 +132,6 @@ const bookmarksSlice = createSlice({
             })
             .addCase(deleteBookmarkThunk.fulfilled, (state, action) => {
                 state.status = "succeeded";
-                state.allBookmarks = state.allBookmarks.filter((b) => b.bookmarkId !== action.payload);
             })
             .addCase(deleteBookmarkThunk.rejected, (state, action) => {
                 state.status = "failed";
@@ -143,44 +140,10 @@ const bookmarksSlice = createSlice({
 
             // 🟢 favorite Bookmark
             .addCase(toggleFavoriteBookmarkThunk.fulfilled, (state, action) => {
-                const { bookmarkId, isFavorite } = action.payload;
-                state.allBookmarks = state.allBookmarks.map((b) =>
-                    b.bookmarkId === bookmarkId ? { ...b, isFavorite } : b
-                );
                 state.status = "succeeded";
-            })
-
-            // 🟢 Update Tag (Update tag name inside bookmarks)
-            .addCase(updateTagThunk.fulfilled, (state, action) => {
-                const { existingTag, tagName } = action.payload;
-                state.allBookmarks = state.allBookmarks.map((bookmark) => ({
-                    ...bookmark,
-                    tags: bookmark.tags.map((tag) =>
-                        tag === existingTag.tagName ? tagName : tag
-                    )
-                }));
-            })
-
-            // When a tag is deleted, update bookmarks in state.
-            .addCase(deleteTagThunk.fulfilled, (state, action) => {
-                const tagDeleted = action.payload;
-                // Remove the tag from bookmarks
-                state.allBookmarks = state.allBookmarks
-                    .map((bookmark) => {
-                        const updatedTags = bookmark.tags.filter((tag) => tag !== tagDeleted.tagName);
-                        // If no tags left, remove the bookmark
-                        if (updatedTags.length === 0) {
-                            return null;
-                        }
-                        return {
-                            ...bookmark,
-                            tags: updatedTags,
-                        };
-                    })
-                    .filter(Boolean);
             })
     },
 });
 
-export const { resetBookmarksState } = bookmarksSlice.actions;
+export const { resetBookmarksState, updateAllBookmarks } = bookmarksSlice.actions;
 export default bookmarksSlice.reducer;
