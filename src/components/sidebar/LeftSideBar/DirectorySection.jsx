@@ -4,7 +4,7 @@ import {
     Collapse, Box, Menu, MenuItem, Typography, Button,
     Divider
 } from '@mui/material';
-import DirectoryList from '../../directory/DirectoryList';
+import DirectoryList from './DirectoryList';
 import { sortDirectories } from '../../../features/directorySlice';
 
 const DirectorySection = ({ directorySelected = null }) => {

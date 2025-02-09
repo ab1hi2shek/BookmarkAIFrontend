@@ -8,7 +8,7 @@ import { deleteBookmarkThunk, setSelectedBookmark, fetchBookmarksThunk, toggleFa
 import { useSelector, useDispatch } from 'react-redux';
 import styles from '../../styles/bookmarkCardStyles';
 import { openRightSideBar } from '../../features/sidebarSlice';
-import DeleteConfirmationModal from '../others/DeleteConfirmationModal';
+import DeleteConfirmationModal from '../modals/DeleteConfirmationModal';
 
 const truncateText = (text, limit) => {
     if (text.length <= limit) return text;

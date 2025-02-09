@@ -2,13 +2,13 @@ import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Box } from "@mui/material";
-import Header from '../components/others/Header';
-import Breadcrumbs from '../components/others/Breadcrumbs';
-import AddBookmark from '../components/bookmark/AddBookmark';
-import BookmarkCard from '../components/bookmark/BookmarkCard';
+import Header from '../components/header/Header';
+import Breadcrumbs from '../components/mainLayout/Breadcrumbs';
+import AddBookmark from '../components/mainLayout/AddBookmark';
+import BookmarkCard from '../components/mainLayout/BookmarkCard';
 import LeftSideBar from '../components/sidebar/LeftSideBar/LeftSideBar';
 import RightSideBar from '../components/sidebar/RightSideBar/RightSideBar';
-import SocialLogin from '../components/others/SocialLogin';
+import SocialLogin from '../components/authentication/SocialLogin';
 import styles from './HomeStyles';
 import { fetchDirectoryBookmarksThunk } from '../features/directorySlice';
 

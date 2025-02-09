@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import {
     Collapse, Box, Menu, MenuItem, Typography, Button
 } from '@mui/material';
-import TagList from '../../tag/TagList';
+import TagList from './TagList';
 import { sortTags } from '../../../features/tagsSlice';
 
 const TagsSection = ({ tagSelected = null }) => {

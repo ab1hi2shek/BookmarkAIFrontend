@@ -2,8 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { List, ListItem, IconButton, TextField, Box, Tooltip, Menu, MenuItem, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateTagThunk, deleteTagThunk, fetchTagsThunk } from '../../features/tagsSlice';
-import DeleteConfirmationModal from '../others/DeleteConfirmationModal';
+import { updateTagThunk, deleteTagThunk, fetchTagsThunk } from '../../../features/tagsSlice';
+import DeleteConfirmationModal from '../../modals/DeleteConfirmationModal';
 
 const TagList = ({ tagSelected }) => {
     const [menuAnchor, setMenuAnchor] = useState(null);

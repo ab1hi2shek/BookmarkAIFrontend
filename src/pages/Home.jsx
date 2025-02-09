@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Box } from "@mui/material";
-import Header from '../components/others/Header';
-import AddBookmark from '../components/bookmark/AddBookmark';
-import BookmarkCard from '../components/bookmark/BookmarkCard';
+import Header from '../components/header/Header';
+import AddBookmark from '../components/mainLayout/AddBookmark';
+import BookmarkCard from '../components/mainLayout/BookmarkCard';
 import RightSideBar from '../components/sidebar/RightSideBar/RightSideBar';
-import SocialLogin from '../components/others/SocialLogin';
+import SocialLogin from '../components/authentication/SocialLogin';
 import styles from './HomeStyles';
 import { fetchBookmarksThunk } from '../features/bookmarksSlice'
 import LeftSideBar from '../components/sidebar/LeftSideBar/LeftSideBar';
