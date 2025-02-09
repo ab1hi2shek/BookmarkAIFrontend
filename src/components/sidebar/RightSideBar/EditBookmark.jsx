@@ -7,19 +7,19 @@ import { updateBookmarkThunk } from '../../../features/bookmarksSlice';
 
 const EditBookmark = () => {
     const dispatch = useDispatch();
-    const selectedBookmark = useSelector((state) => state.bookmarks.selectedBookmark);
+    const bookmarkToEdit = useSelector((state) => state.sidebar.bookmarkToEdit);
     const user = useSelector((state) => state.user.user)
 
-    const [title, setTitle] = useState(selectedBookmark?.title || '');
-    const [notes, setNotes] = useState(selectedBookmark?.notes || '');
-    const [tags, setTags] = useState(selectedBookmark?.tags || []);
+    const [title, setTitle] = useState(bookmarkToEdit?.title || '');
+    const [notes, setNotes] = useState(bookmarkToEdit?.notes || '');
+    const [tags, setTags] = useState(bookmarkToEdit?.tags || []);
     const [newTag, setNewTag] = useState('');
 
     useEffect(() => {
-        setTitle(selectedBookmark?.title || '');
-        setNotes(selectedBookmark?.notes || '');
-        setTags(selectedBookmark?.tags || []);
-    }, [selectedBookmark]);
+        setTitle(bookmarkToEdit?.title || '');
+        setNotes(bookmarkToEdit?.notes || '');
+        setTags(bookmarkToEdit?.tags || []);
+    }, [bookmarkToEdit]);
 
     const handleWhenCloseRightSideBar = () => {
         dispatch(closeRightSideBar());
@@ -27,7 +27,7 @@ const EditBookmark = () => {
 
     const handleSaveClick = () => {
         const updatedBookmark = {
-            ...selectedBookmark,
+            ...bookmarkToEdit,
             title,
             notes,
             tags,

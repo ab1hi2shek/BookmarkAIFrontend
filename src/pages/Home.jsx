@@ -9,6 +9,7 @@ import SocialLogin from '../components/authentication/SocialLogin';
 import styles from './HomeStyles';
 import { fetchBookmarksThunk } from '../features/bookmarksSlice'
 import LeftSideBar from '../components/sidebar/LeftSideBar/LeftSideBar';
+import Breadcrumbs from '../components/mainLayout/Breadcrumbs';
 
 const Home = () => {
     const dispatch = useDispatch();
@@ -50,7 +51,7 @@ const Home = () => {
                 {/* 🟢 Main Content (Previously in `MainLayout`) */}
                 <div style={styles.mainContent(isRightSideBarOpen)}>
                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                        {/* <Breadcrumbs /> */}
+                        <Breadcrumbs />
                         <AddBookmark />
                     </Box>
                     <MainLayout bookmarks={allBookmarks} />

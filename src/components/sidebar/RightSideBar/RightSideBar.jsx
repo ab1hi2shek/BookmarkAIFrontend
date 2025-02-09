@@ -1,55 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Drawer, Box, Typography, Button, TextField, Chip, IconButton } from '@mui/material';
+import { Drawer, Box, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { closeRightSideBar } from '../../../features/sidebarSlice';
-import { updateBookmarkThunk } from '../../../features/bookmarksSlice';
 import EditBookmark from './EditBookmark';
 
 const RightSideBar = () => {
     const dispatch = useDispatch();
-    const selectedBookmark = useSelector((state) => state.bookmarks.selectedBookmark);
-    const user = useSelector((state) => state.user.user)
-
-    const [title, setTitle] = useState(selectedBookmark?.title || '');
-    const [notes, setNotes] = useState(selectedBookmark?.notes || '');
-    const [tags, setTags] = useState(selectedBookmark?.tags || []);
-    const [newTag, setNewTag] = useState('');
-
-    useEffect(() => {
-        setTitle(selectedBookmark?.title || '');
-        setNotes(selectedBookmark?.notes || '');
-        setTags(selectedBookmark?.tags || []);
-    }, [selectedBookmark]);
+    const isRightSideBarOpen = useSelector((state) => state.sidebar.isRightSidebarOpen === true);
 
     const handleWhenCloseRightSideBar = () => {
         dispatch(closeRightSideBar());
-    };
-
-    const handleSaveClick = () => {
-        const updatedBookmark = {
-            ...selectedBookmark,
-            title,
-            notes,
-            tags,
-        };
-        dispatch(updateBookmarkThunk({ userId: user.uid, updatedBookmark: updatedBookmark }));
-        handleWhenCloseRightSideBar();
-    };
-
-    const handleTagDelete = (tagToDelete) => {
-        setTags(tags.filter(tag => tag !== tagToDelete));
-    };
-
-    const handleTagKeyPress = (e) => {
-        if (e.key === 'Enter' && newTag.trim() !== '') {
-            console.log(tags)
-            if (!tags.includes(newTag.trim())) {
-                setTags([...tags, newTag.trim()]);
-            }
-            setNewTag('');
-            e.preventDefault();
-        }
     };
 
     return (
@@ -81,7 +42,7 @@ const RightSideBar = () => {
                 </IconButton>
             </Box>
 
-            {selectedBookmark && <EditBookmark />}
+            {isRightSideBarOpen && <EditBookmark />}
         </Drawer>
     );
 };

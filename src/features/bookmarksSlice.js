@@ -8,7 +8,7 @@ import {
 } from "../services/bookmarkService";
 import { updateTagThunk, deleteTagThunk } from "./tagsSlice";
 
-// 🟢 Fetch bookmarks (all or filtered by tags)
+// 🟢 Fetch all bookmarks
 export const fetchBookmarksThunk = createAsyncThunk(
     "bookmarks/fetch",
     async ({ userId }, { rejectWithValue }) => {
@@ -68,37 +68,17 @@ export const deleteBookmarkThunk = createAsyncThunk(
     }
 );
 
-const filterBookmarksFunction = (bookmarks, filterBy) => {
-    if (filterBy === "favorite") {
-        return bookmarks.filter((b) => b.isFavorite);
-    } else if (filterBy === "with_notes") {
-        return bookmarks.filter((b) => b.notes && b.notes.trim() !== "");
-    } else if (filterBy === "without_tags") {
-        return bookmarks.filter((b) => !b.tags || b.tags.length === 0)
-    }
-    return bookmarks;
-};
-
 const bookmarksSlice = createSlice({
     name: "bookmarks",
     initialState: {
         allBookmarks: [],
-        selectedBookmark: null,
         status: "idle", // "loading" | "succeeded" | "failed"
         error: null,
     },
     reducers: {
-        setSelectedBookmark: (state, action) => {
-            state.selectedBookmark = action.payload;
-        },
-        filterBookmarks: (state, action) => {
-            const { filterBy } = action.payload;
-        },
-
         // 🟢 Reset bookmarks state on logout
         resetBookmarksState: (state) => {
             state.allBookmarks = [];
-            state.selectedBookmark = null;
             state.status = "idle"; // Reset status to ensure refetch on next login
             state.error = null;
         },
@@ -202,5 +182,5 @@ const bookmarksSlice = createSlice({
     },
 });
 
-export const { setSelectedBookmark, filterBookmarks, resetBookmarksState } = bookmarksSlice.actions;
+export const { resetBookmarksState } = bookmarksSlice.actions;
 export default bookmarksSlice.reducer;

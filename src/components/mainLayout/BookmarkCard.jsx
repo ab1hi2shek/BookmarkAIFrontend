@@ -4,7 +4,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FavoriteIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteFilledIcon from '@mui/icons-material/Favorite';
-import { setSelectedBookmark, toggleFavoriteBookmarkThunk } from '../../features/bookmarksSlice';
+import { toggleFavoriteBookmarkThunk } from '../../features/bookmarksSlice';
 import { useSelector, useDispatch } from 'react-redux';
 import styles from '../../styles/bookmarkCardStyles';
 import { openRightSideBar } from '../../features/sidebarSlice';
@@ -26,8 +26,7 @@ const BookmarkCard = ({ bookmark, setBookmarkIdToDelete, setDeleteModalOpen }) =
     };
 
     const handleEditBookmark = (updatedBookmark) => {
-        dispatch(setSelectedBookmark(updatedBookmark));
-        dispatch(openRightSideBar());
+        dispatch(openRightSideBar(updatedBookmark));
     };
 
     const toggleFavorite = (bookmarkId) => {
