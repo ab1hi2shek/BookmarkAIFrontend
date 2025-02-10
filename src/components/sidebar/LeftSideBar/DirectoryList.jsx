@@ -6,8 +6,6 @@ import { renameDirectoryThunk, deleteDirectoryThunk, fetchDirectoriesThunk } fro
 import DirectoryDeleteConfirmationModal from '../../modals/DirectoryDeleteConfirmationModal';
 import { setSelectedItem } from '../../../redux/features/urlSelectionSlice';
 
-const UNCATEGORIZED_DIRECTORY_ID = "directory-83167e18-7d55-4758-b00d-a8724e9feff5";
-
 const DirectoryList = ({ directorySelected }) => {
     const [menuAnchor, setMenuAnchor] = useState(null);
     const [selectedDirectory, setSelectedDirectory] = useState(null);
@@ -100,7 +98,6 @@ const DirectoryList = ({ directorySelected }) => {
             <List sx={{ padding: 1 }}>
                 {allDirectorys && allDirectorys
                     .filter(directory => directory.bookmarksCount > 0)
-                    .filter(directory => directory.directoryId !== UNCATEGORIZED_DIRECTORY_ID)
                     .map((directory) => (
                         <ListItem
                             key={directory.directoryId}

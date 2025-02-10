@@ -50,7 +50,7 @@ const MainLayout = ({ bookmarks = [] }) => {
                     </Box>
                 ) : (
                     < Box>
-                        {bookmarks.map((bookmark) => (
+                        {bookmarks?.map((bookmark) => (
                             <BookmarkCard
                                 key={bookmark.bookmarkId}
                                 bookmark={bookmark}

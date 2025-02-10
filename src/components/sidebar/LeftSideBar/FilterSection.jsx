@@ -11,7 +11,7 @@ import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import TagIcon from '@mui/icons-material/Tag';
 import { setSelectedItem } from '../../../redux/features/urlSelectionSlice';
 
-const UNCATEGORIZED_DIRECTORY_ID = "directory-83167e18-7d55-4758-b00d-a8724e9feff5";
+const UNCATEGORIZED_DIRECTORY_ID = "uncategorized";
 
 const FilterSection = ({ filterSelected = null }) => {
     const navigate = useNavigate();
@@ -87,7 +87,7 @@ const FilterSection = ({ filterSelected = null }) => {
 
             <Collapse in={filtersVisible} timeout="auto" unmountOnExit>
                 <List sx={{ paddingLeft: 1 }}>
-                    <ListItem
+                    {allBookmarksCount > 0 && <ListItem
                         button
                         onClick={() => filterBookmarksForUI("all")}
                         sx={{
@@ -105,8 +105,8 @@ const FilterSection = ({ filterSelected = null }) => {
                                 ({allBookmarksCount})
                             </Typography>
                         </Box>
-                    </ListItem>
-                    <ListItem
+                    </ListItem>}
+                    {favoriteBookmarksCount > 0 && <ListItem
                         button
                         onClick={() => filterBookmarksForUI("favorite")}
                         sx={{
@@ -124,8 +124,8 @@ const FilterSection = ({ filterSelected = null }) => {
                                 ({favoriteBookmarksCount})
                             </Typography>
                         </Box>
-                    </ListItem>
-                    <ListItem
+                    </ListItem>}
+                    {bookmarksWithNotesCount > 0 && <ListItem
                         button
                         onClick={() => filterBookmarksForUI("with_notes")}
                         sx={{
@@ -143,8 +143,8 @@ const FilterSection = ({ filterSelected = null }) => {
                                 ({bookmarksWithNotesCount})
                             </Typography>
                         </Box>
-                    </ListItem>
-                    <ListItem
+                    </ListItem>}
+                    {bookmarksWithNoTags > 0 && <ListItem
                         button
                         onClick={() => filterBookmarksForUI("without_tags")}
                         sx={{
@@ -162,8 +162,8 @@ const FilterSection = ({ filterSelected = null }) => {
                                 ({bookmarksWithNoTags})
                             </Typography>
                         </Box>
-                    </ListItem>
-                    <ListItem
+                    </ListItem>}
+                    {uncategorizedBookmarksCount > 0 && <ListItem
                         button
                         onClick={() => filterBookmarksForUI("uncategorized")}
                         sx={{
@@ -181,7 +181,7 @@ const FilterSection = ({ filterSelected = null }) => {
                                 ({uncategorizedBookmarksCount})
                             </Typography>
                         </Box>
-                    </ListItem>
+                    </ListItem>}
                 </List>
             </Collapse>
         </>

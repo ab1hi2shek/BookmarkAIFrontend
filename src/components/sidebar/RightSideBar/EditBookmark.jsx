@@ -16,18 +16,18 @@ const EditBookmark = () => {
     const [notes, setNotes] = useState(bookmarkToEdit?.notes || '');
     const [tags, setTags] = useState(bookmarkToEdit?.tags || []);
     const [newTag, setNewTag] = useState('');
-    const [selectedDirectory, setSelectedDirectory] = useState(bookmarkToEdit?.directoryId || '');
+    const [selectedDirectory, setSelectedDirectory] = useState(bookmarkToEdit.directoryName || '');
 
     useEffect(() => {
         setTitle(bookmarkToEdit?.title || '');
         setNotes(bookmarkToEdit?.notes || '');
         setTags(bookmarkToEdit?.tags || []);
-        setSelectedDirectory(bookmarkToEdit?.directoryId || '');
+        setSelectedDirectory(bookmarkToEdit?.directoryName || '');
 
         if (directories.length === 0) {
             dispatch(fetchDirectoriesThunk({ userId: user?.uid }));
         }
-    }, [bookmarkToEdit, directories, dispatch, user]);
+    }, [bookmarkToEdit, dispatch, user]);
 
     const handleWhenCloseRightSideBar = () => {
         dispatch(closeRightSideBar());
@@ -112,6 +112,10 @@ const EditBookmark = () => {
                         },
                     }}
                 >
+
+                    <MenuItem key="uncategorized" value="uncategorized">
+                        uncategorized
+                    </MenuItem>
                     {directories.map((directory) => (
                         <MenuItem key={directory.directoryId} value={directory.directoryId}>
                             {directory.name}
