@@ -82,14 +82,14 @@ const directorySlice = createSlice({
     name: "directories",
     initialState: {
         allDirectories: [],
-        directoryBookmarks: [], // ✅ Store directory-specific bookmarks separately
+        directoryBookmarks: [], // Store directory-specific bookmarks separately
         status: "idle",
         error: null
     },
     reducers: {
         resetDirectoriesState: (state) => {
             state.allDirectories = [];
-            state.directoryBookmarks = []; // ✅ Reset bookmarks when clearing state
+            state.directoryBookmarks = [];
             state.status = "idle";
             state.error = null;
         },
@@ -103,8 +103,8 @@ const directorySlice = createSlice({
         }
     },
     extraReducers: (builder) => {
-        // 🟢 Fetch Directories
         builder
+            // 🟢 Fetch Directories
             .addCase(fetchDirectoriesThunk.pending, (state) => {
                 state.status = "loading";
             })
@@ -116,31 +116,6 @@ const directorySlice = createSlice({
             })
             .addCase(fetchDirectoriesThunk.rejected, (state, action) => {
                 state.status = "failed";
-                state.error = action.payload;
-            })
-
-            // 🟢 Create Directory
-            .addCase(createDirectoryThunk.fulfilled, (state, action) => {
-                state.allDirectories.push(action.payload);
-            })
-
-            // 🟢 Rename Directory
-            .addCase(renameDirectoryThunk.fulfilled, (state, action) => {
-                const { directoryId, name } = action.payload;
-                state.allDirectories = state.allDirectories.map((dir) =>
-                    dir.directoryId === directoryId ? { ...dir, name } : dir
-                );
-            })
-            .addCase(renameDirectoryThunk.rejected, (state, action) => {
-                state.error = action.payload;
-            })
-
-            // 🟢 Delete Directory
-            .addCase(deleteDirectoryThunk.fulfilled, (state, action) => {
-                const { directoryId } = action.payload;
-                state.allDirectories = state.allDirectories.filter((dir) => dir.directoryId !== directoryId);
-            })
-            .addCase(deleteDirectoryThunk.rejected, (state, action) => {
                 state.error = action.payload;
             })
 
@@ -156,6 +131,39 @@ const directorySlice = createSlice({
                 state.status = "failed";
                 state.error = action.payload;
             })
+
+            // 🟢 matcher for remaining action items
+            .addMatcher(
+                (action) => [
+                    createDirectoryThunk.pending.type,
+                    renameDirectoryThunk.pending.type,
+                    deleteDirectoryThunk.pending.type,
+                ].includes(action.type),
+                (state) => {
+                    state.status = "loading";
+                }
+            )
+            .addMatcher(
+                (action) => [
+                    createDirectoryThunk.fulfilled.type,
+                    renameDirectoryThunk.fulfilled.type,
+                    deleteDirectoryThunk.fulfilled.type,
+                ].includes(action.type),
+                (state) => {
+                    state.status = "succeeded";
+                }
+            )
+            .addMatcher(
+                (action) => [
+                    createDirectoryThunk.rejected.type,
+                    renameDirectoryThunk.rejected.type,
+                    deleteDirectoryThunk.rejected.type,
+                ].includes(action.type),
+                (state) => {
+                    state.status = "failed";
+                    state.error = action.payload;
+                }
+            )
     }
 });
 

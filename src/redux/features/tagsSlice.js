@@ -7,7 +7,6 @@ import {
     deleteTag
 } from "../services/tagService";
 import { fetchBookmarksWithTagId } from "../services/bookmarkService";
-import { updateBookmarkThunk, deleteBookmarkThunk } from "./bookmarksSlice";
 
 // 🟢 Fetch all tags
 export const fetchTagsThunk = createAsyncThunk("tags/fetch", async ({ userId }, { rejectWithValue }) => {
@@ -94,8 +93,8 @@ const tagsSlice = createSlice({
         }
     },
     extraReducers: (builder) => {
-        // 🟢 Fetch Tags
         builder
+            // 🟢 Fetch Tags list
             .addCase(fetchTagsThunk.pending, (state) => {
                 state.status = "loading";
             })
@@ -103,7 +102,7 @@ const tagsSlice = createSlice({
                 state.status = "succeeded";
                 state.allTags = action.payload;
 
-                // 🟢 Get the sorting preference from localStorage
+                // Get the sorting preference from localStorage
                 const sortPreference = localStorage.getItem("tagsSortPreference") || "alphabetical";
                 state.allTags = sortTagsFunction(action.payload, sortPreference);
             })
@@ -112,45 +111,51 @@ const tagsSlice = createSlice({
                 state.error = action.payload;
             })
 
-            // 🟢 Fetch Bookmarks when tags change
+            // 🟢 Fetch Bookmarks by tag
+            .addCase(fetchBookmarksByTagThunk.pending, (state, action) => {
+                state.status = "loading";
+            })
             .addCase(fetchBookmarksByTagThunk.fulfilled, (state, action) => {
                 state.tagsBookmarks = action.payload;
+                state.status = "succeeded";
             })
             .addCase(fetchBookmarksByTagThunk.rejected, (state, action) => {
-                state.tagsBookmarks = [];
-            })
-
-            // 🟢 Create Tag (After creation, fetch updated tags)
-            .addCase(createTagThunk.fulfilled, (state, action) => {
-                state.allTags.push(action.payload);
-            })
-
-            // 🟢 Update Tag
-            .addCase(updateTagThunk.fulfilled, (state, action) => {
-                const { existingTag, tagName } = action.payload;
-                state.allTags = state.allTags.map((tag) =>
-                    tag.tagId === existingTag.tagId ? { ...tag, tagName } : tag
-                );
-            })
-            .addCase(updateTagThunk.rejected, (state, action) => {
+                state.status = "failed";
                 state.error = action.payload;
             })
 
-            // 🟢 Delete Tag
-            .addCase(deleteTagThunk.fulfilled, (state, action) => {
-                state.allTags = state.allTags.filter((tag) => tag.tagId !== action.payload.tagId);
-            })
-            .addCase(deleteTagThunk.rejected, (state, action) => {
-                state.error = action.payload;
-            })
-
-            // 🟢 When a bookmark is updated, if tags are updated, update tag list
-            .addCase(updateBookmarkThunk.fulfilled, (state) => {
-                state.status = "fetchTags";
-            })
-            .addCase(deleteBookmarkThunk.fulfilled, (state) => {
-                state.status = "fetchTags";
-            });
+            // 🟢 matcher for remaining action items
+            .addMatcher(
+                (action) => [
+                    createTagThunk.pending.type,
+                    updateTagThunk.pending.type,
+                    deleteTagThunk.pending.type,
+                ].includes(action.type),
+                (state) => {
+                    state.status = "loading";
+                }
+            )
+            .addMatcher(
+                (action) => [
+                    createTagThunk.fulfilled.type,
+                    updateTagThunk.fulfilled.type,
+                    deleteTagThunk.fulfilled.type,
+                ].includes(action.type),
+                (state) => {
+                    state.status = "succeeded";
+                }
+            )
+            .addMatcher(
+                (action) => [
+                    createTagThunk.rejected.type,
+                    updateTagThunk.rejected.type,
+                    deleteTagThunk.rejected.type,
+                ].includes(action.type),
+                (state) => {
+                    state.status = "failed";
+                    state.error = action.payload;
+                }
+            )
     }
 });
 

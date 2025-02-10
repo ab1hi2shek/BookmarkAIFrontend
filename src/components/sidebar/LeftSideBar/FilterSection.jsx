@@ -7,6 +7,7 @@ import {
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import TagIcon from '@mui/icons-material/Tag';
+import { setSelectedItem } from '../../../redux/features/urlSelectionSlice';
 
 const FilterSection = ({ filterSelected = null }) => {
     const navigate = useNavigate();
@@ -38,6 +39,7 @@ const FilterSection = ({ filterSelected = null }) => {
     };
 
     const filterBookmarksForUI = (filterType) => {
+        dispatch(setSelectedItem({ type: 'filter', value: directory.directoryId }))
         navigate(`/bookmarks/filter/${filterType}`);
     }
 

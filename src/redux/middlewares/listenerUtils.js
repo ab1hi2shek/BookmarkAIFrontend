@@ -1,13 +1,18 @@
-// Utility function to determine which bookmarks state to update based on URL
-export const getBookmarkStateToUpdate = (pathname, getState) => {
-    if (pathname.includes("/filter/")) {
-        return { key: "filteredBookmarks", state: getState().filterBookmarks.filteredBookmarks };
+import { fetchBookmarksThunk } from '../features/bookmarksSlice';
+import { fetchDirectoryBookmarksThunk } from '../features/directorySlice';
+import { fetchBookmarksByFilterThunk } from '../features/filterBookmarksSlice';
+import { fetchBookmarksByTagThunk } from '../features/tagsSlice';
+
+export const fetchBookmarksThunkBySelection = (getState, dispatch, user) => {
+    const currentSelection = getState().urlSelection.selectedItem;
+
+    if ("tag" === currentSelection.type) {
+        dispatch(fetchBookmarksByTagThunk({ userId: user.uid, tagId: currentSelection.value }));
+    } else if ("directory" === currentSelection.type) {
+        dispatch(fetchDirectoryBookmarksThunk({ userId: user.uid, directoryId: currentSelection.value }));
+    } else if ("filter" === currentSelection.type) {
+        dispatch(fetchBookmarksByFilterThunk({ userId: user.uid, filterType: currentSelection.value }));
+    } else {
+        dispatch(fetchBookmarksThunk({ userId: user.uid }));
     }
-    if (pathname.includes("/directory/")) {
-        return { key: "directoryBookmarks", state: getState().directories.directoryBookmarks };
-    }
-    if (pathname.includes("/tag/")) {
-        return { key: "tagsBookmarks", state: getState().tags.tagsBookmarks };
-    }
-    return { key: "allBookmarks", state: getState().bookmarks.allBookmarks };
-};
+}

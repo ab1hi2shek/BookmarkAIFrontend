@@ -38,8 +38,10 @@ export const renameDirectory = async ({ directoryId, name, userId }) => {
 
 // 🟢 **Delete a directory**
 export const deleteDirectory = async (directoryId, userId, moveBookmarks = true) => {
-    await axios.delete(`${BASE_URL}/delete/${directoryId}`, {
+    const response = await axios.delete(`${BASE_URL}/delete/${directoryId}`, {
         headers: getHeaders(userId),
         data: { moveBookmarks }, // Send moveBookmarks in the request body
     });
+
+    return response.data.data;
 };

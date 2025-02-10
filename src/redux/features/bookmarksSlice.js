@@ -6,7 +6,6 @@ import {
     deleteBookmark,
     togglefavoriteBookmark
 } from "../services/bookmarkService";
-import { updateTagThunk, deleteTagThunk } from "./tagsSlice";
 
 // 🟢 Fetch all bookmarks
 export const fetchBookmarksThunk = createAsyncThunk(
@@ -88,7 +87,7 @@ const bookmarksSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            // 🟢 Fetch Bookmarks
+            // 🟢 Fetch all Bookmarks
             .addCase(fetchBookmarksThunk.pending, (state) => {
                 state.status = "loading";
             })
@@ -101,47 +100,41 @@ const bookmarksSlice = createSlice({
                 state.error = action.payload || "Failed to fetch bookmarks";
             })
 
-            // 🟢 Create Bookmark
-            .addCase(createBookmarkThunk.pending, (state) => {
-                state.status = "loading";
-            })
-            .addCase(createBookmarkThunk.fulfilled, (state, action) => {
-                state.status = "succeeded";
-                state.allBookmarks.push(action.payload);
-            })
-            .addCase(createBookmarkThunk.rejected, (state, action) => {
-                state.status = "failed";
-                state.error = action.payload || "Failed to create bookmark";
-            })
-
-            // 🟢 Update Bookmark
-            .addCase(updateBookmarkThunk.pending, (state) => {
-                state.status = "loading";
-            })
-            .addCase(updateBookmarkThunk.fulfilled, (state, action) => {
-                state.status = "succeeded";
-            })
-            .addCase(updateBookmarkThunk.rejected, (state, action) => {
-                state.status = "failed";
-                state.error = action.payload || "Failed to update bookmark";
-            })
-
-            // 🟢 Delete Bookmark
-            .addCase(deleteBookmarkThunk.pending, (state) => {
-                state.status = "loading";
-            })
-            .addCase(deleteBookmarkThunk.fulfilled, (state, action) => {
-                state.status = "succeeded";
-            })
-            .addCase(deleteBookmarkThunk.rejected, (state, action) => {
-                state.status = "failed";
-                state.error = action.payload || "Failed to delete bookmark";
-            })
-
-            // 🟢 favorite Bookmark
-            .addCase(toggleFavoriteBookmarkThunk.fulfilled, (state, action) => {
-                state.status = "succeeded";
-            })
+            // 🟢 matcher for remaining action items
+            .addMatcher(
+                (action) => [
+                    createBookmarkThunk.pending.type,
+                    updateBookmarkThunk.pending.type,
+                    deleteBookmarkThunk.pending.type,
+                    toggleFavoriteBookmarkThunk.pending.type
+                ].includes(action.type),
+                (state) => {
+                    state.status = "loading";
+                }
+            )
+            .addMatcher(
+                (action) => [
+                    createBookmarkThunk.fulfilled.type,
+                    updateBookmarkThunk.fulfilled.type,
+                    deleteBookmarkThunk.fulfilled.type,
+                    toggleFavoriteBookmarkThunk.fulfilled.type,
+                ].includes(action.type),
+                (state) => {
+                    state.status = "succeeded";
+                }
+            )
+            .addMatcher(
+                (action) => [
+                    createBookmarkThunk.rejected.type,
+                    updateBookmarkThunk.rejected.type,
+                    deleteBookmarkThunk.rejected.type,
+                    toggleFavoriteBookmarkThunk.rejected.type,
+                ].includes(action.type),
+                (state) => {
+                    state.status = "failed";
+                    state.error = action.payload;
+                }
+            )
     },
 });
 

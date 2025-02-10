@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Card, CardContent, Typography, IconButton, Chip, Box, Tooltip } from '@mui/material';
+import FolderIcon from '@mui/icons-material/Folder';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FavoriteIcon from '@mui/icons-material/FavoriteBorder';
@@ -13,6 +15,18 @@ const truncateText = (text, limit) => {
     if (text.length <= limit) return text;
     const truncated = text.slice(0, limit);
     return truncated.slice(0, truncated.lastIndexOf(' ')) + ' ...';
+};
+
+// 🕒 Format timestamp into "Just now", "Yesterday", "X days ago", etc.
+const formatTimestamp = (timestamp) => {
+    console.log("timestamp", timestamp)
+    try {
+        const cleanedTimestamp = timestamp.split('.')[0]; // Removes ".821375+00:00"
+        const date = parseISO(cleanedTimestamp);
+        return formatDistanceToNow(date, { addSuffix: true });
+    } catch (error) {
+        return "Unknown time"; // Fallback in case of an error
+    }
 };
 
 const BookmarkCard = ({ bookmark, setBookmarkIdToDelete, setDeleteModalOpen }) => {
@@ -145,11 +159,39 @@ const BookmarkCard = ({ bookmark, setBookmarkIdToDelete, setDeleteModalOpen }) =
                     {truncateText(bookmark?.notes, 150)}
                 </Typography>
 
-                {/* Tags */}
-                <Box sx={{ mt: 1 }}>
+                {/* Styled Tags Display */}
+                <Box sx={{ mt: 1, display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
                     {bookmark?.tags.map((tag, index) => (
-                        <Chip key={index} label={`#${tag}`} sx={styles.chip} />
+                        <Typography
+                            key={index}
+                            sx={{
+                                fontSize: '0.85rem',
+                                fontWeight: 500,
+                                color: 'rgba(175, 145, 85, 0.8)',
+                                textTransform: 'lowercase',
+                            }}
+                        >
+                            #{tag}
+                        </Typography>
                     ))}
+                </Box>
+                {/* Directory Name & Timestamp in Same Row */}
+                <Box sx={{ mt: 1, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    {/* Directory Name */}
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                        <FolderIcon sx={{ fontSize: '1rem', color: 'gray' }} />
+                        <Typography variant="caption" sx={{ color: 'gray' }}>
+                            {bookmark.directoryName}
+                        </Typography>
+                    </Box>
+
+                    {/* Timestamp */}
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                        <AccessTimeIcon sx={{ fontSize: '1rem', color: 'gray' }} />
+                        <Typography variant="caption" sx={{ color: 'gray' }}>
+                            {formatTimestamp(bookmark.createdAt)}
+                        </Typography>
+                    </Box>
                 </Box>
             </CardContent>
         </Card>
