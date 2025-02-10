@@ -36,7 +36,7 @@ const RightSideBar = () => {
                 },
             }}
         >
-            <Box sx={{ display: 'flex', justifyContent: 'flex-start', padding: '8px', marginBottom: '10px' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-start', padding: '8px' }}>
                 <IconButton onClick={handleWhenCloseRightSideBar} sx={{ borderRadius: 0, color: "rgb(176, 127, 29)" }}>
                     <CloseIcon />
                 </IconButton>

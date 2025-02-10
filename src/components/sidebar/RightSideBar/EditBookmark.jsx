@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Typography, Button, TextField, Chip, IconButton, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
+import { Box, Typography, Button, TextField, Chip, List, MenuItem, Select, FormControl, InputLabel, ListItem } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { closeRightSideBar } from '../../../redux/features/sidebarSlice';
 import { updateBookmarkThunk } from '../../../redux/features/bookmarksSlice';
@@ -17,6 +17,8 @@ const EditBookmark = () => {
     const [tags, setTags] = useState(bookmarkToEdit?.tags || []);
     const [newTag, setNewTag] = useState('');
     const [selectedDirectory, setSelectedDirectory] = useState(bookmarkToEdit.directoryId || '');
+    const [recentTags, setRecentTags] = useState([]);
+    const [showSuggestions, setShowSuggestions] = useState(false);
 
     useEffect(() => {
         setTitle(bookmarkToEdit?.title || '');
@@ -28,6 +30,12 @@ const EditBookmark = () => {
             dispatch(fetchDirectoriesThunk({ userId: user?.uid }));
         }
     }, [bookmarkToEdit, dispatch, user]);
+
+    useEffect(() => {
+        const storedTags = JSON.parse(localStorage.getItem("recentTags")) || [];
+        const recentTagsRemovingCurrent = storedTags.filter(tag => !(bookmarkToEdit?.tags || []).includes(tag));
+        setRecentTags(recentTagsRemovingCurrent);
+    }, [bookmarkToEdit]);
 
     const handleWhenCloseRightSideBar = () => {
         dispatch(closeRightSideBar());
@@ -42,28 +50,51 @@ const EditBookmark = () => {
             directoryId: selectedDirectory, // ✅ Updated directory ID
         };
         dispatch(updateBookmarkThunk({ userId: user.uid, updatedBookmark }));
+        saveRecentTags(tags);
         handleWhenCloseRightSideBar();
+    };
+
+    const saveRecentTags = (newTags) => {
+        const existingTags = JSON.parse(localStorage.getItem("recentTags")) || [];
+        const updatedTags = [...new Set([...newTags, ...existingTags])].slice(0, 5); // Keep only 10 unique tags
+        localStorage.setItem("recentTags", JSON.stringify(updatedTags));
     };
 
     const handleTagDelete = (tagToDelete) => {
         setTags(tags.filter(tag => tag !== tagToDelete));
+
+        // Retrieve stored recent tags
+        const storedTags = JSON.parse(localStorage.getItem("recentTags")) || [];
+
+        // If the deleted tag is in storedTags, add it back to recentTags
+        if (storedTags.includes(tagToDelete)) {
+            setRecentTags(prevRecentTags => {
+                const updatedTags = [tagToDelete, ...prevRecentTags.filter(tag => tag !== tagToDelete)];
+                return updatedTags.slice(0, 5); // Keep only the top 5 recent tags
+            });
+        }
     };
 
     const handleTagKeyPress = (e) => {
-        if (e.key === 'Enter' && newTag.trim() !== '') {
-            if (!tags.includes(newTag.trim())) {
-                setTags([...tags, newTag.trim()]);
+        const trimmedNewTag = newTag.trim();
+        if (e.key === 'Enter' && trimmedNewTag !== '') {
+            if (!tags.includes(trimmedNewTag)) {
+                setTags([...tags, trimmedNewTag]);
+
+                setRemoveTagFromSuggestion(trimmedNewTag);
             }
             setNewTag('');
             e.preventDefault();
         }
     };
 
+    const setRemoveTagFromSuggestion = (tag) => {
+        const updatedRecentTags = recentTags.filter(t => t !== tag);
+        setRecentTags(updatedRecentTags);
+    }
+
     return (
         <Box sx={{ padding: '16px' }}>
-            <Typography variant="h6" sx={{ marginBottom: '30px', textAlign: 'center', width: '100%' }}>
-                Edit Bookmark
-            </Typography>
 
             <TextField
                 label="Title"
@@ -84,7 +115,7 @@ const EditBookmark = () => {
                 label="Notes"
                 fullWidth
                 multiline
-                rows={4}
+                rows={3}
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 sx={{
@@ -144,8 +175,10 @@ const EditBookmark = () => {
                 value={newTag}
                 onChange={(e) => setNewTag(e.target.value)}
                 onKeyPress={handleTagKeyPress}
+                onFocus={() => setShowSuggestions(true)}
+                onBlur={() => setShowSuggestions(false)}
                 sx={{
-                    marginBottom: '24px',
+                    marginBottom: '0px',
                     '& .MuiOutlinedInput-root': {
                         '& fieldset': { borderColor: 'rgb(199, 165, 98)' },
                         '&:hover fieldset': { borderColor: 'rgb(231, 162, 24)' },
@@ -153,6 +186,39 @@ const EditBookmark = () => {
                     },
                 }}
             />
+            {/* Suggestions Dropdown */}
+            {showSuggestions && recentTags.length > 0 && (
+                <Box sx={{
+                    position: "relative",
+                    width: "94%",
+                    backgroundColor: "rgba(237, 232, 232, 0)",
+                    padding: 1,
+                    borderRadius: "4px",
+                    border: "1px solid rgb(199, 165, 98)",
+                    boxShadow: "0px 4px 6px rgba(0,0,0,0.1)",
+                    zIndex: 10
+                }}>
+                    <Typography variant="caption" sx={{ color: "gray" }}>
+                        Recent
+                    </Typography>
+                    <List>
+                        {recentTags.map((tag, index) => (
+                            <ListItem
+                                key={index}
+                                button
+                                onMouseDown={() => {
+                                    setTags([...tags, tag]);
+                                    setNewTag('');
+                                    setRemoveTagFromSuggestion(tag);
+                                }}
+                                sx={{ fontSize: "0.85rem", padding: "4px 6px", '&:hover': { backgroundColor: "rgba(244, 229, 201, 0.8)" } }}
+                            >
+                                {tag}
+                            </ListItem>
+                        ))}
+                    </List>
+                </Box>
+            )}
 
             <Box sx={{ display: 'flex', justifyContent: 'center', gap: '16px', marginTop: '24px' }}>
                 <Button variant="contained" onClick={handleSaveClick}>
