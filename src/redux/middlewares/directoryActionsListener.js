@@ -22,6 +22,8 @@ directoryActionsMiddleware.startListening({
 
         fetchBookmarksThunkBySelection(getState, dispatch, user)
 
+        //ISSUE TODO: when user refreshes page and deletes directory, urlselection is not set.
+
         dispatch(fetchDirectoriesThunk({ userId: user.uid }))
 
     }

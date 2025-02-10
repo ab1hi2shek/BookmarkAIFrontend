@@ -1,9 +1,11 @@
 import React from "react";
+import { useNavigate } from 'react-router-dom';
 import { Breadcrumbs as MuiBreadcrumbs, Link, Chip } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import { useSelector } from "react-redux";
 
 const Breadcrumbs = () => {
+    const navigate = useNavigate();
     const allTags = useSelector((state) => state.tags.allTags);
 
     const handleTagClick = (tag) => {
@@ -11,7 +13,7 @@ const Breadcrumbs = () => {
     };
 
     const handleHomeClick = () => {
-        console.log("handleHomeClick");
+        navigate("/");
     };
 
     return (
