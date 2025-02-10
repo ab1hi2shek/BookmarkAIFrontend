@@ -34,18 +34,36 @@ const MainLayout = ({ bookmarks = [] }) => {
         <>
             <Divider sx={{ marginTop: '20px' }} />
             <Box sx={{ columnCount: { xs: 1, sm: 3, md: 4 }, columnGap: '16px', marginTop: '10px' }}>
-                {bookmarks?.map((bookmark) => (
-                    <BookmarkCard
-                        key={bookmark.bookmarkId}
-                        bookmark={bookmark}
-                        setBookmarkIdToDelete={setBookmarkIdToDelete}
-                        setDeleteModalOpen={setDeleteModalOpen}
-                    />
-                ))}
-            </Box>
+                {bookmarks?.length === 0 ? (
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: '60vh',
+                            color: 'gray',
+                            fontSize: '1.3rem',
+                            fontWeight: 500,
+                        }}
+                    >
+                        No bookmarks found
+                    </Box>
+                ) : (
+                    < Box>
+                        {bookmarks.map((bookmark) => (
+                            <BookmarkCard
+                                key={bookmark.bookmarkId}
+                                bookmark={bookmark}
+                                setBookmarkIdToDelete={setBookmarkIdToDelete}
+                                setDeleteModalOpen={setDeleteModalOpen}
+                            />
+                        ))}
+                    </Box>
+                )}
+            </Box >
 
             {/* Delete Confirmation Modal */}
-            <DeleteConfirmationModal
+            < DeleteConfirmationModal
                 open={deleteModalOpen}
                 onClose={() => setDeleteModalOpen(false)}
                 onConfirm={confirmDelete}
