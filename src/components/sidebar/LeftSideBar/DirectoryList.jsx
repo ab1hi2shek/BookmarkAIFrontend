@@ -97,6 +97,7 @@ const DirectoryList = ({ directorySelected }) => {
         <>
             <List sx={{ padding: 1 }}>
                 {allDirectorys && allDirectorys
+                    .filter(directory => directory.bookmarksCount > 0)
                     .map((directory) => (
                         <ListItem
                             key={directory.directoryId}

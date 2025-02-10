@@ -10,6 +10,7 @@ import { toggleFavoriteBookmarkThunk } from '../../redux/features/bookmarksSlice
 import { useSelector, useDispatch } from 'react-redux';
 import styles from '../../styles/bookmarkCardStyles';
 import { openRightSideBar } from '../../redux/features/sidebarSlice';
+import { formatDistanceToNowStrict } from 'date-fns';
 
 const truncateText = (text, limit) => {
     if (text.length <= limit) return text;
@@ -21,10 +22,12 @@ const truncateText = (text, limit) => {
 const formatTimestamp = (timestamp) => {
     console.log("timestamp", timestamp)
     try {
-        const cleanedTimestamp = timestamp.split('.')[0]; // Removes ".821375+00:00"
-        const date = parseISO(cleanedTimestamp);
-        return formatDistanceToNow(date, { addSuffix: true });
+        const date = new Date(timestamp * 1000);
+        const timeDiff = Math.floor((Date.now() - date.getTime()) / 1000);
+        if (timeDiff < 60) return "Just now";
+        return formatDistanceToNowStrict(date);
     } catch (error) {
+        console.log(error)
         return "Unknown time"; // Fallback in case of an error
     }
 };
