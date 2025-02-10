@@ -151,7 +151,7 @@ const tagsSlice = createSlice({
                     updateTagThunk.rejected.type,
                     deleteTagThunk.rejected.type,
                 ].includes(action.type),
-                (state) => {
+                (state, action) => {
                     state.status = "failed";
                     state.error = action.payload;
                 }

@@ -20,7 +20,6 @@ const truncateText = (text, limit) => {
 
 // 🕒 Format timestamp into "Just now", "Yesterday", "X days ago", etc.
 const formatTimestamp = (timestamp) => {
-    console.log("timestamp", timestamp)
     try {
         const date = new Date(timestamp * 1000);
         const timeDiff = Math.floor((Date.now() - date.getTime()) / 1000);

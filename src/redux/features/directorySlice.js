@@ -35,8 +35,9 @@ export const createDirectoryThunk = createAsyncThunk(
 export const renameDirectoryThunk = createAsyncThunk(
     "directories/rename",
     async ({ directoryId, name, userId }, { rejectWithValue }) => {
+        console.log("directoryId, name, userId", directoryId, name, userId)
         try {
-            await renameDirectory(userId, directoryId, name);
+            await renameDirectory(directoryId, name, userId);
             return { directoryId, name };
         } catch (error) {
             return rejectWithValue(error.response?.data?.error || "Failed to rename directory");
@@ -47,9 +48,10 @@ export const renameDirectoryThunk = createAsyncThunk(
 // 🟢 Delete a directory (Move bookmarks or delete them)
 export const deleteDirectoryThunk = createAsyncThunk(
     "directories/delete",
-    async ({ directoryId, userId, moveBookmarks = true }, { rejectWithValue }) => {
+    async ({ directoryId, userId, moveBookmarks }, { rejectWithValue }) => {
         try {
-            await deleteDirectory(userId, directoryId, moveBookmarks);
+            console.log("ggggg", directoryId, userId, moveBookmarks)
+            await deleteDirectory(directoryId, userId, moveBookmarks);
             return { directoryId, moveBookmarks };
         } catch (error) {
             return rejectWithValue(error.response?.data?.error || "Failed to delete directory");
@@ -159,7 +161,7 @@ const directorySlice = createSlice({
                     renameDirectoryThunk.rejected.type,
                     deleteDirectoryThunk.rejected.type,
                 ].includes(action.type),
-                (state) => {
+                (state, action) => {
                     state.status = "failed";
                     state.error = action.payload;
                 }

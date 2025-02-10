@@ -27,7 +27,8 @@ export const createDirectory = async (name, userId) => {
 };
 
 // 🟢 **Rename a directory**
-export const renameDirectory = async ({ directoryId, name, userId }) => {
+export const renameDirectory = async (directoryId, name, userId) => {
+    console.log(" renameDirectory ", directoryId, name, userId)
     const response = await axios.post(
         `${BASE_URL}/rename/${directoryId}`,
         { name },
@@ -37,11 +38,12 @@ export const renameDirectory = async ({ directoryId, name, userId }) => {
 };
 
 // 🟢 **Delete a directory**
-export const deleteDirectory = async (directoryId, userId, moveBookmarks = true) => {
+export const deleteDirectory = async (directoryId, userId, moveBookmarks) => {
     const response = await axios.delete(`${BASE_URL}/delete/${directoryId}`, {
         headers: getHeaders(userId),
         data: { moveBookmarks }, // Send moveBookmarks in the request body
     });
+    console.log("response.data.data", response.data.data)
 
     return response.data.data;
 };

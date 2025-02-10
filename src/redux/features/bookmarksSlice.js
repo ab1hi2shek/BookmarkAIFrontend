@@ -130,7 +130,7 @@ const bookmarksSlice = createSlice({
                     deleteBookmarkThunk.rejected.type,
                     toggleFavoriteBookmarkThunk.rejected.type,
                 ].includes(action.type),
-                (state) => {
+                (state, action) => {
                     state.status = "failed";
                     state.error = action.payload;
                 }

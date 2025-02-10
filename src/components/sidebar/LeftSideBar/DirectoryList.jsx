@@ -3,13 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { List, ListItem, IconButton, TextField, Box, Tooltip, Menu, MenuItem, Typography, Modal, Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { renameDirectoryThunk, deleteDirectoryThunk, fetchDirectoriesThunk } from '../../../redux/features/directorySlice';
-import DeleteConfirmationModal from '../../modals/DeleteConfirmationModal';
+import DirectoryDeleteConfirmationModal from '../../modals/DirectoryDeleteConfirmationModal';
 import { setSelectedItem } from '../../../redux/features/urlSelectionSlice';
 
 const DirectoryList = ({ directorySelected }) => {
     const [menuAnchor, setMenuAnchor] = useState(null);
     const [selectedDirectory, setSelectedDirectory] = useState(null);
-    const [directoryIdToDelete, setDirectoryIdToDelete] = useState(null);
+    const [directoryIdToDelete, setDirectoryIdToDelete] = useState(null); //Wrongly named. it holds object
     const [editingDirectory, setEditingDirectory] = useState(null);
     const [newDirectoryName, setNewDirectoryName] = useState('');
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -68,7 +68,7 @@ const DirectoryList = ({ directorySelected }) => {
     const confirmDelete = (moveBookmarks) => {
         if (directoryIdToDelete) {
             dispatch(deleteDirectoryThunk({
-                directoryId: directoryIdToDelete,
+                directoryId: directoryIdToDelete.directoryId,
                 userId: user?.uid,
                 moveBookmarks: moveBookmarks
             }));
@@ -102,12 +102,10 @@ const DirectoryList = ({ directorySelected }) => {
                         <ListItem
                             key={directory.directoryId}
                             dense
-                            onClick={() => handleDirectoryClick(directory)}
                             sx={{
                                 padding: '2px 12px',
                                 margin: '4px 0px',
                                 display: 'flex',
-                                cursor: 'pointer',
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
                                 backgroundColor: directorySelected == directory.directoryId && editingDirectory?.directoryId !== directory.directoryId ? 'rgba(244, 229, 201, 0.8)' : 'transparent',
@@ -132,7 +130,8 @@ const DirectoryList = ({ directorySelected }) => {
                                 />
                             ) : (
                                 <Box
-                                    sx={{ display: 'flex', alignItems: 'center' }}
+                                    sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+                                    onClick={() => handleDirectoryClick(directory)}
                                 >
                                     <Typography
                                         variant="body2"
@@ -195,10 +194,12 @@ const DirectoryList = ({ directorySelected }) => {
             </Menu>
 
             {/* Delete Confirmation Modal */}
-            <DeleteConfirmationModal
+            <DirectoryDeleteConfirmationModal
                 open={deleteModalOpen}
                 onClose={() => setDeleteModalOpen(false)}
-                onConfirm={confirmDelete}
+                onMove={() => confirmDelete(true)}  // Move to Uncategorized
+                onDelete={() => confirmDelete(false)} // Delete permanently
+                bookmarkCount={directoryIdToDelete?.bookmarksCount}  // Pass count dynamically
             />
         </>
     );
