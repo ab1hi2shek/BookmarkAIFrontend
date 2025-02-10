@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { List, ListItem, IconButton, TextField, Box, Tooltip, Menu, MenuItem, Typography, Modal, Button } from '@mui/material';
+import FolderIcon from '@mui/icons-material/Folder';
+import { List, ListItem, IconButton, TextField, Box, Tooltip, Menu, MenuItem, Typography, ListItemText, Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { renameDirectoryThunk, deleteDirectoryThunk, fetchDirectoriesThunk } from '../../../redux/features/directorySlice';
 import DirectoryDeleteConfirmationModal from '../../modals/DirectoryDeleteConfirmationModal';
@@ -97,7 +98,6 @@ const DirectoryList = ({ directorySelected }) => {
         <>
             <List sx={{ padding: 1 }}>
                 {allDirectorys && allDirectorys
-                    .filter(directory => directory.bookmarksCount > 0)
                     .map((directory) => (
                         <ListItem
                             key={directory.directoryId}
@@ -115,41 +115,39 @@ const DirectoryList = ({ directorySelected }) => {
                             }}
                         >
                             {editingDirectory?.directoryId === directory.directoryId ? (
-                                <TextField
-                                    variant="standard"
-                                    fullWidth
-                                    value={newDirectoryName}
-                                    onChange={(e) => setNewDirectoryName(e.target.value)}
-                                    onKeyDown={handleEditSave}
-                                    autoFocus
-                                    inputRef={inputRef}
-                                    sx={{ fontSize: '0.8rem', border: 'none', borderBottom: '2px solid rgba(219, 194, 143, 0.8)', pb: 0.5 }}
-                                    InputProps={{
-                                        disableUnderline: true,
-                                    }}
-                                />
-                            ) : (
-                                <Box
-                                    sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
-                                    onClick={() => handleDirectoryClick(directory)}
-                                >
-                                    <Typography
-                                        variant="body2"
-                                        sx={{
-                                            fontSize: directorySelected == directory.directoryId ? '0.85rem' : '0.8rem',
-                                            fontWeight: directorySelected == directory.directoryId ? 550 : 400,
-                                            color: 'text.primary',
-                                            transition: 'color 0.2s ease-in-out',
+                                <>
+                                    <FolderIcon sx={{ fontSize: '0.8rem', color: 'rgba(219, 194, 143, 0.8)', marginRight: '8px' }} />
+                                    <TextField
+                                        variant="standard"
+                                        fullWidth
+                                        value={newDirectoryName}
+                                        onChange={(e) => setNewDirectoryName(e.target.value)}
+                                        onKeyDown={handleEditSave}
+                                        autoFocus
+                                        inputRef={inputRef}
+                                        sx={{ fontSize: '0.8rem', border: 'none', borderBottom: '2px solid rgba(219, 194, 143, 0.8)', pb: 0.5 }}
+                                        InputProps={{
+                                            disableUnderline: true,
+                                            sx: { fontSize: '0.8rem' }
                                         }}
-                                    >
-                                        {directory.name}
-                                    </Typography>
-                                    <Typography
-                                        variant="caption"
-                                        sx={{ marginLeft: 1, fontSize: '0.75rem', color: 'text.primary' }}
-                                    >
-                                        ({directory.bookmarksCount})
-                                    </Typography>
+                                    />
+                                </>
+                            ) : (
+                                <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }} onClick={() => handleDirectoryClick(directory)}>
+                                    <FolderIcon sx={{ fontSize: '0.85rem', marginRight: 1 }} />
+                                    <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                                        <ListItemText
+                                            primary={directory.name}
+                                            primaryTypographyProps={{
+                                                fontSize: directorySelected == directory.directoryId ? '0.85rem' : '0.8rem',
+                                                fontWeight: directorySelected == directory.directoryId ? 550 : 400,
+                                                transition: 'color 0.2s ease-in-out',
+                                            }}
+                                        />
+                                        <Typography variant="caption" sx={{ fontSize: '0.75rem', color: 'gray', marginLeft: 1 }}>
+                                            ({directory.bookmarksCount})
+                                        </Typography>
+                                    </Box>
                                 </Box>
 
                             )}

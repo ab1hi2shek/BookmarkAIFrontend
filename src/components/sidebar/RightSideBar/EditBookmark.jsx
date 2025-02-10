@@ -16,13 +16,13 @@ const EditBookmark = () => {
     const [notes, setNotes] = useState(bookmarkToEdit?.notes || '');
     const [tags, setTags] = useState(bookmarkToEdit?.tags || []);
     const [newTag, setNewTag] = useState('');
-    const [selectedDirectory, setSelectedDirectory] = useState(bookmarkToEdit.directoryName || '');
+    const [selectedDirectory, setSelectedDirectory] = useState(bookmarkToEdit.directoryId || '');
 
     useEffect(() => {
         setTitle(bookmarkToEdit?.title || '');
         setNotes(bookmarkToEdit?.notes || '');
         setTags(bookmarkToEdit?.tags || []);
-        setSelectedDirectory(bookmarkToEdit?.directoryName || '');
+        setSelectedDirectory(bookmarkToEdit?.directoryId || '');
 
         if (directories.length === 0) {
             dispatch(fetchDirectoriesThunk({ userId: user?.uid }));
