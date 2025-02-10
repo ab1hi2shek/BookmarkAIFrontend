@@ -6,7 +6,7 @@ import { renameDirectoryThunk, deleteDirectoryThunk, fetchDirectoriesThunk } fro
 import DirectoryDeleteConfirmationModal from '../../modals/DirectoryDeleteConfirmationModal';
 import { setSelectedItem } from '../../../redux/features/urlSelectionSlice';
 
-const UNCATEGORIZED_DIRECTORY_ID = "directory-165ee178-7c68-4134-a2f6-9455be8ec55e";
+const UNCATEGORIZED_DIRECTORY_ID = "directory-83167e18-7d55-4758-b00d-a8724e9feff5";
 
 const DirectoryList = ({ directorySelected }) => {
     const [menuAnchor, setMenuAnchor] = useState(null);

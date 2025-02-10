@@ -11,7 +11,7 @@ import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import TagIcon from '@mui/icons-material/Tag';
 import { setSelectedItem } from '../../../redux/features/urlSelectionSlice';
 
-const UNCATEGORIZED_DIRECTORY_ID = "directory-165ee178-7c68-4134-a2f6-9455be8ec55e";
+const UNCATEGORIZED_DIRECTORY_ID = "directory-83167e18-7d55-4758-b00d-a8724e9feff5";
 
 const FilterSection = ({ filterSelected = null }) => {
     const navigate = useNavigate();
@@ -176,7 +176,7 @@ const FilterSection = ({ filterSelected = null }) => {
                     >
                         <FolderIcon sx={{ fontSize: '0.85rem', marginRight: 1 }} />
                         <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-                            <ListItemText primary="Uncategorized" primaryTypographyProps={{ fontSize: '0.85rem' }} />
+                            <ListItemText primary="uncategorized" primaryTypographyProps={{ fontSize: '0.85rem' }} />
                             <Typography variant="caption" sx={{ fontSize: '0.75rem', color: 'gray', marginLeft: 1 }}>
                                 ({uncategorizedBookmarksCount})
                             </Typography>
