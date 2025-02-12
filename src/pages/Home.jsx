@@ -6,10 +6,12 @@ import AddBookmark from '../components/mainLayout/AddBookmark';
 import MainLayout from '../components/mainLayout/MainLayout';
 import RightSideBar from '../components/sidebar/RightSideBar/RightSideBar';
 import SocialLogin from '../components/authentication/SocialLogin';
-import styles from './HomeStyles';
+import styles from './styles/HomeStyles';
 import { fetchBookmarksThunk } from '../redux/features/bookmarksSlice'
+import { setSelectedItem } from '../redux/features/urlSelectionSlice';
 import LeftSideBar from '../components/sidebar/LeftSideBar/LeftSideBar';
 import Breadcrumbs from '../components/mainLayout/Breadcrumbs';
+import LoadingSkeleton from '../components/common/LoadingSkeleton';
 
 const Home = () => {
     const dispatch = useDispatch();
@@ -24,7 +26,7 @@ const Home = () => {
     }, [user, dispatch]);
 
     if (loading) {
-        return <div>Loading...</div>; // Show loading indicator
+        return <LoadingSkeleton />;
     }
 
     // 🔹 If the user is not logged in, show the login component

@@ -9,7 +9,6 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import FolderIcon from '@mui/icons-material/Folder';
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
 import TagIcon from '@mui/icons-material/Tag';
-import { setSelectedItem } from '../../../redux/features/urlSelectionSlice';
 
 const UNCATEGORIZED_DIRECTORY_ID = "uncategorized";
 
@@ -50,7 +49,6 @@ const FilterSection = ({ filterSelected = null }) => {
     };
 
     const filterBookmarksForUI = (filterType) => {
-        dispatch(setSelectedItem({ type: 'filter', value: filterType }))
         navigate(`/bookmarks/filter/${filterType}`);
     }
 

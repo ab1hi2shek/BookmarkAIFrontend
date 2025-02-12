@@ -9,8 +9,10 @@ import MainLayout from '../components/mainLayout/MainLayout';
 import LeftSideBar from '../components/sidebar/LeftSideBar/LeftSideBar';
 import RightSideBar from '../components/sidebar/RightSideBar/RightSideBar';
 import SocialLogin from '../components/authentication/SocialLogin';
-import styles from './HomeStyles';
+import styles from './styles/HomeStyles';
 import { fetchBookmarksByTagThunk } from '../redux/features/tagsSlice';
+import { setSelectedItem } from '../redux/features/urlSelectionSlice';
+import LoadingSkeleton from '../components/common/LoadingSkeleton';
 
 const BookmarksWithTags = () => {
 
@@ -24,11 +26,12 @@ const BookmarksWithTags = () => {
     useEffect(() => {
         if (tagId && user?.uid) {
             dispatch(fetchBookmarksByTagThunk({ userId: user.uid, tagId: tagId }));
+            dispatch(setSelectedItem({ type: 'tag', value: tagId }));
         }
     }, [tagId, user, dispatch]);
 
     if (loading) {
-        return <div>Loading...</div>; // Show loading indicator
+        return <LoadingSkeleton />;
     }
 
     // 🔹 If the user is not logged in, show the login component

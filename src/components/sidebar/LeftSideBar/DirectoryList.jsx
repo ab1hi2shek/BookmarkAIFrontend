@@ -5,7 +5,6 @@ import { List, ListItem, IconButton, TextField, Box, Tooltip, Menu, MenuItem, Ty
 import { useDispatch, useSelector } from 'react-redux';
 import { renameDirectoryThunk, deleteDirectoryThunk, fetchDirectoriesThunk } from '../../../redux/features/directorySlice';
 import DirectoryDeleteConfirmationModal from '../../modals/DirectoryDeleteConfirmationModal';
-import { setSelectedItem } from '../../../redux/features/urlSelectionSlice';
 
 const DirectoryList = ({ directorySelected }) => {
     const [menuAnchor, setMenuAnchor] = useState(null);
@@ -90,7 +89,6 @@ const DirectoryList = ({ directorySelected }) => {
     };
 
     const handleDirectoryClick = (directory) => {
-        dispatch(setSelectedItem({ type: 'directory', value: directory.directoryId }))
         navigate(`/bookmarks/directory/${directory.directoryId}`);
     };
 

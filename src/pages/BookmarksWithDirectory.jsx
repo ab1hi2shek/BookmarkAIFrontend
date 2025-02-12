@@ -9,8 +9,10 @@ import MainLayout from '../components/mainLayout/MainLayout';
 import LeftSideBar from '../components/sidebar/LeftSideBar/LeftSideBar';
 import RightSideBar from '../components/sidebar/RightSideBar/RightSideBar';
 import SocialLogin from '../components/authentication/SocialLogin';
-import styles from './HomeStyles';
+import styles from './styles/HomeStyles';
 import { fetchDirectoryBookmarksThunk } from '../redux/features/directorySlice';
+import { setSelectedItem } from '../redux/features/urlSelectionSlice';
+import LoadingSkeleton from '../components/common/LoadingSkeleton';
 
 const BookmarksWithDirectory = () => {
     const { directoryId } = useParams();
@@ -22,10 +24,11 @@ const BookmarksWithDirectory = () => {
     useEffect(() => {
         if (directoryId && user?.uid) {
             dispatch(fetchDirectoryBookmarksThunk({ userId: user.uid, directoryId }));
+            dispatch(setSelectedItem({ type: 'directory', value: directoryId }));
         }
     }, [directoryId, user, dispatch]);
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <LoadingSkeleton />;
 
     if (!user) {
         return (

@@ -4,7 +4,6 @@ import { List, ListItem, IconButton, TextField, Box, Tooltip, Menu, MenuItem, Ty
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTagThunk, deleteTagThunk, fetchTagsThunk } from '../../../redux/features/tagsSlice';
 import DeleteConfirmationModal from '../../modals/DeleteConfirmationModal';
-import { setSelectedItem } from '../../../redux/features/urlSelectionSlice';
 
 const TagList = ({ tagSelected }) => {
     const [menuAnchor, setMenuAnchor] = useState(null);
@@ -88,7 +87,6 @@ const TagList = ({ tagSelected }) => {
     };
 
     const handleTagClick = (clickedTagId) => {
-        dispatch(setSelectedItem({ type: 'tag', value: clickedTagId }))
         navigate(`/bookmarks/tag/${clickedTagId}`);
     };
 
