@@ -2,15 +2,14 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Box } from "@mui/material";
 import Header from '../components/header/Header';
-import AddBookmark from '../components/mainLayout/AddBookmark';
+import AddBookmark from '../components/secondaryHeader/AddBookmark';
 import MainLayout from '../components/mainLayout/MainLayout';
 import RightSideBar from '../components/sidebar/RightSideBar/RightSideBar';
 import SocialLogin from '../components/authentication/SocialLogin';
 import styles from './styles/HomeStyles';
 import { fetchBookmarksThunk } from '../redux/features/bookmarksSlice'
-import { setSelectedItem } from '../redux/features/urlSelectionSlice';
 import LeftSideBar from '../components/sidebar/LeftSideBar/LeftSideBar';
-import Breadcrumbs from '../components/mainLayout/Breadcrumbs';
+import SecondaryHeader from '../components/secondaryHeader/SecondaryHeader';
 import LoadingSkeleton from '../components/common/LoadingSkeleton';
 
 const Home = () => {
@@ -52,10 +51,7 @@ const Home = () => {
 
                 {/* 🟢 Main Content (Previously in `MainLayout`) */}
                 <div style={styles.mainContent(isRightSideBarOpen)}>
-                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                        <Breadcrumbs />
-                        <AddBookmark />
-                    </Box>
+                    <SecondaryHeader />
                     <MainLayout bookmarks={allBookmarks} />
                 </div>
 

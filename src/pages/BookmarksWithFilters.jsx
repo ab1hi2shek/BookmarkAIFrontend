@@ -3,8 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { Box } from "@mui/material";
 import Header from '../components/header/Header';
-import Breadcrumbs from '../components/mainLayout/Breadcrumbs';
-import AddBookmark from '../components/mainLayout/AddBookmark';
+import SecondaryHeader from '../components/secondaryHeader/SecondaryHeader';
 import MainLayout from '../components/mainLayout/MainLayout';
 import LeftSideBar from '../components/sidebar/LeftSideBar/LeftSideBar';
 import RightSideBar from '../components/sidebar/RightSideBar/RightSideBar';
@@ -57,10 +56,7 @@ const BookmarksWithFilters = () => {
 
                 {/* 🟢 Main Content (Previously in `MainLayout`) */}
                 <div style={styles.mainContent(isRightSideBarOpen)}>
-                    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                        <Breadcrumbs />
-                        <AddBookmark />
-                    </Box>
+                    <SecondaryHeader />
                     <MainLayout bookmarks={filteredBookmarks} />
                 </div>
 
