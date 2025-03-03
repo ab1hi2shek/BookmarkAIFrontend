@@ -33,35 +33,10 @@ const AddBookmark = () => {
         setBookmarkUrl('');
     };
 
-    // Function to fetch metadata from URL when Save is clicked
-    const fetchMetadataFromURL = async (url) => {
-        try {
-            const new_url = `https://api.linkpreview.net/?key=7d823587f98544c9abe15244156b7a2a&q=${url}`;
-            const response = await fetch(new_url);
-            const data = await response.json();
-
-            return {
-                title: data.title || '',
-                notes: data.description || '',
-                imageUrl: data.image || ''
-            };
-        } catch (error) {
-            console.error('Error fetching metadata:', error);
-            return { title: '', notes: '', imageUrl: '' };
-        }
-    };
-
     const handleAddBookmark = async () => {
         if (bookmarkUrl.trim()) {
-            const metadata = await fetchMetadataFromURL(bookmarkUrl);
-
             const newBookmark = {
-                title: metadata.title,
-                url: bookmarkUrl,
-                notes: metadata.notes,
-                imageUrl: metadata.imageUrl,
-                directoryId: 'directory-165ee178-7c68-4134-a2f6-9455be8ec55e',
-                tags: []
+                url: bookmarkUrl
             };
 
             // Dispatch Redux Thunk to save in API

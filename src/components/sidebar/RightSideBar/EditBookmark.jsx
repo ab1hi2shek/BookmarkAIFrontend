@@ -5,6 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { closeRightSideBar } from '../../../redux/features/sidebarSlice';
 import { updateBookmarkThunk } from '../../../redux/features/bookmarksSlice';
 import { fetchDirectoriesThunk } from '../../../redux/features/directorySlice';
+import AddIcon from '@mui/icons-material/Add';
 
 const EditBookmark = () => {
     const dispatch = useDispatch();
@@ -19,6 +20,7 @@ const EditBookmark = () => {
     const [selectedDirectory, setSelectedDirectory] = useState(bookmarkToEdit.directoryId || '');
     const [recentTags, setRecentTags] = useState([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
+    const generatedTags = bookmarkToEdit?.generatedTags || [];
 
     useEffect(() => {
         setTitle(bookmarkToEdit?.title || '');
@@ -92,6 +94,13 @@ const EditBookmark = () => {
         const updatedRecentTags = recentTags.filter(t => t !== tag);
         setRecentTags(updatedRecentTags);
     }
+
+    const handleGeneratedTagClick = (tag) => {
+        const trimmedTag = tag.trim();
+        if (!tags.includes(trimmedTag)) {
+            setTags([...tags, trimmedTag]);
+        }
+    };
 
     return (
         <Box sx={{ padding: '16px' }}>
@@ -199,7 +208,7 @@ const EditBookmark = () => {
                     zIndex: 10
                 }}>
                     <Typography variant="caption" sx={{ color: "gray" }}>
-                        Recent
+                        Recently used tags
                     </Typography>
                     <List>
                         {recentTags.map((tag, index) => (
@@ -217,6 +226,31 @@ const EditBookmark = () => {
                             </ListItem>
                         ))}
                     </List>
+                </Box>
+            )}
+
+            {/* Generated Tags Section */}
+            {generatedTags.length > 0 && (
+                <Box sx={{ marginTop: '16px' }}>
+                    <Typography variant="caption" sx={{ color: "gray" }}>
+                        Suggested Tags
+                    </Typography>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                        {generatedTags.map((tag, index) => (
+                            <Chip
+                                key={index}
+                                label={tag}
+                                icon={<AddIcon />}
+                                onClick={() => handleGeneratedTagClick(tag)}
+                                size="small"
+                                sx={{
+                                    cursor: "pointer",
+                                    backgroundColor: 'rgba(235, 206, 149, 0.8)',
+                                    '&:hover': { backgroundColor: 'rgba(246, 172, 12, 0.8)' }
+                                }}
+                            />
+                        ))}
+                    </Box>
                 </Box>
             )}
 

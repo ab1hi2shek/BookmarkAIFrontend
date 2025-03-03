@@ -67,6 +67,16 @@ export const deleteBookmarkThunk = createAsyncThunk(
     }
 );
 
+// 🟢 Generate Tags
+// export const generateBookmarkTagsThunk = createAsyncThunk("tags/generate", async ({ bookmarkId, userId }, { rejectWithValue }) => {
+//     try {
+//         const generatedTags = await generateBookmarkTags(bookmarkId, userId);
+//         return generatedTags; // ✅ Return the generated tags
+//     } catch (error) {
+//         return rejectWithValue(error.response?.data?.error || "Failed to create tag");
+//     }
+// });
+
 const bookmarksSlice = createSlice({
     name: "bookmarks",
     initialState: {

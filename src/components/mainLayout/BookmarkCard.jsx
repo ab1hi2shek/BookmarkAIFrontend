@@ -35,6 +35,8 @@ const BookmarkCard = ({ bookmark, setBookmarkIdToDelete, setDeleteModalOpen }) =
     const dispatch = useDispatch();
     const [hoveredCard, setHoveredCard] = useState(null);
     const { user } = useSelector((state) => state.user)
+    const imageUrl = bookmark?.imageUrl || '/image/no_image.jpg';
+    const bookmarkTitle = bookmark?.title || bookmark?.url;
 
     const handleDeleteClick = (bookmarkId) => {
         setBookmarkIdToDelete(bookmarkId);
@@ -69,15 +71,13 @@ const BookmarkCard = ({ bookmark, setBookmarkIdToDelete, setDeleteModalOpen }) =
             onClick={() => window.open(bookmark.url, '_blank')}
         >
             {/* Bookmark Image */}
-            {bookmark?.imageUrl && (
-                <Box sx={{ width: '100%', overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center', maxHeight: '100px' }}>
-                    <img
-                        src={bookmark.imageUrl}
-                        alt={bookmark.title}
-                        style={{ maxWidth: '100%', maxHeight: '100px', objectFit: 'contain' }}
-                    />
-                </Box>
-            )}
+            <Box sx={{ width: '100%', overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center', maxHeight: '100px' }}>
+                <img
+                    src={imageUrl}
+                    alt={bookmarkTitle}
+                    style={{ maxWidth: '100%', maxHeight: '100px', objectFit: 'contain' }}
+                />
+            </Box>
 
             {/* Icons (Only Show on Hover) */}
             {hoveredCard === bookmark.bookmarkId && (
@@ -154,8 +154,14 @@ const BookmarkCard = ({ bookmark, setBookmarkIdToDelete, setDeleteModalOpen }) =
             )}
 
             <CardContent>
-                <Typography variant="h6" sx={styles.title}>
-                    {bookmark?.title}
+                <Typography variant="h6" sx={{
+                    ...styles.title,
+                    wordBreak: 'break-word', // Allows URLs to wrap naturally
+                    overflowWrap: 'break-word', // Ensures long URLs do not overflow
+                    whiteSpace: 'normal',
+                    maxWidth: '100%',
+                }}>
+                    {bookmarkTitle}
                 </Typography>
                 <Typography variant="body2" sx={styles.notes}>
                     {truncateText(bookmark?.notes, 150)}

@@ -101,3 +101,13 @@ export const togglefavoriteBookmark = async (bookmarkId, userId) => {
     );
     return response.data.data;
 };
+
+// 🟢 **generate tags**
+// export const generateBookmarkTags = async (bookmarkId, userId) => {
+//     const response = await axios.post(
+//         `${BASE_URL}/generate`,
+//         { bookmarkId },
+//         { headers: getHeaders(userId) }
+//     );
+//     return response.data.data.generatedTags;
+// };
